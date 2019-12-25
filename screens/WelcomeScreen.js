@@ -60,7 +60,7 @@ export default class Login extends Component {
 				<Logo/>      
 				<Form type="Login" navigation={this.props.navigation}/>
 				<View style={styles.signupTextCont}>
-					<Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
+					<Text style={styles.signupText}>מעוניין להירשם לתוכניתת?</Text>
 					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר</Text></TouchableOpacity>
 				</View>
 			</View>	
