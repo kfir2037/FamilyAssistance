@@ -6,8 +6,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import Icon from '@expo/vector-icons/Ionicons';
 import DashboardTabNavigator from './DashboardTabNavigator';
-import WatchTasks from '../../screens/swScreens/WatchTasks';
-
+import WatchTasks from '../../screens/ParentsScreens/WatchTasks'
 
 const WatchTasksStackNavigator = createStackNavigator({
     watchTasks:WatchTasks,

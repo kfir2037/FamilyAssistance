@@ -10,12 +10,12 @@ import {createStackNavigator} from 'react-navigation-stack';
 // import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
 // import KidsWatchTasks from '../../screens/kidsScreens/KidsWatchTasks';
 import KidsStackNavigator from './KidsStackNavigator';
-
+import KidsMainPageStackNavigator from './KidsMainPageStackNavigator';
 
 const KidsDrawerNavigator = createDrawerNavigator({
-    // Tasks:{
-    //   screen:WatchTasks,
-    // }
+    Main:{
+      screen:KidsMainPageStackNavigator,
+    },
     Tasks:{
       screen:KidsStackNavigator,
     }
