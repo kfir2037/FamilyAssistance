@@ -32,7 +32,9 @@ class App extends React.Component{
 export default App
 
 
- 
+//kfir2 
+
+
 const AppSwitchNavigator = createSwitchNavigator({
   Welcome:{ 
     screen:WelcomeScreen,
