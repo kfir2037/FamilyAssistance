@@ -1,7 +1,9 @@
 var config ={}
 
-config.endpoint = "https://family-assistance-cosmos-db2.documents.azure.com:443/"
+config.endpoint = "https://family-assistance-cosmos-db.documents.azure.com:443/"
 config.primartKey = "99OEziozdzKjAzBRHDIC2PYijN3mcJzSbAxDYqJe3N92r33hbk8cqdi8ayIqCW2yMnKbmareLWXFz6nN8J2gcA=="
+
+
 
 config.database = {
     id: 'FamilyDatabase'
