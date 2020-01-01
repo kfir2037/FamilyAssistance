@@ -60,8 +60,8 @@ export default class Login extends Component {
 				<Logo/>      
 				<Form type="Login" navigation={this.props.navigation}/>
 				<View style={styles.signupTextCont}>
-					<Text style={styles.signupText}>מעוניין להירשם לתוכניתת?</Text>
-					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר</Text></TouchableOpacity>
+					<Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
+					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר </Text></TouchableOpacity>
 				</View>
 			</View>	
       </TouchableWithoutFeedback>
@@ -71,7 +71,7 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container : {
-    backgroundColor:'#5f6ee3',
+    backgroundColor:'#8b96d9',
     flex: 1,
     alignItems:'center',
     justifyContent :'center'
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   signupButton: {
   	color:'#ffffff',
   	fontSize:16,
-  	fontWeight:'500'
+    fontWeight:'500',
+    
   },
 });

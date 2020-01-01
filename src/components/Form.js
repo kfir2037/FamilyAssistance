@@ -7,9 +7,6 @@ import {
   TouchableOpacity 
 } from 'react-native';
 
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-
 export default class Form extends Component {
 
   constructor(props){
@@ -82,11 +79,11 @@ const styles = StyleSheet.create({
     marginVertical: 10
   },
   button: {
-    width:300,
+    width: 200,
     backgroundColor:'#1c313a',
-     borderRadius: 25,
-      marginVertical: 10,
-      paddingVertical: 13
+    borderRadius: 25,
+    marginVertical: 10,
+    paddingVertical: 13
   },
   buttonText: {
     fontSize:16,
