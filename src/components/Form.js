@@ -4,91 +4,110 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity 
+  TouchableOpacity
 } from 'react-native';
+import firebase from '../../config/config';
+
 
 export default class Form extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
-      id:'',
-      password:''};
+    this.state = {
+      id: '',
+      password: '',
+      errorMessage: ''
+    };
   }
 
-	render(){
-		return(
-			<View style={styles.container}>
-          <TextInput onChangeText={(id)=>this.setState({id})} value={this.state.id} style={styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="תעודת זהות"
-              placeholderTextColor = "#ffffff"
-              selectionColor="#fff"
-              keyboardType="numeric"
-              onSubmitEditing={()=> this.password.focus()}
-              />
-          <TextInput onChangeText={(password)=>this.setState({password})} value={this.state.password} style={styles.inputBox} 
-              underlineColorAndroid='rgba(0,0,0,0)' 
-              placeholder="סיסמה"
-              secureTextEntry={true}
-              placeholderTextColor = "#ffffff"
-              ref={(input) => this.password = input}
-              /> 
+  render() {
+    return (
+      <View style={styles.container}>
+        <TextInput onChangeText={(id) => this.setState({ id })} value={this.state.id} style={styles.inputBox}
+          underlineColorAndroid='rgba(0,0,0,0)'
+          placeholder="תעודת זהות"
+          placeholderTextColor="#ffffff"
+          selectionColor="#fff"
+          keyboardType="numeric"
+          onSubmitEditing={() => this.password.focus()}
+        />
 
-          <TouchableOpacity onPress={this.login} style={styles.button}>
-            <Text style={styles.buttonText}>התחברות</Text>
-          </TouchableOpacity>
-  		</View>
-			)
+        <TextInput onChangeText={(password) => this.setState({ password })} value={this.state.password} style={styles.inputBox}
+          underlineColorAndroid='rgba(0,0,0,0)'
+          placeholder="סיסמה"
+          secureTextEntry={true}
+          placeholderTextColor="#ffffff"
+          ref={(input) => this.password = input}
+        />
+
+        {this.state.errorMessage ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : null}
+        <TouchableOpacity onPress={() => this.loginUser(this.state.id, this.state.password)} style={styles.button}>
+          <Text style={styles.buttonText}>התחברות</Text>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
-  
-  login =()=>{
-    if(this.state.id==1){
-      this.props.navigation.navigate('Dashboard');
+
+  loginUser = async (id, password) => {
+
+    console.log('id: ' + id);
+    if (id != '' && password != '') {
+      try {
+        let user = await firebase.auth().signInWithEmailAndPassword(this.state.id, this.state.password);
+        props.navigation.navigate('SwDashboard');
+        console.log(user);
+      } catch (error) {
+        this.addError();
+        console.log(error);
+      }
     }
-    else if(this.state.id==2){
-      this.props.navigation.navigate('SwDashboard');
+    else {
+      this.addError();
     }
-    else if(this.state.id==3){
-      this.props.navigation.navigate('KidsDashboard');
-    }else{
-      this.props.navigation.navigate('SwDashboard');
-    }
-    //alert(this.state.id);
-    
+
   }
-  
+
+  addError = () =>{
+    this.setState({errorMessage : 'שם משתמש או סיסמה שגויים'});
+    console.log('errorm'+this.state.errorMessage);
+  }
+
 
 }
 
 const styles = StyleSheet.create({
-  container : {
+  container: {
     flexGrow: 1,
-    justifyContent:'center',
+    justifyContent: 'center',
     alignItems: 'center'
   },
 
   inputBox: {
-    width:300,
-    backgroundColor:'rgba(255, 255,255,0.2)',
+    width: 300,
+    backgroundColor: 'rgba(255, 255,255,0.2)',
     borderRadius: 22,
-    paddingHorizontal:16,
-    fontSize:20,
-    color:'#ffffff',
+    paddingHorizontal: 16,
+    fontSize: 20,
+    color: '#ffffff',
     marginVertical: 10
   },
   button: {
     width: 200,
-    backgroundColor:'#1c313a',
+    backgroundColor: '#1c313a',
     borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 13
   },
   buttonText: {
-    fontSize:16,
-    fontWeight:'500',
-    color:'#ffffff',
-    textAlign:'center'
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#ffffff',
+    textAlign: 'center'
+  },
+  errorMessage: {
+    fontSize:18,
+    fontWeight:'700',
+    color:'red'
   }
 });

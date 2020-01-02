@@ -3,62 +3,63 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar ,
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native';
-
+import firebase from './config/config';
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 
 export default class Login extends Component {
 
-	signup() {
+  signup() {
     Actions.signup()
-	}
+  }
 
-	render() {
+  render() {
     console.log(this.props.navigation);
 
-		return(
+    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-			<View style={styles.container}>
-				<Logo/>      
-				<Form type="Login" navigation={this.props.navigation}/>
-				<View style={styles.signupTextCont}>
-					<Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
-					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר </Text></TouchableOpacity>
-				</View>
-			</View>	
+        <View style={styles.container}>
+          <Logo />
+          <Form type="Login" navigation={this.props.navigation} />
+          <View style={styles.signupTextCont}>
+            <Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
+            <TouchableOpacity onPress={this.signup}>
+              <Text style={styles.signupButton}> צור קשר </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </TouchableWithoutFeedback>
-			)
-	}
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#8b96d9',
+  container: {
+    backgroundColor: '#8b96d9',
     flex: 1,
-    alignItems:'center',
-    justifyContent :'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  signupTextCont : {
-  	flexGrow: 1,
-    alignItems:'flex-end',
-    justifyContent :'center',
-    paddingVertical:16,
-    flexDirection:'row'
+  signupTextCont: {
+    flexGrow: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    flexDirection: 'row'
   },
   signupText: {
-  	color:'rgba(255,255,255,0.6)',
-  	fontSize:16
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 16
   },
   signupButton: {
-  	color:'#ffffff',
-  	fontSize:16,
-  	fontWeight:'500'
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '500'
   },
 });
