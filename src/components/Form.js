@@ -54,8 +54,8 @@ export default class Form extends Component {
     console.log('id: ' + id);
     if (id != '' && password != '') {
       try {
-        let user = await firebase.auth().signInWithEmailAndPassword(this.state.id, this.state.password);
-        props.navigation.navigate('SwDashboard');
+        let user = await firebase.auth().signInWithEmailAndPassword(id, password);
+        this.props.navigation.navigate('SwDashboard');
         console.log(user);
       } catch (error) {
         this.addError();
