@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet } from 'react-native';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import WelcomeScreen from './screens/WelcomeScreen';
 import AppDrawerNavigator from './navigations/ParentsNavigations/AppDrawerNavigator';
 import SwDrawerNavigator from './navigations/SwNavigations/SwDrawerNavigator';
 import KidsDrawerNavigator from './navigations/KidsNavigations/KidsDrawerNavigator';
+import firebase from './config/config';
+
 
 class App extends React.Component{
-  render(){
+  render(){ 
+    // console.log(firebase.name);
+    // console.log(firebase.database());
     return(
-        <AppContainer/>
+      <AppContainer/>
     )   
   }
 }
