@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Constants } from 'expo';
 
 
-export default class SettingsScreen extends React.Component{
+export default class ParentsMainScreen extends React.Component{
 
   constructor () {
     super()
