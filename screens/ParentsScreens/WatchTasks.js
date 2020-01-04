@@ -299,21 +299,19 @@ export default class App extends React.Component {
 
 
   render() {
-    let date = new Date().getDate(); //Current Date
+    let day = new Date().getDate(); //Current day
     var month = new Date().getMonth() + 1; //Current Month
     var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
-    console.log(new Date().getTime());
-    console.log(date)
-    console.log(month)
-    console.log(year)
-    console.log(hours)
-    console.log(min)
-    console.log(sec)
+ 
 
-    var stringDate = year+"-"+"0"+month+"-"+"0"+date
+    if(day<10){
+      day="0"+day
+    }
+    if(month<10){
+      month="0"+month
+    }
+
+    var stringDate = year+"-"+month+"-"+day
     console.log(stringDate)
 
     return (
@@ -322,8 +320,8 @@ export default class App extends React.Component {
           eventTapped={this._eventTapped.bind(this)}
           events={this.state.events}
           width={width}
-          initDate = {'2017-09-07'}
-          // initDate={stringDate}
+          // initDate = {'2017-09-07'}
+          initDate={stringDate}
           scrollToFirst
           upperCaseHeader
           uppercase
