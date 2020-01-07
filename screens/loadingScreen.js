@@ -23,20 +23,29 @@ export default class Login extends Component {
       loggedIn: false
     };
 
-    //var user = firebase.auth().currentUser;
     var that = this;
     firebase.auth().onAuthStateChanged(function(user) {
+      user = firebase.auth().currentUser;
+      //console.log('Loading   '+user);
       if(user){
-        that.setState({ loggedIn:true });
         that.props.navigation.navigate('ParentsDashboard');
-        //this.navigation.navigate('SwDashboard');
       }else{
-        that.setState({ loggedIn: false });
         that.props.navigation.navigate('Welcome');
       }
-    });
+    })
+    
+    // firebase.auth().onAuthStateChanged(function(user) {
+    //   if(user){
+    //     that.setState({ loggedIn:true });
+    //     that.props.navigation.navigate('ParentsDashboard');
+    //     //this.navigation.navigate('SwDashboard');
+    //   }else{
+    //     that.setState({ loggedIn: false });
+    //     that.props.navigation.navigate('Welcome');
+    //   }
+    // });
   }
-
+  
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

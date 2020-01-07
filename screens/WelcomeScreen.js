@@ -46,7 +46,7 @@ import Form from '../src/components/Form';
 export default class Login extends Component {
 
 	render() {
-    console.log(this.props.navigation);
+    //console.log(this.props.navigation);
 
 		return(
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

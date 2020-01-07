@@ -21,13 +21,16 @@ export default class Form extends Component {
     };
 
     var that = this;
-    firebase.auth().onAuthStateChanged(function(user) {
+    var user;// = firebase.auth().currentUser; 
+    firebase.auth().onAuthStateChanged(function(user){
+      user = firebase.auth().currentUser;
+      //console.log('Welcome   '+user);
       if(user){
-        that.setState({ loggedIn:true });
+        //that.setState({ loggedIn:true });
         that.props.navigation.navigate('ParentsDashboard');
         //this.navigation.navigate('SwDashboard');
       }else{
-        that.setState({ loggedIn: false });
+        //that.setState({ loggedIn: false });
       }
     });
   }
@@ -68,7 +71,7 @@ export default class Form extends Component {
         let user = await firebase.auth().signInWithEmailAndPassword(id, password);
         this.setState({loggedIn:true});
         this.props.navigation.navigate('ParentsDashboard');
-        console.log(user);
+        //console.log(user);
         console.log(this.state.loggedIn+'71');
       } catch (error) {
         this.setState({loggedIn:false});
@@ -83,10 +86,13 @@ export default class Form extends Component {
   }
 
 
+
   addError = () =>{
     this.setState({errorMessage : 'שם משתמש או סיסמה שגויים'});
     //console.log('errorm'+this.state.errorMessage);
   }
+
+
 }
 
 const styles = StyleSheet.create({
