@@ -75,7 +75,7 @@ for(let i = 0; i < allTasks.length; i++){
 export default () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>משימות</Text>
+      <Text style={styles.title}>משימות להיום:</Text>
 
       {tasks}
 
