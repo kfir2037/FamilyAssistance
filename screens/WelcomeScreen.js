@@ -1,33 +1,3 @@
-// import React, { Component } from 'react';
-// import { StyleSheet,View, Text,Button } from 'react-native';
-
-// export default class WelcomeScreen extends React.Component {
-
-//     render() {
-//       return (
-//         <View style={styles.container}> 
-//             <Button 
-//             title="Login"
-//             onPress={()=>this.props.navigation.navigate("Dashboard")}           
-//             />
-//             <Button 
-//             title="SignIn"
-//             onPress={()=>alert('button pressed')} 
-//             />
-  
-//         </View>
-//       );
-//     }
-//   }
-//   const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       backgroundColor: '#fff',
-//       alignItems: 'center',
-//       justifyContent: 'center',
-//     },
-//   });
-  
 
 import React, { Component } from 'react';
 import {
@@ -37,7 +7,8 @@ import {
   StatusBar ,
   TouchableOpacity,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView
 } from 'react-native';
 
 import Logo from '../src/components/Logo';
@@ -49,16 +20,19 @@ export default class Login extends Component {
     console.log(this.props.navigation);
 
 		return(
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-			<View style={styles.container}>
-				<Logo/>      
-				<Form type="Login" navigation={this.props.navigation}/>
-				<View style={styles.signupTextCont}>
-					<Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
-					<TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר </Text></TouchableOpacity>
-				</View>
-			</View>	
-      </TouchableWithoutFeedback>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Logo/>      
+          <Form type="Login" navigation={this.props.navigation}/>
+          <View style={styles.signupTextCont}>
+            <Text style={styles.signupText}>מעוניין להירשם לתוכנית?</Text>
+            <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}> צור קשר </Text></TouchableOpacity>
+          </View>
+        </View>	
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+
 			)
 	}
 }
