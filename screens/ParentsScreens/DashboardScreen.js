@@ -9,8 +9,8 @@ export default class DashboardScreen extends React.Component {
             <Text> DashboardScreen </Text>
           </View>
         );
-      }
     }
+  }
 
 
     const styles = StyleSheet.create({
@@ -22,3 +22,5 @@ export default class DashboardScreen extends React.Component {
         },
       });
       
+
+    

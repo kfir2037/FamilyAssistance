@@ -43,13 +43,7 @@ import {
 import Logo from '../src/components/Logo';
 import Form from '../src/components/Form';
 
-import {Actions} from 'react-native-router-flux';
-
 export default class Login extends Component {
-
-	signup() {
-    Actions.signup()
-	}
 
 	render() {
     console.log(this.props.navigation);

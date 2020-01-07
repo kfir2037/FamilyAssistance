@@ -17,7 +17,10 @@ const WatchTasksStackNavigator = createStackNavigator({
     return{
       headerLeft:(
         <Icon style={{padding:10}}
-        onPress={()=>navigation.openDrawer()}
+        onPress={()=>{
+          navigation.openDrawer();
+        }
+    }
         name="md-menu"
         size={30}/>
       ),

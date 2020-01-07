@@ -23,8 +23,8 @@ const DashboardStackNavigator = createStackNavigator({
         <Icon style={{padding:10}}
         name="md-exit"
         onPress={()=>{
-          //firebase.auth().signOut();
-          navigation.navigate('Login');
+          firebase.auth().signOut();
+          navigation.navigate('Welcome');
         }}
         size={30}/>   
       )
