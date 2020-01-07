@@ -8,7 +8,7 @@ import Icon from '@expo/vector-icons/Ionicons';
 import DashboardTabNavigator from './DashboardTabNavigator';
 import WatchTasks from '../../screens/swScreens/WatchTasks';
 import MainPage from '../../screens/ParentsScreens/ParentsMainPage';
-
+import firebase from '../../config/config'
 
 const WatchTasksStackNavigator = createStackNavigator({
     Main:MainPage,
@@ -24,7 +24,14 @@ const WatchTasksStackNavigator = createStackNavigator({
       headerRight:(
         <Icon style={{padding:10}}
         name="md-exit"
-        onPress={()=>navigation.navigate('Welcome')}
+        onPress={()=>{
+          try{
+            firebase.auth().signOut();
+            navigation.navigate('Welcome');
+          }catch(error){
+            console.log(error);
+          }
+        }}
         size={30}/>   
       )
     }
