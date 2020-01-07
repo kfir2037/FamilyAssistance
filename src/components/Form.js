@@ -24,7 +24,7 @@ export default class Form extends Component {
     firebase.auth().onAuthStateChanged(function(user) {
       if(user){
         that.setState({ loggedIn:true });
-        that.props.navigation.navigate('Dashboard');
+        that.props.navigation.navigate('ParentsDashboard');
         //this.navigation.navigate('SwDashboard');
       }else{
         that.setState({ loggedIn: false });
