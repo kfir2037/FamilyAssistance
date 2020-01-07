@@ -27,7 +27,7 @@ const KidsStackNavigator = createStackNavigator({
       headerRight:(
         <Icon style={{padding:10}}
         name="md-exit"
-        onPress={()=>navigation.navigate('Welcome')}
+        onPress={()=>navigation.navigate('Login')}
         size={30}/>   
       )
     }

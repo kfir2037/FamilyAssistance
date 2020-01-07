@@ -6,7 +6,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import Icon from '@expo/vector-icons/Ionicons';
 import DashboardTabNavigator from './DashboardTabNavigator';
-
+import firebase from '../../config/config'
 
 const DashboardStackNavigator = createStackNavigator({
     DashboardTabNavigator:DashboardTabNavigator,
@@ -22,7 +22,10 @@ const DashboardStackNavigator = createStackNavigator({
       headerRight:(
         <Icon style={{padding:10}}
         name="md-exit"
-        onPress={()=>navigation.navigate('Welcome')}
+        onPress={()=>{
+          //firebase.auth().signOut();
+          navigation.navigate('Login');
+        }}
         size={30}/>   
       )
     }

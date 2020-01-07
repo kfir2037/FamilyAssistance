@@ -16,11 +16,24 @@ export default class Form extends Component {
     this.state = {
       id: '',
       password: '',
-      errorMessage: ''
+      errorMessage: '',
+      loggedIn: false
     };
+
+    var that = this;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if(user){
+        that.setState({ loggedIn:true });
+        that.props.navigation.navigate('Dashboard');
+        //this.navigation.navigate('SwDashboard');
+      }else{
+        that.setState({ loggedIn: false });
+      }
+    });
   }
 
   render() {
+    console.log(this.state.loggedIn+'35');
     return (
       <View style={styles.container}>
         <TextInput onChangeText={(id) => this.setState({ id })} value={this.state.id} style={styles.inputBox}
@@ -47,33 +60,33 @@ export default class Form extends Component {
       </View>
     )
   }
-
-
+  
   loginUser = async (id, password) => {
 
-    console.log('id: ' + id);
     if (id != '' && password != '') {
       try {
         let user = await firebase.auth().signInWithEmailAndPassword(id, password);
-        this.props.navigation.navigate('SwDashboard');
+        this.setState({loggedIn:true});
+        this.props.navigation.navigate('ParentsDashboard');
         console.log(user);
+        console.log(this.state.loggedIn+'71');
       } catch (error) {
+        this.setState({loggedIn:false});
         this.addError();
         console.log(error);
       }
     }
     else {
+      this.setState({loggedIn:false});
       this.addError();
     }
-
   }
+
 
   addError = () =>{
     this.setState({errorMessage : 'שם משתמש או סיסמה שגויים'});
-    console.log('errorm'+this.state.errorMessage);
+    //console.log('errorm'+this.state.errorMessage);
   }
-
-
 }
 
 const styles = StyleSheet.create({
