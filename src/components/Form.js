@@ -4,10 +4,11 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlightBase
 } from 'react-native';
 import firebase from '../../config/config';
-
+import Spinner from '../components/Spinner';
 
 export default class Form extends Component {
 
@@ -17,26 +18,47 @@ export default class Form extends Component {
       id: '',
       password: '',
       errorMessage: '',
-      loggedIn: false
+      loading: false
     };
 
+
     var that = this;
-    var user;// = firebase.auth().currentUser; 
-    firebase.auth().onAuthStateChanged(function(user){
+    firebase.auth().onAuthStateChanged(function (user) {
       user = firebase.auth().currentUser;
-      //console.log('Welcome   '+user);
-      if(user){
-        //that.setState({ loggedIn:true });
+      if (user) {
         that.props.navigation.navigate('ParentsDashboard');
-        //this.navigation.navigate('SwDashboard');
-      }else{
-        //that.setState({ loggedIn: false });
+      } else {
       }
     });
   }
 
+  onButtonPress() {
+    const { id, password } = this.state;
+    this.setState({ errorMessage: '', loading: true });
+
+    firebase.auth().signInWithEmailAndPassword(id, password)
+      .catch(this.onLoginFail.bind(this));
+  }
+
+  onLoginFail() {
+    this.setState({ errorMessage: 'שם משתמש או סיסמה שגויים', loading: false })
+  }
+
+  renderButton() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
+
+    return (
+      <TouchableOpacity onPress={this.onButtonPress.bind(this)} style={styles.button}>
+        <Text style={styles.buttonText}>התחברות</Text>
+      </TouchableOpacity>
+    );
+  }
+
+
+
   render() {
-    console.log(this.state.loggedIn+'35');
     return (
       <View style={styles.container}>
         <TextInput onChangeText={(id) => this.setState({ id })} value={this.state.id} style={styles.inputBox}
@@ -51,48 +73,45 @@ export default class Form extends Component {
         <TextInput onChangeText={(password) => this.setState({ password })} value={this.state.password} style={styles.inputBox}
           underlineColorAndroid='rgba(0,0,0,0)'
           placeholder="סיסמה"
+          selectionColor="#fff"
           secureTextEntry={true}
           placeholderTextColor="#ffffff"
           ref={(input) => this.password = input}
         />
 
         {this.state.errorMessage ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : null}
-        <TouchableOpacity onPress={() => this.loginUser(this.state.id, this.state.password)} style={styles.button}>
+
+
+        <View>
+          {this.renderButton()}
+        </View>
+
+        {/* <TouchableOpacity onPress={() => this.onButtonPress()} style={styles.button}>
           <Text style={styles.buttonText}>התחברות</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     )
   }
-  
+
   loginUser = async (id, password) => {
 
     if (id != '' && password != '') {
       try {
         let user = await firebase.auth().signInWithEmailAndPassword(id, password);
-        this.setState({loggedIn:true});
         this.props.navigation.navigate('ParentsDashboard');
-        //console.log(user);
-        console.log(this.state.loggedIn+'71');
       } catch (error) {
-        this.setState({loggedIn:false});
         this.addError();
         console.log(error);
       }
     }
     else {
-      this.setState({loggedIn:false});
       this.addError();
     }
   }
 
-
-
-  addError = () =>{
-    this.setState({errorMessage : 'שם משתמש או סיסמה שגויים'});
-    //console.log('errorm'+this.state.errorMessage);
+  addError = () => {
+    this.setState({ errorMessage: 'שם משתמש או סיסמה שגויים' });
   }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -119,14 +138,14 @@ const styles = StyleSheet.create({
     paddingVertical: 13
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '500',
     color: '#ffffff',
     textAlign: 'center'
   },
   errorMessage: {
-    fontSize:18,
-    fontWeight:'700',
-    color:'red'
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'red'
   }
 });

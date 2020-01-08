@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import firebase from '../config/config';
 import Logo from '../src/components/Logo';
+import Spinner from '../src/components/Spinner';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -50,7 +51,9 @@ export default class Login extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Logo />
+          <Logo style={{flex:2}}/>
+          <Spinner/>
+         
         </View>
       </TouchableWithoutFeedback>
     )
@@ -61,7 +64,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#8b96d9',
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   }

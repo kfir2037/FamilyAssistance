@@ -33,7 +33,7 @@ export default class Login extends Component {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
-			)
+		)
 	}
 }
 
