@@ -26,7 +26,7 @@ export default class Form extends Component {
     firebase.auth().onAuthStateChanged(function (user) {
       user = firebase.auth().currentUser;
       if (user) {
-        that.props.navigation.navigate('ParentsDashboard');
+        that.props.navigation.navigate('SwDashboard');
       } else {
       }
     });
@@ -93,25 +93,25 @@ export default class Form extends Component {
     )
   }
 
-  loginUser = async (id, password) => {
+  // loginUser = async (id, password) => {
 
-    if (id != '' && password != '') {
-      try {
-        let user = await firebase.auth().signInWithEmailAndPassword(id, password);
-        this.props.navigation.navigate('ParentsDashboard');
-      } catch (error) {
-        this.addError();
-        console.log(error);
-      }
-    }
-    else {
-      this.addError();
-    }
-  }
+  //   if (id != '' && password != '') {
+  //     try {
+  //       let user = await firebase.auth().signInWithEmailAndPassword(id, password);
+  //       this.props.navigation.navigate('ParentsDashboard');
+  //     } catch (error) {
+  //       this.addError();
+  //       console.log(error);
+  //     }
+  //   }
+  //   else {
+  //     this.addError();
+  //   }
+  // }
 
-  addError = () => {
-    this.setState({ errorMessage: 'שם משתמש או סיסמה שגויים' });
-  }
+  // addError = () => {
+  //   this.setState({ errorMessage: 'שם משתמש או סיסמה שגויים' });
+  // }
 }
 
 const styles = StyleSheet.create({
