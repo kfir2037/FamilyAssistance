@@ -19,63 +19,27 @@ export default class SettingsScreen extends React.Component{
   }
   
   render () {
-    const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
-    const { selectedIndex } = this.state
-
-    var tasks=[];
-
-    let allTasks=[
-      {
-        "title":"מקלחת",
-        "time":"11:30",
-        "place":"בית",
-        "details":"לקלח עם סבון",
-        "isDone":"false"  
-      },
-      {
-        "title":"אסיפת הורים",
-        "time":"17:00",
-        "place":"בית ספר",
-        "details":"לבוא רבע שעה לפני",
-        "isDone":"true"            
-      },
-      {
-        "title":"לבוא לפגישה עם עו''ס",
-        "time":"18:00",
-        "place":"מרכז ילדים-הורים",
-        "details":"אין",
-        "isDone":"true"        
-      },
-      {
-        "title":"לבוא לפגישה עם עו''ס",
-        "time":"18:00",
-        "place":"מרכז ילדים-הורים",
-        "details":"אין",
-        "isDone":"true"        
-      }
-
-    ]
-
+    // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
+    // const { selectedIndex } = this.state
 
   return (
       <View style={styles.container}>
         <ScrollView>
       
           <View style={styles.container}>
-            <ButtonGroup
+            {/* <ButtonGroup
               onPress={this.updateIndex}
               selectedIndex={selectedIndex}
               buttons={buttons}
               containerStyle={{height: 50,borderRadius:6} }
-            />
+            /> */}
+
 
               {/* <ProgressBarAndroid
                 styleAttr="Horizontal"
                 indeterminate={false}
                 progress={tasksDone/allTasks.length}
               />             */}
-
-
 
                 {/* { tasks } */}
 
