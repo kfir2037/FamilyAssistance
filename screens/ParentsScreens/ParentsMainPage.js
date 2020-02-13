@@ -4,7 +4,7 @@ import { FormLabel, FormInput, FormValidationMessage, Header,Button,ButtonGroup}
 import  Accordion  from '../../src/components/Accordion';
 
 
-export default class SettingsScreen extends React.Component{
+export default class ParentsMainPage extends React.Component{
 
   constructor () {
     super()
