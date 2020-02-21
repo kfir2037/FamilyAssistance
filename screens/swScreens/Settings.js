@@ -7,11 +7,10 @@ import {
     ScrollView,
     TextInput,
     TouchableOpacity,
-    TouchableHighlightBase,
+    Button,
   } from 'react-native';
-import { Button } from 'react-native-elements';
+// import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-//   import {InputNumber} from 'rc-input-number';
 import NumericInput from 'react-native-numeric-input'
 import Tabs from 'react-native-tabs';
 import Task from './Task';
@@ -272,19 +271,52 @@ changeTasksToCategory = (el) => {
                         })}
                     </View>
                 </View>
-                <Button
-                    style={{marginTop:50}}
+                <View style={{margin:20}}>
+                   <Button               
                     icon={
                         <Icon
                         name="trash"
-                        size={15}
+                        size={20}
                         color="white"
                         />
                     }
                     title="  הסרת משימה  "
                     />
+                </View>
+
+            </View>
+            <View>
+                <View style={styles.addTask}> 
+                    <Text>בוקר</Text>
+                    <View style={styles.addTaskInputContainer}>
+                        <TextInput
+                            style={styles.addTaskInput}
+                            multiline={true}
+                            numberOfLines={2}
+                            onChangeText={(text) => this.setState()}
+                            // value={this.state.text}
+                        />
+                    </View>
+                </View>
+                {/* <Button style={styles.addButton}
+                    // icon={
+                    //     <Icon
+                    //     name="trash"
+                    //     size={20}
+                    //     color="white"
+                    //     />
+                    // }
+                    title="הוספה  "
+                ></Button> */}
+                <View style={{margin:30}}>
+                    <Button                     
+                        title="Click Here"
+                        // color="#0000ff"
+                        />
+                </View>
             </View>
         </View>
+
         <View style={{height:60}}></View>
         </ScrollView>
     );
@@ -293,13 +325,13 @@ changeTasksToCategory = (el) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex:2,
-        flexGrow: 1,
-        alignItems: 'stretch',
+        // flex:2,
+        // flexGrow: 1,
+        // alignItems: 'stretch',
     },
     fields:{
         flexDirection: 'row-reverse',
-        alignItems: 'stretch',
+        // alignItems: 'stretch',
         marginTop:10,
     },
     text:{
@@ -336,6 +368,31 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginTop:50,
   },
+
+    addTask:{
+        flexDirection: 'row-reverse',
+        marginTop:10,
+        // textAlign: 'center',
+    },    
+    addTaskInput:{
+        // flex:3,
+        // backgroundColor:'red',
+        // width:200,
+        textAlign:'right',
+        marginRight:20,
+    },
+    addTaskInputContainer:{
+        // flex:1,
+        width:300 ,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#d6d7da',
+        textAlign:'left'
+    },
+    addButton:{
+        margin:20,
+        backgroundColor:"black"
+    }
 }
 );
 
