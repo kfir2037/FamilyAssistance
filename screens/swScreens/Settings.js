@@ -266,8 +266,7 @@ changeTasksToCategory = (el) => {
                     </Text>
                     <View>
                         {this.state.tasks.map(task=>{
-                            return <Task task={task}></Task>
-                    
+                            return <Task task={task}></Task>                  
                         })}
                     </View>
                 </View>
@@ -283,8 +282,8 @@ changeTasksToCategory = (el) => {
                     title="  הסרת משימה  "
                     />
                 </View>
-
             </View>
+            <View style = {styles.lineStyle} />
             <View>
                 <View style={styles.addTask}> 
                     <Text>בוקר</Text>
@@ -292,7 +291,98 @@ changeTasksToCategory = (el) => {
                         <TextInput
                             style={styles.addTaskInput}
                             multiline={true}
-                            numberOfLines={2}
+                            numberOfLines={3}
+                            onChangeText={(text) => this.setState()}
+                            // value={this.state.text}
+                        />
+                    </View>
+                </View>
+                {/* <Button style={styles.addButton}
+                    // icon={
+                    //     <Icon
+                    //     name="trash"
+                    //     size={20}
+                    //     color="white"
+                    //     />
+                    // }
+                    title="הוספת משימה  "
+                ></Button> */}
+                <View style={{marginTop:30,alignContent:'center'}}>
+                    <Button                     
+                        title="הוספת משימה"
+                        
+                        // color="#0000ff"
+                        />
+                </View>
+            </View>
+            <View>
+                <View style={styles.addTask}> 
+                    <Text>צהריים</Text>
+                    <View style={styles.addTaskInputContainer}>
+                        <TextInput
+                            style={styles.addTaskInput}
+                            multiline={true}
+                            numberOfLines={3}
+                            onChangeText={(text) => this.setState()}
+                            // value={this.state.text}
+                        />
+                    </View>
+                </View>
+                {/* <Button style={styles.addButton}
+                    // icon={
+                    //     <Icon
+                    //     name="trash"
+                    //     size={20}
+                    //     color="white"
+                    //     />
+                    // }
+                    title="הוספת משימה  "
+                ></Button> */}
+                <View style={{marginTop:30,alignContent:'center'}}>
+                    <Button                     
+                        title="הוספת משימה"
+                        // color="#0000ff"
+                        />
+                </View>
+            </View>
+            <View>
+                <View style={styles.addTask}> 
+                    <Text>אחר הצהריים</Text>
+                    <View style={styles.addTaskInputContainer}>
+                        <TextInput
+                            style={styles.addTaskInput}
+                            multiline={true}
+                            numberOfLines={3}
+                            onChangeText={(text) => this.setState()}
+                            // value={this.state.text}
+                        />
+                    </View>
+                </View>
+                {/* <Button style={styles.addButton}
+                    // icon={
+                    //     <Icon
+                    //     name="trash"
+                    //     size={20}
+                    //     color="white"
+                    //     />
+                    // }
+                    title="הוספת משימה  "
+                ></Button> */}
+                <View style={{marginTop:30,alignContent:'center'}}>
+                    <Button                     
+                        title="הוספת משימה"
+                        // color="#0000ff"
+                        />
+                </View>
+            </View>
+            <View>
+                <View style={styles.addTask}> 
+                    <Text>ערב</Text>
+                    <View style={styles.addTaskInputContainer}>
+                        <TextInput
+                            style={styles.addTaskInput}
+                            multiline={true}
+                            numberOfLines={3}
                             onChangeText={(text) => this.setState()}
                             // value={this.state.text}
                         />
@@ -308,13 +398,14 @@ changeTasksToCategory = (el) => {
                     // }
                     title="הוספה  "
                 ></Button> */}
-                <View style={{margin:30}}>
+                <View style={{marginTop:30,alignContent:'center'}}>
                     <Button                     
-                        title="Click Here"
+                        title="הוספת משימה"
                         // color="#0000ff"
                         />
                 </View>
             </View>
+
         </View>
 
         <View style={{height:60}}></View>
@@ -366,7 +457,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#333333',
         marginBottom: 5,
-        marginTop:50,
+        marginTop:20,
   },
 
     addTask:{

@@ -9,7 +9,7 @@ import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
 import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
 import SettingsStackNavigator from './SettingsStackNavigator'
-
+import ReportsStackNavigator from './ReportsStackNavigator'
 
 
 const SwDrawerNavigator = createDrawerNavigator({
@@ -24,6 +24,9 @@ const SwDrawerNavigator = createDrawerNavigator({
     },
     Settings:{
       screen:SettingsStackNavigator,
+    },
+    Reports:{
+      screen:ReportsStackNavigator,
     }
   })
 

@@ -8,10 +8,10 @@ import {createStackNavigator} from 'react-navigation-stack';
 import Icon from '@expo/vector-icons/Ionicons';
 // import DashboardTabNavigator from './DashboardTabNavigator';
 import WatchFamilies from '../../screens/swScreens/WatchFamilies';
-import Settings from '../../screens/swScreens/Settings'
+import Reports from '../../screens/swScreens/Reports'
 
-const SettingsStackNavigator = createStackNavigator({
-    Settings:Settings,
+const ReportsStackNavigator = createStackNavigator({
+    Reports:Reports,
   },
   {
   defaultNavigationOptions:({navigation})=>{
@@ -33,4 +33,4 @@ const SettingsStackNavigator = createStackNavigator({
   }
   ) 
 
-  export default SettingsStackNavigator;
+  export default ReportsStackNavigator;
