@@ -8,6 +8,7 @@ import WatchTasks from '../../screens/swScreens/WatchTasks';
 import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
 import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
+import SettingsStackNavigator from './SettingsStackNavigator'
 
 
 
@@ -21,7 +22,9 @@ const SwDrawerNavigator = createDrawerNavigator({
     WatchFamilies:{
       screen:SwWatchFamiliesStackNavigator,
     },
-    
+    Settings:{
+      screen:SettingsStackNavigator,
+    }
   })
 
   export default SwDrawerNavigator;

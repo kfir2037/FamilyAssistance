@@ -33,7 +33,7 @@ export default class Form extends Component {
   }
 
   onButtonPress() {
-    this.props.navigation.navigate('KidsDashboard');
+    this.props.navigation.navigate('SwDashboard');
     // const { id, password } = this.state;
     // this.setState({ errorMessage: '', loading: true });
 

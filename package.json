@@ -18,15 +18,18 @@
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.3",
     "native-base": "^2.13.8",
+    "rc-input-number": "^4.5.5",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-customize-selected-date": "^1.0.1",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.5.2",
+    "react-native-numeric-input": "^1.8.3",
     "react-native-reanimated": "^1.4.0",
     "react-native-redash": "^9.5.1",
     "react-native-router-flux": "^4.0.6",
+    "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.0.10",
@@ -36,7 +39,8 @@
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",
-    "eslint-plugin-react-hooks": "^2.3.0"
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "prettier": "^1.19.1"
   },
   "private": true
 }
