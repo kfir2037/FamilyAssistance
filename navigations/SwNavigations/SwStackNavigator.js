@@ -1,14 +1,18 @@
 import React from 'react';
 
 import { createStackNavigator } from 'react-navigation-stack';
-import WatchTasks from '../../screens/swScreens/WatchTasks';
+import Main from '../../screens/swScreens/MainPage';
 import Icon from '@expo/vector-icons/Ionicons';
 import firebase from '../../config/config'
+import AddNewFamily from '../../screens/swScreens/AddNewFamily';
+import Tasks2 from '../../screens/swScreens/WatchFamiliesTasks'
+
+
 
 const SwStackNavigator = createStackNavigator({
-  Tasks: WatchTasks,
-  // AddNewFamily:AddNewFamily,
-  // WatchFamilies:WatchFamilies,
+  Main: Main,
+  AddNewFamily:AddNewFamily,
+  Tasks2:Tasks2,
 },
   {
     

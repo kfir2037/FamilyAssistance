@@ -434,11 +434,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginLeft:50,
     },
-    lineStyle:{
-        borderWidth: 0.5,
-        borderColor:'black',
-        margin:20,
-   },
+
    container2: {
         flex: 1,
         justifyContent: 'center',
