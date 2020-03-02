@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TextInput, Alert, Switch, ProgressBarAndroid, TouchableOpacity } from 'react-native';
 import firebase from '../../config/config';
+//import admin from '../../firebase/functions/index';
 // import MenuButton from '../components/MenuButton';
 
 const AddNewFamily = () => {
@@ -79,7 +80,7 @@ const AddNewFamily = () => {
               <Text style={styles.text} >תעודת זהות</Text>
             </View>
             <View style={styles.fields}>
-              <TextInput onChangeText={(ID) => setID({ ID })} placeholder='123456789'></TextInput>
+              <TextInput onChangeText={setID} placeholder='123456789'></TextInput>
             </View>
           </View>
         </View>
@@ -127,16 +128,37 @@ const AddNewFamily = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log("ButtonPressed" + {ID} );
-            firebase.database().ref('families/'+{ID}).set({
-              motherName:MotherName,
-              fatherName:FatherName,
-              lastName:LastName,
-              email:Email,
-              phone:Phone,
-              password:Password,
-              vpassword:RePassword
-            })
+            console.log("ButtonPressed " + ID);
+            var createUser = firebase.functions().httpsCallable('createUser');
+            console.log(133);
+            var user = {
+              firstName: "yossi",
+              lastName: "cohen",
+              password: "123456",
+              email: "moshe@gmail.com",
+              role: "sw"
+            }
+            console.log(141);
+            createUser(user)
+              .then(function (resp) {
+                //Display success
+                console.log(resp.data.result);
+              })
+              .catch(function (error) {
+                var code = error.code;
+                var message = error.message;
+                //Display error
+                console.log(code + ' ' + message);
+              });
+            // firebase.database().ref('families/'+{ID}).set({
+            //   motherName:MotherName,
+            //   fatherName:FatherName,
+            //   lastName:LastName,
+            //   email:Email,
+            //   phone:Phone,
+            //   password:Password,
+            //   vpassword:RePassword
+            // })
           }}
         >
           <Text style={styles.buttonText}> הוסף </Text>

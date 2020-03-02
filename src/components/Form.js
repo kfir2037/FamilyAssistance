@@ -72,9 +72,9 @@ export default class Form extends Component {
 
         <TextInput onChangeText={(password) => this.setState({ password })} value={this.state.password} style={styles.inputBox}
           underlineColorAndroid='rgba(0,0,0,0)'
-          placeholder="סיסמה"
+          placeholder='סיסמה'
           selectionColor="#fff"
-          secureTextEntry={true}
+          secureTextEntry
           placeholderTextColor="#ffffff"
           ref={(input) => this.password = input}
         />
@@ -123,11 +123,13 @@ const styles = StyleSheet.create({
 
   inputBox: {
     width: 300,
+    height:40,
     backgroundColor: 'rgba(255, 255,255,0.2)',
     borderRadius: 22,
     paddingHorizontal: 16,
     fontSize: 20,
     color: '#ffffff',
+    textAlign: 'right',
     marginVertical: 10
   },
   button: {
