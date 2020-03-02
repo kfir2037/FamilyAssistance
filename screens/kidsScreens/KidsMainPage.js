@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View,ScrollView,TextInput,Alert,Switch,ProgressBarAndroid,TouchableOpacity } from 'react-native';
-// import MenuButton from '../components/MenuButton';
-import { FormLabel, FormInput, FormValidationMessage, Header,Button,ButtonGroup,Divider,Overlay   } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Constants } from 'expo';
+import { FormLabel, FormInput, FormValidationMessage, Header,Button,ButtonGroup} from 'react-native-elements';
+import  Accordion  from '../../src/components/Accordion';
 
 
 export default class KidsMainPage extends React.Component{
@@ -22,109 +20,33 @@ export default class KidsMainPage extends React.Component{
   
   render () {
     // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
-    const { selectedIndex } = this.state
-
-    var tasks=[];
-
-    let allTasks=[
-      {
-        "title":"מקלחת",
-        "time":"11:30",
-        "place":"בית",
-        "details":"לקלח עם סבון",
-        "isDone":"false"  
-      },
-      {
-        "title":"אסיפת הורים",
-        "time":"17:00",
-        "place":"בית ספר",
-        "details":"לבוא רבע שעה לפני",
-        "isDone":"true"            
-      },
-      {
-        "title":"לבוא לפגישה עם עו''ס",
-        "time":"18:00",
-        "place":"מרכז ילדים-הורים",
-        "details":"אין",
-        "isDone":"true"        
-      }
-    ]
-    let tasksDone=0;
-    for(let i = 0; i < 3; i++){
-      if(allTasks[i]['isDone']=='true'){
-        tasksDone++;
-      }
-      tasks.push(
-        <View key = {i}>
-            <View style={styles.task}>
-              <View style={styles.field}>
-                <View style={styles.temp}>
-                  <Text>משימה</Text>
-                </View>
-                <View style={styles.temp}>
-                  <Text>{allTasks[i]['title']}</Text>
-                </View>
-              </View>
-              <View style={styles.field}>
-              <View style={styles.temp}>
-                <Text>זמן</Text>
-                </View>
-                <View style={styles.temp}>
-                <Text>{allTasks[i]['time']}</Text>
-                </View>
-              </View>
-              <View style={styles.field}>
-                <View style={styles.temp}>
-                  <Text>מקום</Text>
-                </View>
-                <View style={styles.temp}>
-                  <Text>{allTasks[i]['place']}</Text>
-                </View>
-              </View>
-              <View style={styles.field}>
-              <View style={styles.temp}>
-                <Text>פרטים</Text>
-                </View>
-                <View style={styles.temp}>
-                <Text>{allTasks[i]['details']}</Text>
-                </View>
-              </View>
-              <View style={styles.field}>
-              <View style={styles.temp}>
-                <Text>המשימה בוצעה</Text>
-                </View>
-                <View style={styles.temp}>
-                <Switch/>
-                </View>
-              </View>
-              </View>
-
-
-        </View>
-        
-      )
-    }
+    // const { selectedIndex } = this.state
 
   return (
+      <View style={styles.container}>
+        <ScrollView>
       
-  <ScrollView>
- 
-    <View style={styles.container}>
-      {/* <ButtonGroup
-        onPress={this.updateIndex}
-        selectedIndex={selectedIndex}
-        buttons={buttons}
-        containerStyle={{height: 50}}
-      /> */}
+          <View style={styles.container}>
+            {/* <ButtonGroup
+              onPress={this.updateIndex}
+              selectedIndex={selectedIndex}
+              buttons={buttons}
+              containerStyle={{height: 50,borderRadius:6} }
+            /> */}
 
-        <ProgressBarAndroid
-          styleAttr="Horizontal"
-          indeterminate={false}
-          progress={tasksDone/allTasks.length}
-        />            
-          { tasks }
-        </View>
-      </ScrollView>
+
+              {/* <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={false}
+                progress={tasksDone/allTasks.length}
+              />             */}
+
+                {/* { tasks } */}
+
+              <Accordion/>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -132,7 +54,7 @@ export default class KidsMainPage extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#8b96d9',
     // alignItems: 'center',
     justifyContent: 'center',
     paddingTop:15,
@@ -173,3 +95,4 @@ const styles = StyleSheet.create({
     textAlign:'left'
   }
 });
+

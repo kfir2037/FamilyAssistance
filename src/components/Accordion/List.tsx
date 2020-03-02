@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text,Switch,Image, TouchableWithoutFeedback } from "react-native";
 import { CheckBox } from 'react-native-elements'
 import Animated, { Easing } from "react-native-reanimated";
 import { bInterpolate, bin, useTransition } from "react-native-redash";
 import Chevron from "./Chevron";
 import Item, { LIST_ITEM_HEIGHT, ListItem } from "./ListItem";
-
+import {images} from '../ImagesClass'
 const { not, interpolate } = Animated;
 const styles = StyleSheet.create({
   container: {
@@ -24,18 +24,43 @@ const styles = StyleSheet.create({
   },
   items: {
     overflow: "hidden"
+  },
+  image:{
+    width:50,
+    height:50,
   }
 });
 
 export interface List {
   name: string;
   items: ListItem[];
+  picture:string;
   test:string;
 }
 
 interface ListProps {
   list: List;
 }
+
+// const images = {
+//   sun: {
+//     imgName: 'sun', 
+//     uri: "../icons/sun.jpg"
+//   },
+//   moon: {
+//     imgName: 'moon', 
+//     uri: '../icons/moon.png'
+//   },
+//   lunch: {
+//     imgName: 'lunch', 
+//     uri: '../icons/lunch.png'
+//   },
+//   games: {
+//     imgName: 'games', 
+//     uri: '../icons/games.jpg'
+//   },
+
+// }
 
 export default ({ list }: ListProps) => {
   const [open, setOpen] = useState(false);
@@ -56,6 +81,15 @@ export default ({ list }: ListProps) => {
     outputRange: [8, 0]
   });
 
+  
+  // if (list.picture==images.sun.imgName){
+  //  pic = images.sun.uri
+  // }
+  // alert("list.picture: "+list.picture)
+  // alert("pic: "+pic)
+  // alert("images.sun.imgName: "+images.sun.imgName)
+  
+let pic =images.sun.uri;
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setOpen(prev => !prev)}>
@@ -65,22 +99,24 @@ export default ({ list }: ListProps) => {
             {
               borderBottomLeftRadius: bottomRadius,
               borderBottomRightRadius: bottomRadius
-            }
+            }          
           ]}
         >          
-
+        
           <Text style={styles.title}>{list.items[0]['points']}</Text>
-          {/* <Text style={styles.title}>Total Points</Text> */}
+          {/* <Image style={styles.image} source={require(pic)} /> */}
+          
+          <Image style={styles.image} source={require('../icons/sun.jpg')} />
           <Chevron {...{ transition }} />
-        </Animated.View>
+          </Animated.View>
         
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, { height }]}>
         {list.items.map((item, key) => (
           <Item {...{ item, key }} isLast={key === list.items.length - 1} />
-
         ))}
       </Animated.View>
+
     </>
   );
 };

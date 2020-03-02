@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text,Switch,Image, View } from "react-native";
 
 import List, { List as ListModel } from "./List";
-
+import { Suspense } from "react";
 
 // const list: ListModel = {
 //   name: "Total Points",
@@ -19,37 +19,45 @@ import List, { List as ListModel } from "./List";
 let allTasks=[
   {
     "id":1,
-    "title":"מקלחת",
+    "title":"משימות בוקר",
     "time":"11:30",
     "place":"בית",
     "details":"לקלח עם סבון",
-    "isDone":"false"  
+    "isDone":"false",
+    "picture":'sun.jpg'
   },
   {
     "id":2,
-    "title":"אסיפת הורים",
+    "title":"משימות צהריים",
     "time":"17:00",
     "place":"בית ספר",
     "details":"לבוא רבע שעה לפני",
-    "isDone":"true"            
+    "isDone":"true",
+    "picture":'lunch.png'           
   },
   {
     "id":3,
-    "title":"לבוא לפגישה עם עו''ס",
+    "title":"משימות אחר הצהריים",
     "time":"18:00",
     "place":"מרכז ילדים-הורים",
     "details":"אין",
-    "isDone":"true"        
+    "isDone":"true",
+    "picture":'games.jpg'
+        
   },
   {
     "id":4,
-    "title":"להאכיל את הילדים",
+    "title":"משימות ערב",
     "time":"19:00",
     "place":"בית",
     "details":"הם אוהבים סטייק אנטריקוט 200 גרם",
-    "isDone":"true"        
+    "isDone":"true",
+    "picture":'moon.png'
+      
   }
 ]
+
+
 
 var tasks=[];
 
@@ -64,21 +72,39 @@ for(let i = 0; i < allTasks.length; i++){
       { name: "פרטים", points: allTasks[i]['details'] },
       { name: "האם בוצע?", points: allTasks[i]['isDone'] },
     ],
+    picture:"sun",
     test:'test',
-  };
+  }; 
 
   tasks.push(
     <List key={allTasks[i]['id']} {...{ list }} />
   )
+  // tasks.push( 
+  //   <Switch key={allTasks[i]['id']+5} {...{ list }}/>
+  // )
+  let picPath = '../icons/'+'sun.jpg'
+  // let picName = allTasks[i]['picture']
+  // let fullPath = picPath+picName
+  // alert(picPath)
+  // tasks.push(
+  //   <Image source={require(picPath)} />
+  // )  
 }
 
+let date = new Date();
+let currentDate = date.getDate();
+let currentMonth = date.getMonth()+1;
+let currentYear = date.getFullYear();
+let fullDate = currentDate+'.'+currentMonth+'.'+currentYear
 export default () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>משימות להיום:</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>משימות לתאריך: </Text>
+        <Text style={styles.title}>{fullDate}</Text>
 
+      </View>
       {tasks}
-
     </View>
   );
 };
@@ -89,8 +115,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#8b96d9",
     padding: 16
   },
+  header:{
+    flexDirection:'row-reverse',
+  },
   title: {
-    fontSize: 32,
+    fontSize: 25,
     fontWeight: "bold"
   }
 });

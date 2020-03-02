@@ -33,11 +33,12 @@ export default class Form extends Component {
   }
 
   onButtonPress() {
-    const { id, password } = this.state;
-    this.setState({ errorMessage: '', loading: true });
+    this.props.navigation.navigate('SwDashboard');
+    // const { id, password } = this.state;
+    // this.setState({ errorMessage: '', loading: true });
 
-    firebase.auth().signInWithEmailAndPassword(id, password)
-      .catch(this.onLoginFail.bind(this));
+    // firebase.auth().signInWithEmailAndPassword(id, password)
+    //   .catch(this.onLoginFail.bind(this));
   }
 
   onLoginFail() {

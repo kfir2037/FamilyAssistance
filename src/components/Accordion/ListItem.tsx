@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text,Switch, View,Image } from "react-native";
 
 export const LIST_ITEM_HEIGHT = 54;
 const styles = StyleSheet.create({
@@ -41,19 +41,27 @@ interface ListItemProps {
 export default ({ item, isLast }: ListItemProps) => {
   const bottomRadius = isLast ? 8 : 0;
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          borderBottomLeftRadius: bottomRadius,
-          borderBottomRightRadius: bottomRadius
-        }
-      ]}
-    >
-      <Text style={styles.name}>{item.name}</Text>
-      <View style={styles.pointsContainer}>
-        <Text style={styles.points}>{item.points}</Text>
+    
+    <View>
+      <View
+        style={[
+          styles.container,
+          {
+            borderBottomLeftRadius: bottomRadius,
+            borderBottomRightRadius: bottomRadius
+          }
+        ]}
+        
+      >
+        <Text style={styles.name}>{item.name}</Text>
+        <View style={styles.pointsContainer}>
+            <Text style={styles.points}>{item.points}</Text>
+        </View>
+        <Switch/>
       </View>
+      
     </View>
+
   );
+
 };
