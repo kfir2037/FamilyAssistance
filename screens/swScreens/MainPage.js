@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   familiesList:{
     borderRadius:2,
-    borderWidth:5,
+    borderWidth:2,
     borderColor:'black',
     height:400,
   },
