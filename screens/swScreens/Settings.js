@@ -59,8 +59,7 @@ constructor(props){
 changeTasksToCategory = (el) => {
     console.log(el.props.name)
     if(el.props.name=='tasks1'){
-        this.setState({tasks:this.tasks1})
-        
+        this.setState({tasks:this.tasks1})        
     }
     else if(el.props.name=='tasks2'){
         this.setState({tasks:this.tasks2})
@@ -74,7 +73,6 @@ changeTasksToCategory = (el) => {
     console.log(this.state.tasks)
   }
   render() {
-
     return (
         <ScrollView>
         <View style={styles.container}>
@@ -436,11 +434,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginLeft:50,
     },
-    lineStyle:{
-        borderWidth: 0.5,
-        borderColor:'black',
-        margin:20,
-   },
+
    container2: {
         flex: 1,
         justifyContent: 'center',

@@ -4,7 +4,7 @@ import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
-import WatchTasks from '../../screens/swScreens/WatchTasks';
+import WatchTasks from '../../screens/swScreens/MainPage';
 import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
 import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
@@ -13,7 +13,7 @@ import ReportsStackNavigator from './ReportsStackNavigator'
 
 
 const SwDrawerNavigator = createDrawerNavigator({
-    Tasks:{
+    Main:{
       screen:SwStackNavigator,
     },
     AddNewFamily:{
