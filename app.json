@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FamilyAssistance",
+    "name": "Family Assistance",
     "slug": "FamilyAssistance",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -13,7 +13,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/family.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
