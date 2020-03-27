@@ -15,11 +15,11 @@
 //     }
 //     // this.updateIndex = this.updateIndex.bind(this)
 //   }
-  
+
 //   // updateIndex (selectedIndex) {
 //   //   this.setState({selectedIndex})
 //   // }
-  
+
 //   render () {
 //     const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
 //     // const { selectedIndex } = this.state
@@ -101,7 +101,7 @@
 
 
 //     //     </View>
-        
+
 //     //   )
 //     // }
 
@@ -114,7 +114,7 @@
 
 
 
-      
+
 //   // <ScrollView>
 //   //   <View style={styles.container}>
 //   //     <ButtonGroup
@@ -149,7 +149,7 @@
 //   // days:{
 //   //   flex:1,
 //   //   flexDirection:'row-reverse',
-  
+
 //   // },
 //   // button:{
 //   //   alignItems: 'center',
@@ -248,38 +248,38 @@
 
 
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,Button } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
 
 export default class MainPage extends Component {
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
-      this.state = {
-        loading: false,
-        data: [],
-      };
-    }
+    this.state = {
+      loading: false,
+      data: [],
+    };
+  }
 
   itemsSelected = (selectedItem) => {
     console.log(selectedItem);
   }
 
-    componentDidMount() {
+  componentDidMount() {
     const arr = [
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
-      {name:'kfir',email:'asdfasdf'},
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
+      { name: 'kfir', email: 'asdfasdf' },
     ]
-    this.setState({data:arr})
+    this.setState({ data: arr })
   }
-  test(num){
+  test(num) {
     console.log(num)
   }
 
@@ -300,58 +300,58 @@ export default class MainPage extends Component {
     </View>
   )
 
-render(){
-  return(
-    <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.header}>
-          <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
+  render() {
+    return (
+      <>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
           </View>
-      <View style={styles.familiesList}>
-        <ScrollView>
-        <SelectableFlatlist
-          data={this.state.data}
-          state={STATE.EDIT}
-          multiSelect={false}
-          itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
-          initialSelectedIndex={[0]}
-          cellItemComponent={(item, otherProps) => this.rowItem(item)}
-        />
-        </ScrollView>
-      </View>
-      <View>
-      <View style={styles.twoFirstButtons}>
-        <View style={styles.buttons}>
-        <Button            
-              title= "הסרת משפחה"
-            />
-        </View>
-        <View style={styles.buttons}>
-        <Button      
-            onPress={()=>this.props.navigation.navigate('Tasks2')}           
-              title="משימות"
-            />
-        </View>
-      </View>
-      <View style={styles.button}>
-        <Button
-          title="צפייה בפרטי המשפחה"
-        />
-      </View>
-      <View style={styles.button}>
-        <Button
-        onPress={()=>this.props.navigation.navigate('AddNewFamily')}
-          title="הוספת משפחה חדשה"
-        />
-      </View>
-      </View>
+          <View style={styles.familiesList}>
+            
+              <SelectableFlatlist
+                data={this.state.data}
+                state={STATE.EDIT}
+                multiSelect={false}
+                itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
+                initialSelectedIndex={[0]}
+                cellItemComponent={(item, otherProps) => this.rowItem(item)}
+              />
+            
+          </View>
+          <View>
+            <View style={styles.twoFirstButtons}>
+              <View style={styles.buttons}>
+                <Button
+                  title="הסרת משפחה"
+                />
+              </View>
+              <View style={styles.buttons}>
+                <Button
+                  onPress={() => this.props.navigation.navigate('Tasks2')}
+                  title="משימות"
+                />
+              </View>
+            </View>
+            <View style={styles.button}>
+              <Button
+                title="צפייה בפרטי המשפחה"
+              />
+            </View>
+            <View style={styles.button}>
+              <Button
+                onPress={() => this.props.navigation.navigate('AddNewFamily')}
+                title="הוספת משפחה חדשה"
+              />
+            </View>
+          </View>
 
-      
-    </View>
 
-    </ScrollView>
-  )
-}
+        </View>
+
+      </>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -361,32 +361,32 @@ const styles = StyleSheet.create({
     // alignItems:'center'
 
   },
-  familiesList:{
-    borderRadius:2,
-    borderWidth:2,
-    borderColor:'black',
-    height:400,
+  familiesList: {
+    borderRadius: 2,
+    borderWidth: 2,
+    borderColor: 'black',
+    height: 400,
   },
-    titleText: {
+  titleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingBottom:20,
+    paddingBottom: 20,
   },
-  header:{
-    alignItems:'center',
+  header: {
+    alignItems: 'center',
   },
-  twoFirstButtons:{
-    flexDirection:'row-reverse',
-    flex:1,
+  twoFirstButtons: {
+    flexDirection: 'row-reverse',
+    flex: 1,
   },
-  buttons:{
-    width:150,
-    margin:25
+  buttons: {
+    width: 150,
+    margin: 25
   },
-  button:{
-    width:350,
-    margin:20,
-    alignItems:'center'
+  button: {
+    width: 350,
+    margin: 20,
+    alignItems: 'center'
     // alignContent:'center'
   }
 
