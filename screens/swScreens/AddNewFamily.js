@@ -8,7 +8,7 @@ const AddNewFamily = () => {
   const [MotherName, setMotherName] = useState("");
   const [FatherName, setFatherName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [ID, setID] = useState("");
+  const [numOfPersons, setNumOfPersons] = useState("");
   const [Email, setEmail] = useState("");
   const [Phone, setPhone] = useState("");
   const [Password, setPassword] = useState("");
@@ -80,7 +80,7 @@ const AddNewFamily = () => {
               <Text style={styles.text} >תעודת זהות</Text>
             </View>
             <View style={styles.fields}>
-              <TextInput onChangeText={setID} placeholder='123456789'></TextInput>
+              <TextInput onChangeText={setNumOfPersons} placeholder='123456789'></TextInput>
             </View>
           </View>
         </View>
@@ -128,18 +128,16 @@ const AddNewFamily = () => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            console.log("ButtonPressed " + ID);
-            var createUser = firebase.functions().httpsCallable('createUser');
+            console.log("ButtonPressed " + numOfPersons);
+            var createFamily = firebase.functions().httpsCallable('createFamily');
             console.log(133);
-            var user = {
-              firstName: "yossi",
-              lastName: "cohen",
-              password: "123456",
-              email: "moshe@gmail.com",
-              role: "sw"
+            var family = {
+              familyName: LastName,
+              numOfPersons
+
             }
             console.log(141);
-            createUser(user)
+            createFamily(family)
               .then(function (resp) {
                 //Display success
                 console.log(resp.data.result);
@@ -150,15 +148,6 @@ const AddNewFamily = () => {
                 //Display error
                 console.log(code + ' ' + message);
               });
-            // firebase.database().ref('families/'+{ID}).set({
-            //   motherName:MotherName,
-            //   fatherName:FatherName,
-            //   lastName:LastName,
-            //   email:Email,
-            //   phone:Phone,
-            //   password:Password,
-            //   vpassword:RePassword
-            // })
           }}
         >
           <Text style={styles.buttonText}> הוסף </Text>

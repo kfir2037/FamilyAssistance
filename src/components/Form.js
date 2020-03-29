@@ -34,11 +34,11 @@ export default class Form extends Component {
 
   onButtonPress() {
 
-    // const { id, password } = this.state;
-    // this.setState({ errorMessage: '', loading: true });
+    const { id, password } = this.state;
+    this.setState({ errorMessage: '', loading: true });
 
-    // firebase.auth().signInWithEmailAndPassword(id, password)
-    //   .catch(this.onLoginFail.bind(this));
+    firebase.auth().signInWithEmailAndPassword(id, password)
+      .catch(this.onLoginFail.bind(this));
 
     // var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
     // users.get().then(function (doc) {
@@ -52,7 +52,7 @@ export default class Form extends Component {
     //   console.log("Error getting document:", error);
     // });
 
-    this.props.navigation.navigate('SwDashboard');
+    //this.props.navigation.navigate('SwDashboard');
   }
 
   onLoginFail() {

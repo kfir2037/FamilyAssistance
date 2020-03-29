@@ -308,16 +308,16 @@ export default class MainPage extends Component {
             <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
           </View>
           <View style={styles.familiesList}>
-            
-              <SelectableFlatlist
-                data={this.state.data}
-                state={STATE.EDIT}
-                multiSelect={false}
-                itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
-                initialSelectedIndex={[0]}
-                cellItemComponent={(item, otherProps) => this.rowItem(item)}
-              />
-            
+
+            <SelectableFlatlist
+              data={this.state.data}
+              state={STATE.EDIT}
+              multiSelect={false}
+              itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
+              initialSelectedIndex={[0]}
+              cellItemComponent={(item, otherProps) => this.rowItem(item)}
+            />
+
           </View>
           <View>
             <View style={styles.twoFirstButtons}>
@@ -357,7 +357,7 @@ export default class MainPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 40
     // alignItems:'center'
 
   },
@@ -365,19 +365,19 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderWidth: 2,
     borderColor: 'black',
-    height: 400,
+    height: 400
   },
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   header: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   twoFirstButtons: {
     flexDirection: 'row-reverse',
-    flex: 1,
+    //flex: 1
   },
   buttons: {
     width: 150,
