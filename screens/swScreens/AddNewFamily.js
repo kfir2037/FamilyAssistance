@@ -72,7 +72,7 @@ const AddNewFamily = () => {
               <Text style={styles.text} >שם משפחה</Text>
             </View>
             <View style={styles.fields}>
-              <TextInput onChangeText={(LastName) => setLastName({ LastName })} placeholder='שם משפחה'></TextInput>
+              <TextInput onChangeText={(LastName) => setLastName(LastName)} placeholder='שם משפחה'></TextInput>
             </View>
           </View>
           <View style={styles.names}>
