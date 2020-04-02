@@ -53,8 +53,25 @@ export default class Form extends Component {
     // const { id, password } = this.state;
     // this.setState({ errorMessage: '', loading: true });
 
-    // firebase.auth().signInWithEmailAndPassword(id, password)
-    //   .catch(this.onLoginFail.bind(this));
+    const { id, password } = this.state;
+    this.setState({ errorMessage: '', loading: true });
+
+    firebase.auth().signInWithEmailAndPassword(id, password)
+      .catch(this.onLoginFail.bind(this));
+
+    // var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
+    // users.get().then(function (doc) {
+    //   if (doc.exists) {
+    //     console.log("Document data:", doc.data());
+    //   } else {
+    //     // doc.data() will be undefined in this case
+    //     console.log("No such document!");
+    //   }
+    // }).catch(function (error) {
+    //   console.log("Error getting document:", error);
+    // });
+
+    //this.props.navigation.navigate('SwDashboard');
   }
 
   onLoginFail() {
@@ -140,7 +157,7 @@ const styles = StyleSheet.create({
 
   inputBox: {
     width: 300,
-    height:40,
+    height: 40,
     backgroundColor: 'rgba(255, 255,255,0.2)',
     borderRadius: 22,
     paddingHorizontal: 16,
