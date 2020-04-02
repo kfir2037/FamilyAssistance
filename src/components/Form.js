@@ -34,6 +34,22 @@ export default class Form extends Component {
 
   onButtonPress() {
     this.props.navigation.navigate('SwDashboard');
+
+    var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
+    users.get().then(function (doc) {
+      if (doc.exists) {
+        console.log("Document data:", doc.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+
+
+
+
     // const { id, password } = this.state;
     // this.setState({ errorMessage: '', loading: true });
 
