@@ -252,6 +252,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
+import firebase from '../../config/config';
 
 export default class MainPage extends Component {
   constructor(props) {
@@ -262,25 +263,27 @@ export default class MainPage extends Component {
       data: [],
     };
   }
-
+ 
   itemsSelected = (selectedItem) => {
-    console.log(selectedItem);
+    // console.log(selectedItem);
   }
 
   componentDidMount() {
     const arr = [
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
-      { name: 'kfir', email: 'asdfasdf' },
+      { name: '1', email: 'asdfasdf' },
+      { name: '2', email: 'asdfasdf' },
+      { name: '3', email: 'asdfasdf' },
+      { name: '4', email: 'asdfasdf' },
+      { name: '5', email: 'asdfasdf' },
+      { name: '6', email: 'asdfasdf' },
+      { name: '7', email: 'asdfasdf' },
     ]
-    this.setState({ data: arr })
+    // this.setState({ data: arr })
+    families = getFamilies();
+    // this.setState({data:families})
   }
   test(num) {
-    console.log(num)
+    // console.log(num)
   }
 
   rowItem = (item) => (
@@ -303,6 +306,7 @@ export default class MainPage extends Component {
   render() {
     return (
       <>
+      <ScrollView>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
@@ -348,12 +352,82 @@ export default class MainPage extends Component {
 
 
         </View>
+        </ScrollView>
 
       </>
     )
   }
 }
+const getFamilies = ()=>{
+  allFamilies=[]
+  familyObj={}
+  const socialWorkerUid = firebase.auth().currentUser['uid'];
+  // var families = firebase.firestore().collection('users').doc(socialWorkerUid);
+  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',families);
+  let SocialWorker = firebase.firestore().collection('users').doc(socialWorkerUid);
+  let getDoc = SocialWorker.get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('No such document!');
+      } else {
+        allFamilies=doc.data().families;
+        console.log('allfamilies1'+self.allFamilies);
+        console.log('Document data:', doc.data().families);
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+    });
+    console.log('allfamilies2'+self.allFamilies);
 
+    familiesFromDB = firebase.firestore().collection('families')
+
+    allFamilies.forEach((family)=>{
+      var swFamilies = familiesFromDB.doc(family); 
+      console.log('family'+family);
+      swFamilies.get()
+      .then(doc2=>{
+        if(!doc2.exists){
+          console.log('No such document!');
+        }else{
+          console.log('family Data'+doc2.data())
+        }
+      })
+      .catch(err2=>{
+        console.log('Error getting document', err);
+
+      })
+
+
+    })
+
+  // families.get().then(function (doc) {
+  //     if (doc.exists) {
+  //       doc.data()['families'].forEach((family)=>{
+  //           var swFamilies = firebase.firestore().collection('families').doc(family).data();
+  //           console.log("1^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",swFamilies);
+  //           swFamilies.get().then(function(doc){
+  //             // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',doc['proto']['fields']['childs']['mapValue']['fields']);
+  //             if(doc.exists){
+  //               familyObj.lastName = doc['lastName'];
+  //               console.log("*********************",doc.lastName)
+  //               // doc.data()['childs'].forEach
+  //             }
+  //           })
+  //       })
+  //       // console.log("Document data:", doc.data()['families']);
+  //     } else {
+  //       // doc.data() will be undefined in this case
+  //       // console.log("No such document!");
+  //     }
+  //   }).catch(function (error) {
+  //     // console.log("Error getting document:", error);
+  //   });
+  return allFamilies;
+
+  // var families = firebase.firestore().collection('users').doc(socialWorker.id).families;
+  
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
