@@ -3,7 +3,6 @@
     "name": "Family Assistance",
     "slug": "FamilyAssistance",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
@@ -26,7 +25,6 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
-    }
+    "android": {}
   }
 }
