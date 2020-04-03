@@ -24,7 +24,8 @@ export default class Form extends Component {
 
     var that = this;
     firebase.auth().onAuthStateChanged(function (user) {
-      user = firebase.auth().currentUser;
+      user = firebase.auth().currentUser.uid;
+      console.log(user);
       if (user) {
         that.props.navigation.navigate('SwDashboard');
       } else {
@@ -33,29 +34,14 @@ export default class Form extends Component {
   }
 
   onButtonPress() {
-    this.props.navigation.navigate('SwDashboard');
-
-    var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
-    users.get().then(function (doc) {
-      if (doc.exists) {
-        console.log("Document data:", doc.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
-
-
-
+    //this.props.navigation.navigate('SwDashboard');
 
     // const { id, password } = this.state;
     // this.setState({ errorMessage: '', loading: true });
 
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
-
+    
     firebase.auth().signInWithEmailAndPassword(id, password)
       .catch(this.onLoginFail.bind(this));
 
