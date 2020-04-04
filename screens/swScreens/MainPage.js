@@ -263,7 +263,7 @@ export default class MainPage extends Component {
       data: [],
     };
   }
- 
+
   itemsSelected = (selectedItem) => {
     // console.log(selectedItem);
   }
@@ -282,11 +282,12 @@ export default class MainPage extends Component {
     families = getFamilies();
     // this.setState({data:families})
   }
+
   test(num) {
     // console.log(num)
   }
 
-  rowItem = (item) => (
+  rowItem = (item) => {
     <View
       style={{
         flex: 1,
@@ -301,18 +302,16 @@ export default class MainPage extends Component {
       <Text>{item.email}</Text>
 
     </View>
-  )
+  }
 
   render() {
     return (
       <>
-      <ScrollView>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
           </View>
           <View style={styles.familiesList}>
-
             <SelectableFlatlist
               data={this.state.data}
               state={STATE.EDIT}
@@ -321,7 +320,6 @@ export default class MainPage extends Component {
               initialSelectedIndex={[0]}
               cellItemComponent={(item, otherProps) => this.rowItem(item)}
             />
-
           </View>
           <View>
             <View style={styles.twoFirstButtons}>
@@ -349,57 +347,66 @@ export default class MainPage extends Component {
               />
             </View>
           </View>
-
-
         </View>
-        </ScrollView>
-
       </>
     )
   }
 }
-const getFamilies = ()=>{
-  allFamilies=[]
-  familyObj={}
+
+const getFamilies = () => {
+  allFamilies = []
+  familyObj = {}
   const socialWorkerUid = firebase.auth().currentUser['uid'];
+  console.log('socialWorkerId ' + socialWorkerUid);
+
+  const swFamilies = firebase.firestore().collection('families').where('swInCharge', '==', socialWorkerUid)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(doc.id, " => ", doc.data());
+      });
+    })
+    .catch(error => {
+      console.log("Error getting documents: ", error);
+    });
+
+  console.log('Query: ' + swFamilies);
   // var families = firebase.firestore().collection('users').doc(socialWorkerUid);
   // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',families);
-  let SocialWorker = firebase.firestore().collection('users').doc(socialWorkerUid);
-  let getDoc = SocialWorker.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('No such document!');
-      } else {
-        allFamilies=doc.data().families;
-        console.log('allfamilies1'+self.allFamilies);
-        console.log('Document data:', doc.data().families);
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
-    });
-    console.log('allfamilies2'+self.allFamilies);
+  // let SocialWorker = firebase.firestore().collection('users').doc(socialWorkerUid);
+  // let getDoc = await SocialWorker.get()
+  //   .then(doc => {
+  //     if (!doc.exists) {
+  //       console.log('No such document! ');
+  //     } else {
+  //       allFamilies = doc.data().families;
+  //       console.log('allfamilies1 ' + self.allFamilies);
+  //       console.log('Document data: ', doc.data().families);
+  //     }
+  //   })
+  //   .catch(err => {
+  //     console.log('Error getting document ', err);
+  //   });
+  // console.log('allfamilies2 ' + self.allFamilies);
 
-    familiesFromDB = firebase.firestore().collection('families')
+  // familiesFromDB = firebase.firestore().collection('families');
 
-    allFamilies.forEach((family)=>{
-      var swFamilies = familiesFromDB.doc(family); 
-      console.log('family'+family);
-      swFamilies.get()
-      .then(doc2=>{
-        if(!doc2.exists){
-          console.log('No such document!');
-        }else{
-          console.log('family Data'+doc2.data())
-        }
-      })
-      .catch(err2=>{
-        console.log('Error getting document', err);
+  // allFamilies.forEach((family) => {
+  //   var swFamilies = familiesFromDB.doc(family);
+  //   console.log('family ' + family);
+  //   swFamilies.get()
+  //     .then(doc2 => {
+  //       if (!doc2.exists) {
+  //         console.log('No such document!');
+  //       } else {
+  //         console.log('family Data ' + doc2.data())
+  //       }
+  //     })
+  //     .catch(err2 => {
+  //       console.log('Error getting document', err);
+  //     })
 
-      })
-
-
-    })
+  // })
 
   // families.get().then(function (doc) {
   //     if (doc.exists) {
@@ -426,7 +433,7 @@ const getFamilies = ()=>{
   return allFamilies;
 
   // var families = firebase.firestore().collection('users').doc(socialWorker.id).families;
-  
+
 }
 const styles = StyleSheet.create({
   container: {

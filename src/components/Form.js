@@ -24,11 +24,15 @@ export default class Form extends Component {
 
     var that = this;
     firebase.auth().onAuthStateChanged(function (user) {
-      user = firebase.auth().currentUser.uid;
-      console.log(user);
-      if (user) {
-        that.props.navigation.navigate('SwDashboard');
-      } else {
+      try {
+        user = firebase.auth().currentUser.uid;
+        console.log(user);
+        if (user) {
+          that.props.navigation.navigate('SwDashboard');
+        } else {
+        }
+      }catch {
+        console.log('error get current user');
       }
     });
   }
@@ -41,7 +45,7 @@ export default class Form extends Component {
 
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
-    
+
     firebase.auth().signInWithEmailAndPassword(id, password)
       .catch(this.onLoginFail.bind(this));
 
