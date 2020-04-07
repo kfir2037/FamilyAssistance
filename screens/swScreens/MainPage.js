@@ -265,26 +265,34 @@ export default class MainPage extends Component {
   }
 
   itemsSelected = (selectedItem) => {
-    // console.log(selectedItem);
+    console.log(selectedItem);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const arr = [
-      { name: '1', email: 'asdfasdf' },
-      { name: '2', email: 'asdfasdf' },
-      { name: '3', email: 'asdfasdf' },
-      { name: '4', email: 'asdfasdf' },
-      { name: '5', email: 'asdfasdf' },
-      { name: '6', email: 'asdfasdf' },
-      { name: '7', email: 'asdfasdf' },
+      // { name: '1', email: 'asdfasdf' },
+      // { name: '2', email: 'asdfasdf' },
+      // { name: '3', email: 'asdfasdf' },
+      // { name: '4', email: 'asdfasdf' },
+      // { name: '5', email: 'asdfasdf' },
+      // { name: '6', email: 'asdfasdf' },
+      // { name: '7', email: 'asdfasdf' },
     ]
     // this.setState({ data: arr })
-    families = getFamilies();
-    // this.setState({data:families})
+    let families = await getFamilies();
+    console.log('families: ', families);
+    for(let key in families){
+      arr.push({
+        uid:key , details:families[key]
+      })
+    }
+    console.log('arr: ', arr);
+
+    this.setState({data:arr})
   }
 
   test(num) {
-    // console.log(num)
+    console.log(num)
   }
 
   rowItem = (item) => {
@@ -298,8 +306,8 @@ export default class MainPage extends Component {
         borderBottomColor: '##dfdfdf'
       }}
     >
-      <Text>{item.name}</Text>
-      <Text>{item.email}</Text>
+      <Text>{item.uid}</Text>
+      <Text>{item.details}</Text>
 
     </View>
   }
@@ -353,24 +361,28 @@ export default class MainPage extends Component {
   }
 }
 
-const getFamilies = () => {
+ async function getFamilies ()  {
   allFamilies = []
   familyObj = {}
   const socialWorkerUid = firebase.auth().currentUser['uid'];
   console.log('socialWorkerId ' + socialWorkerUid);
 
-  const swFamilies = firebase.firestore().collection('families').where('swInCharge', '==', socialWorkerUid)
+  const swFamilies = await firebase.firestore().collection('families').where('swInCharge', '==', socialWorkerUid)
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        console.log(doc.id, " => ", doc.data());
+        // console.log(doc.id, " => ", doc.data());
+        familyObj[doc.id] = Object.assign({},doc.data());
+        console.log('familyObj[doc.id]: ',familyObj[doc.id]);
       });
     })
     .catch(error => {
       console.log("Error getting documents: ", error);
     });
 
-  console.log('Query: ' + swFamilies);
+  // console.log('Query: ' , swFamilies);
+  // console.log('familyObj: ' , JSON.stringify(familyObj));
+
   // var families = firebase.firestore().collection('users').doc(socialWorkerUid);
   // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',families);
   // let SocialWorker = firebase.firestore().collection('users').doc(socialWorkerUid);
@@ -430,7 +442,7 @@ const getFamilies = () => {
   //   }).catch(function (error) {
   //     // console.log("Error getting document:", error);
   //   });
-  return allFamilies;
+  return familyObj;
 
   // var families = firebase.firestore().collection('users').doc(socialWorker.id).families;
 

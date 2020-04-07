@@ -28,7 +28,7 @@ class Reports extends Component {
   }
   render() {
  
-    console.log(this.state.families)
+    // console.log(this.state.families)
     return (
       <View style={styles.container}>
         {/* <Text style={{fontSize:30,marginBottom:15}}> Reports </Text>
