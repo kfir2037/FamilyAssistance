@@ -59,7 +59,7 @@ export default class Settings extends Component {
         { name: "moti", age: 16 },
     ];
     changeTasksToCategory = (el) => {
-        console.log(el.props.name)
+        // console.log(el.props.name)
         if (el.props.name == 'tasks1') {
             this.setState({ tasks: this.tasks1 })
         }
