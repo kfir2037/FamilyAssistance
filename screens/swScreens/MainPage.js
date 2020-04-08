@@ -261,11 +261,14 @@ export default class MainPage extends Component {
     this.state = {
       loading: false,
       data: [],
+      familySelectedUid:'',
     };
   }
 
   itemsSelected = (selectedItem) => {
-    console.log(selectedItem);
+    // this.setState({familySelectedUid: selectedItem["uid"] })
+      console.log(selectedItem[0]);
+    
   }
 
 
@@ -369,7 +372,7 @@ export default class MainPage extends Component {
 }
 
 async function getFamilies() {
-  allFamilies = []
+  // allFamilies = []
   let familyObj = {}
   const socialWorkerUid = firebase.auth().currentUser['uid'];
   console.log('socialWorkerId ' + socialWorkerUid);
