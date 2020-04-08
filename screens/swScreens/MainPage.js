@@ -248,7 +248,7 @@
 
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, YellowBox, FlatList } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
@@ -268,7 +268,11 @@ export default class MainPage extends Component {
     console.log(selectedItem);
   }
 
+
+
   async componentDidMount() {
+    YellowBox.ignoreWarnings(['Setting a timer']);
+
     const arr = [
       // { name: '1', email: 'asdfasdf' },
       // { name: '2', email: 'asdfasdf' },
@@ -281,14 +285,14 @@ export default class MainPage extends Component {
     // this.setState({ data: arr })
     let families = await getFamilies();
     console.log('families: ', families);
-    for(let key in families){
+    for (let key in families) {
       arr.push({
-        uid:key , details:families[key]
+        uid: key, details: families[key]
       })
     }
     console.log('arr: ', arr);
 
-    this.setState({data:arr})
+    this.setState({ data: arr })
   }
 
   test(num) {
@@ -296,20 +300,23 @@ export default class MainPage extends Component {
   }
 
   rowItem = (item) => {
-    <View
-      style={{
-        flex: 1,
-        borderBottomWidth: 0.5,
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        paddingVertical: 20,
-        borderBottomColor: '##dfdfdf'
-      }}
-    >
-      <Text>{item.uid}</Text>
-      <Text>{item.details}</Text>
+    return (
+      <View
+        style={{
+          flex: 1,
+          borderWidth: 3,
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          paddingVertical: 20,
+          paddingHorizontal:10,
+          borderColor: 'black'
+        }}
+      >
+        <Text>HI</Text>
+        <Text>{item['details']['lastName']}</Text>
 
-    </View>
+      </View>
+    );
   }
 
   render() {
@@ -326,7 +333,7 @@ export default class MainPage extends Component {
               multiSelect={false}
               itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
               initialSelectedIndex={[0]}
-              cellItemComponent={(item, otherProps) => this.rowItem(item)}
+              cellItemComponent={(item) => this.rowItem(item)}
             />
           </View>
           <View>
@@ -361,9 +368,9 @@ export default class MainPage extends Component {
   }
 }
 
- async function getFamilies ()  {
+async function getFamilies() {
   allFamilies = []
-  familyObj = {}
+  let familyObj = {}
   const socialWorkerUid = firebase.auth().currentUser['uid'];
   console.log('socialWorkerId ' + socialWorkerUid);
 
@@ -372,8 +379,8 @@ export default class MainPage extends Component {
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
         // console.log(doc.id, " => ", doc.data());
-        familyObj[doc.id] = Object.assign({},doc.data());
-        console.log('familyObj[doc.id]: ',familyObj[doc.id]);
+        familyObj[doc.id] = Object.assign({}, doc.data());
+        console.log('familyObj[doc.id]: ', familyObj[doc.id]);
       });
     })
     .catch(error => {
