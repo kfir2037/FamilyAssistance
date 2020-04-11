@@ -261,32 +261,59 @@ export default class MainPage extends Component {
     this.state = {
       loading: false,
       data: [],
-      familySelectedUid:'',
+      familySelectedUid: ''
     };
   }
 
   itemsSelected = (selectedItem) => {
     // this.setState({familySelectedUid: selectedItem["uid"] })
-      console.log(selectedItem[0]);
-    
+    if (typeof selectedItem[0] === "undefined") {
+      console.log('selected still undefined');
+    }
+    else {
+      console.log('selected: ', (selectedItem[0]).id);
+    }
+
   }
 
+  getFamilies = async () => {
+    let allFamilies = []
+    let familyObj = {}
+    const socialWorkerUid = firebase.auth().currentUser['uid'];
+    console.log('socialWorkerId ' + socialWorkerUid);
+
+    const swFamilies = await firebase
+      .firestore()
+      .collection('families')
+      .where('swInCharge', '==', socialWorkerUid)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          allFamilies.push(doc);
+          // this.setState(
+          //   { data: [...this.state.data, doc.data()] }
+          // );
+          // console.log(doc.id, " => ", doc.data());
+          familyObj[doc.id] = Object.assign({}, doc.data());
+          //console.log('familyObj[doc.id]: ', familyObj[doc.id]);
+        });
+        this.setState({ data: allFamilies });
+        console.log('data: ', this.state.data);
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
+
+    return allFamilies;
+  }
 
 
   async componentDidMount() {
     YellowBox.ignoreWarnings(['Setting a timer']);
 
-    const arr = [
-      // { name: '1', email: 'asdfasdf' },
-      // { name: '2', email: 'asdfasdf' },
-      // { name: '3', email: 'asdfasdf' },
-      // { name: '4', email: 'asdfasdf' },
-      // { name: '5', email: 'asdfasdf' },
-      // { name: '6', email: 'asdfasdf' },
-      // { name: '7', email: 'asdfasdf' },
-    ]
+    const arr = [];
     // this.setState({ data: arr })
-    let families = await getFamilies();
+    let families = await this.getFamilies();
     console.log('families: ', families);
     for (let key in families) {
       arr.push({
@@ -295,14 +322,11 @@ export default class MainPage extends Component {
     }
     console.log('arr: ', arr);
 
-    this.setState({ data: arr })
-  }
-
-  test(num) {
-    console.log(num)
+    //this.setState({ data: arr })
   }
 
   rowItem = (item) => {
+    //console.log('item :', item);
     return (
       <View
         style={{
@@ -311,12 +335,12 @@ export default class MainPage extends Component {
           alignItems: 'flex-end',
           justifyContent: 'center',
           paddingVertical: 20,
-          paddingHorizontal:10,
+          paddingHorizontal: 10,
           borderColor: 'black'
         }}
       >
         <Text>HI</Text>
-        <Text>{item['details']['lastName']}</Text>
+        <Text>{item.data().lastName}</Text>
 
       </View>
     );
@@ -334,7 +358,7 @@ export default class MainPage extends Component {
               data={this.state.data}
               state={STATE.EDIT}
               multiSelect={false}
-              itemsSelected={(selectedItem) => { this.itemsSelected(selectedItem); }}
+              itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
               initialSelectedIndex={[0]}
               cellItemComponent={(item) => this.rowItem(item)}
             />
@@ -371,92 +395,8 @@ export default class MainPage extends Component {
   }
 }
 
-async function getFamilies() {
-  // allFamilies = []
-  let familyObj = {}
-  const socialWorkerUid = firebase.auth().currentUser['uid'];
-  console.log('socialWorkerId ' + socialWorkerUid);
 
-  const swFamilies = await firebase.firestore().collection('families').where('swInCharge', '==', socialWorkerUid)
-    .get()
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        // console.log(doc.id, " => ", doc.data());
-        familyObj[doc.id] = Object.assign({}, doc.data());
-        console.log('familyObj[doc.id]: ', familyObj[doc.id]);
-      });
-    })
-    .catch(error => {
-      console.log("Error getting documents: ", error);
-    });
 
-  // console.log('Query: ' , swFamilies);
-  // console.log('familyObj: ' , JSON.stringify(familyObj));
-
-  // var families = firebase.firestore().collection('users').doc(socialWorkerUid);
-  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',families);
-  // let SocialWorker = firebase.firestore().collection('users').doc(socialWorkerUid);
-  // let getDoc = await SocialWorker.get()
-  //   .then(doc => {
-  //     if (!doc.exists) {
-  //       console.log('No such document! ');
-  //     } else {
-  //       allFamilies = doc.data().families;
-  //       console.log('allfamilies1 ' + self.allFamilies);
-  //       console.log('Document data: ', doc.data().families);
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log('Error getting document ', err);
-  //   });
-  // console.log('allfamilies2 ' + self.allFamilies);
-
-  // familiesFromDB = firebase.firestore().collection('families');
-
-  // allFamilies.forEach((family) => {
-  //   var swFamilies = familiesFromDB.doc(family);
-  //   console.log('family ' + family);
-  //   swFamilies.get()
-  //     .then(doc2 => {
-  //       if (!doc2.exists) {
-  //         console.log('No such document!');
-  //       } else {
-  //         console.log('family Data ' + doc2.data())
-  //       }
-  //     })
-  //     .catch(err2 => {
-  //       console.log('Error getting document', err);
-  //     })
-
-  // })
-
-  // families.get().then(function (doc) {
-  //     if (doc.exists) {
-  //       doc.data()['families'].forEach((family)=>{
-  //           var swFamilies = firebase.firestore().collection('families').doc(family).data();
-  //           console.log("1^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",swFamilies);
-  //           swFamilies.get().then(function(doc){
-  //             // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',doc['proto']['fields']['childs']['mapValue']['fields']);
-  //             if(doc.exists){
-  //               familyObj.lastName = doc['lastName'];
-  //               console.log("*********************",doc.lastName)
-  //               // doc.data()['childs'].forEach
-  //             }
-  //           })
-  //       })
-  //       // console.log("Document data:", doc.data()['families']);
-  //     } else {
-  //       // doc.data() will be undefined in this case
-  //       // console.log("No such document!");
-  //     }
-  //   }).catch(function (error) {
-  //     // console.log("Error getting document:", error);
-  //   });
-  return familyObj;
-
-  // var families = firebase.firestore().collection('users').doc(socialWorker.id).families;
-
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
