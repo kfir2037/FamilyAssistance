@@ -272,6 +272,8 @@ export default class MainPage extends Component {
     }
     else {
       console.log('selected: ', (selectedItem[0]).id);
+      this.setState({familySelectedUid: (selectedItem[0]).id })
+
     }
 
   }
@@ -290,15 +292,10 @@ export default class MainPage extends Component {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           allFamilies.push(doc);
-          // this.setState(
-          //   { data: [...this.state.data, doc.data()] }
-          // );
-          // console.log(doc.id, " => ", doc.data());
           familyObj[doc.id] = Object.assign({}, doc.data());
-          //console.log('familyObj[doc.id]: ', familyObj[doc.id]);
         });
         this.setState({ data: allFamilies });
-        console.log('data: ', this.state.data);
+        // console.log('data: ', this.state.data);
       })
       .catch(error => {
         console.log("Error getting documents: ", error);
@@ -314,13 +311,13 @@ export default class MainPage extends Component {
     const arr = [];
     // this.setState({ data: arr })
     let families = await this.getFamilies();
-    console.log('families: ', families);
+    // console.log('families: ', families);
     for (let key in families) {
       arr.push({
         uid: key, details: families[key]
       })
     }
-    console.log('arr: ', arr);
+    // console.log('arr: ', arr);
 
     //this.setState({ data: arr })
   }
@@ -372,7 +369,9 @@ export default class MainPage extends Component {
               </View>
               <View style={styles.buttons}>
                 <Button
-                  onPress={() => this.props.navigation.navigate('Tasks2')}
+                  onPress={() => this.props.navigation.navigate('Tasks2',{
+                    familyId:this.state.familySelectedUid
+                  })}
                   title="משימות"
                 />
               </View>
@@ -384,7 +383,7 @@ export default class MainPage extends Component {
             </View>
             <View style={styles.button}>
               <Button
-                onPress={() => this.props.navigation.navigate('AddNewFamily')}
+                onPress={() => this.props.navigation.navigate('AddNewFamily',)}
                 title="הוספת משפחה חדשה"
               />
             </View>
