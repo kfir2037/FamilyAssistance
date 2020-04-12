@@ -1,19 +1,142 @@
 
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image } from 'react-native';
+import { Platform, StyleSheet, Text, View,YellowBox, Image } from 'react-native';
 import DateTime from 'react-native-customize-selected-date'
 import _ from 'lodash'
+import firebase from '../../config/config';
 
 export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      time: '',
-      test:[]
+      test:'',
+      morningTasks:[],
+      noonTasks:[],
+      afternoonTasks:[],
+      eveningTasks:[],
+      customTasks:[],
     }
   }
 
+  async componentDidMount() {
+    let tasks = await this.getTasks();
+
+  }
+
+  getTasks = async () => {
+    YellowBox.ignoreWarnings(['Setting a timer']);
+
+    // let allFamilies = []
+    // let familyObj = {}
+    const familyId = this.props.navigation.state.params.familyId;
+    // console.log("familyuId: ",familyId);
+
+
+    let morningTasks = firebase.firestore().collection('RoutineTasks').doc('morning');
+
+    let getDoc = morningTasks.get()
+      .then(doc => {
+        if (!doc.exists) {
+          console.log('No such document!');
+        } else {
+          let allData = doc.data();
+          this.setState({morningTasks:allData.tasks})
+          // console.log('Document data:', this.state.morningTasks);
+        }
+      })
+      .catch(err => {
+        console.log('Error getting document', err);
+      });
+      
+      let noonTasks = firebase.firestore().collection('RoutineTasks').doc('noon');
+      getDoc = noonTasks.get()
+        .then(doc => {
+          if (!doc.exists) {
+            console.log('No such document!');
+          } else {
+            let allData = doc.data();
+            this.setState({noonTasks:allData.tasks})
+            // console.log('Document data:', this.state.noonTasks);
+          }
+        })
+        .catch(err => {
+          console.log('Error getting document', err);
+        });
+
+        let afternoonTasks = firebase.firestore().collection('RoutineTasks').doc('afterNoon');
+        getDoc = afternoonTasks.get()
+          .then(doc => {
+            if (!doc.exists) {
+              console.log('No such document!');
+            } else {
+              let allData = doc.data();
+              this.setState({afternoonTasks:allData.tasks})
+              // console.log('Document data:', this.state.afternoonTasks);
+            }
+          })
+          .catch(err => {
+            console.log('Error getting document', err);
+          });
+
+          let eveningTasks = firebase.firestore().collection('RoutineTasks').doc('evening');
+          getDoc = eveningTasks.get()
+            .then(doc => {
+              if (!doc.exists) {
+                console.log('No such document!');
+              } else {
+                let allData = doc.data();
+                this.setState({eveningTasks:allData.tasks})
+                // console.log('Document data:', this.state.eveningTasks);
+              }
+            })
+            .catch(err => {
+              console.log('Error getting document', err);
+            });
+
+            const swFamilies = await firebase
+            .firestore()
+            .collection('tasks')
+            .where('family_id', '==', familyId) 
+            .get()
+            .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                // console.log('doc: ',doc._document.key.path.segments[6]);
+                let state = this.state.customTasks;
+                state.push(doc._document)
+                this.setState({customTasks:state})
+                // console.log('custom tasks arr: ',this.state.customTasks);
+
+              });
+              // this.setState({ data: allFamilies });
+              // console.log('data: ', this.state.data);
+            })
+            .catch(error => {
+              console.log("Error getting documents: ", error);
+            });
+
+
+
+
+            // let customTasks =await firebase
+            // .firestore()
+            // .collection('tasks')
+            // .where('title', '==', 'test')
+            // // .where('family_id', '==', familyId)
+            // .get()
+            // .then(doc => {
+            //   if (!doc.exists) {
+            //     console.log('familyId: ',familyId);
+            //     console.log('No such document!');
+            //   } else {
+            //     let allData = doc.data();
+            //     console.log('customTasks:', allData);
+            //   }
+            // })
+
+
+    return familyId;
+  }
   onChangeDate(date) {
     let arr=[]
     for(let i=0;i<10;i++){
@@ -35,6 +158,16 @@ export default class App extends Component {
   }
 
   render() {
+   
+    let items = this.state.customTasks.map((item,key)=>
+      JSON.stringify(item.proto.fields.test)
+    );
+    items = items.map((item,key)=>
+      console.log(item)
+    );
+    // let items = this.state.customTasks.map((item,key)=>
+    // <Text key='1'>{item.proto.fields.test}</Text>
+    // )
     return (
       <View>
         <View style={styles.container}>
@@ -45,8 +178,17 @@ export default class App extends Component {
             renderChildDay={(day) => this.renderChildDay(day)}
           />
         </View>
-        <View style={styles.tasks}>          
-         <Text>{this.state.test}</Text>
+        <View style={styles.tasks}>    
+        <Text>משימות בוקר</Text>      
+         <Text>{this.state.morningTasks}</Text>
+         <Text>משימות צהריים</Text>      
+         <Text>{this.state.noonTasks}</Text>
+         <Text>משימות אחר הצהריים</Text>      
+         <Text>{this.state.afternoonTasks}</Text>
+         <Text>משימות ערב</Text>      
+         <Text>{this.state.eveningTasks}</Text>
+         <Text>משימות מותאמות</Text>      
+        {/* <Text>{items}</Text> */}
         </View>
         
       </View>
