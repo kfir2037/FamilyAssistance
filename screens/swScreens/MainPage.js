@@ -272,7 +272,7 @@ export default class MainPage extends Component {
     }
     else {
       console.log('selected: ', (selectedItem[0]).id);
-      this.setState({familySelectedUid: (selectedItem[0]).id })
+      this.setState({ familySelectedUid: (selectedItem[0]).id })
 
     }
 
@@ -369,8 +369,8 @@ export default class MainPage extends Component {
               </View>
               <View style={styles.buttons}>
                 <Button
-                  onPress={() => this.props.navigation.navigate('Tasks2',{
-                    familyId:this.state.familySelectedUid
+                  onPress={() => this.props.navigation.navigate('Tasks2', {
+                    familyId: this.state.familySelectedUid
                   })}
                   title="משימות"
                 />
@@ -379,11 +379,14 @@ export default class MainPage extends Component {
             <View style={styles.button}>
               <Button
                 title="צפייה בפרטי המשפחה"
+                onPress={() => this.props.navigation.navigate('WatchFamilies', {
+                  familyId: this.state.familySelectedUid
+                })}
               />
             </View>
             <View style={styles.button}>
               <Button
-                onPress={() => this.props.navigation.navigate('AddNewFamily',)}
+                onPress={() => this.props.navigation.navigate('AddNewFamily')}
                 title="הוספת משפחה חדשה"
               />
             </View>

@@ -1,34 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 
-class WatchFamilies extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
+const WatchFamilies = ({ navigation }) => {
+
+
+  const getFamily = () => {
+    const familyId = navigation.getParam('familyId');
+    console.log(familyId);
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text> Watch Families </Text>
-        <Button
-        title="go back"
-        onPress={()=>this.props.navigation.goBack()}
-        />
-      </View>
-    );
-  }
+  useEffect(() => {
+    getFamily();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Watch Families</Text>
+    </View>
+  );
+
 }
 
 export default WatchFamilies;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

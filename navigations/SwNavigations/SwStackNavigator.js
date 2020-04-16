@@ -3,16 +3,17 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import Main from '../../screens/swScreens/MainPage';
 import Icon from '@expo/vector-icons/Ionicons';
-import firebase from '../../config/config'
+import firebase from '../../config/config';
 import AddNewFamily from '../../screens/swScreens/AddNewFamily';
-import Tasks2 from '../../screens/swScreens/WatchFamiliesTasks'
-
+import Tasks2 from '../../screens/swScreens/WatchFamiliesTasks';
+import WatchFamilies from '../../screens/swScreens/WatchFamilies';
 
 
 const SwStackNavigator = createStackNavigator({
   Main: Main,
   AddNewFamily:AddNewFamily,
   Tasks2:Tasks2,
+  WatchFamilies:WatchFamilies
 },
   {
     

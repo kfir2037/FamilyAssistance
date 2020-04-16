@@ -1,13 +1,13 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 export default class Spinner extends Component {
-	render() {
-		return (
-        <View style={styles.spinnerStyle}>
-            <ActivityIndicator size='large' />
-        </View>
-    );
+    render() {
+        return (
+            <View style={styles.spinnerStyle}>
+                <ActivityIndicator size='large' />
+            </View>
+        );
     }
 };
 

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  StatusBar ,
-  TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView
@@ -15,48 +12,44 @@ import Form from '../src/components/Form';
 
 export default class Login extends Component {
 
-	render() {
-    //console.log(this.props.navigation);
-
-		return(
+  render() {
+    return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <Logo/>      
-          <Form type="Login" navigation={this.props.navigation}/>
-          <View style={styles.signupTextCont}>
-            
+          <View style={styles.container}>
+            <Logo />
+            <Form type="Login" navigation={this.props.navigation} />
+            <View style={styles.signupTextCont}>
+            </View>
           </View>
-        </View>	
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-
-		)
-	}
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'#8b96d9',
+  container: {
+    backgroundColor: '#8b96d9',
     flex: 1,
-    alignItems:'center',
-    justifyContent :'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  signupTextCont : {
-  	flexGrow: 1,
-    alignItems:'flex-end',
-    justifyContent :'center',
-    paddingVertical:16,
-    flexDirection:'row'
+  signupTextCont: {
+    flexGrow: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    flexDirection: 'row'
   },
   signupText: {
-  	color:'rgba(255,255,255,0.6)',
-  	fontSize:16
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 16
   },
   signupButton: {
-  	color:'#ffffff',
-  	fontSize:16,
-    fontWeight:'500',
-    
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '500',
+
   },
 });

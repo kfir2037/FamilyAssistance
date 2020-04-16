@@ -161,6 +161,7 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
         }
 
         data['swInCharge'] = callerUid;
+        data['status'] = 'active';
 
         const familyCreationRequestRef = await admin.firestore().collection("familyCreationRequests").add(familyCreationRequest);
 
