@@ -25,6 +25,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {}
+    "android": {},
+    "sdkVersion": "37.0.0"
   }
 }

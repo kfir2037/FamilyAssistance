@@ -1,143 +1,41 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TextInput, Alert, Switch, ProgressBarAndroid, TouchableOpacity } from 'react-native';
+import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
 import firebase from '../../config/config';
-//import admin from '../../firebase/functions/index';
-// import MenuButton from '../components/MenuButton';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+
+const FamilySchema = yup.object({
+  lastName: yup.string()
+    .required('שדה חובה')
+    .min(2,'שם המשפחה חייב להכיל לפחות 2 אותיות'),
+  numOfPersons: yup.string()
+    .required('שדה חובה')
+    .test('is-between-2-10', 'מספר הנפשות חייב להיות לפחות 2 ולכל היותר 10', (val) => {
+      return parseInt(val) < 11 && parseInt(val) > 1;
+    }),
+  email: yup.string()
+    .required('שדה חובה')
+    .email('כתובת הדוא"ל אינה תקינה'),
+  phone: yup.string()
+    .required('שדה חובה')
+    .length(10,'מספר טלפון נייד לא תקין')
+
+})
 
 const AddNewFamily = () => {
-  const [MotherName, setMotherName] = useState("");
-  const [FatherName, setFatherName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [numOfPersons, setNumOfPersons] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Phone, setPhone] = useState("");
-  const [Password, setPassword] = useState("");
-  const [RePassword, setRePassword] = useState("");
-  const [switchValue, setSwitchValue] = useState(false);
-
-  // const onButtonPress = () => {
-  //   console.log("ButtonPressed" + {ID} );
-  //   firebase.database().ref('families/'+ID).set({
-  //     motherName:MotherName,
-  //     fatherName:FatherName,
-  //     lastName:LastName,
-  //     email:Email,
-  //     phone:Phone,
-  //     password:Password,
-  //     vpassword:RePassword
-  //   })
-  // };
-
-  const Add = () => {
-    alert("kfir")
-  }
 
   return (
-    <ScrollView>
-      {/* <MenuButton navigation={props.navigation}/> */}
+    <ScrollView style={{ backgroundColor: '#b5bef5' }}>
       <View style={styles.container}>
-        {/* <ProgressBarAndroid/>
-      <ProgressBarAndroid styleAttr="Horizontal" />
-        <ProgressBarAndroid styleAttr="Horizontal" color="#2196F3" />
-        <ProgressBarAndroid
-          styleAttr="Horizontal"
-          indeterminate={false}
-          progress={0.5}
-        /> */}
-
-
-        {/* <Text style={ styles.heading }> הוספת משפחה חדשה </Text> */}
-        <Text style={styles.headlines}>פרטים אישיים:</Text>
-        {/* <FormValidationMessage>{'This field is required'}</FormValidationMessage> */}
-
-        <View style={{ backgroundColor: '#f0efed' }}>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >שם האם</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={setMotherName} placeholder='שם האם'></TextInput>
-            </View>
-          </View>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >שם האב</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(FatherName) => setFatherName({ FatherName })} placeholder='שם האב'></TextInput>
-            </View>
-          </View>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >שם משפחה</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(LastName) => setLastName(LastName)} placeholder='שם משפחה'></TextInput>
-            </View>
-          </View>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >תעודת זהות</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={setNumOfPersons} placeholder='123456789'></TextInput>
-            </View>
-          </View>
-        </View>
-
-        <Text style={styles.headlines}>פרטי קשר:</Text>
-        <View style={{ backgroundColor: '#f0efed' }}>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text}>אימייל</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(Email) => setEmail({ Email })} placeholder='name@domain.com'></TextInput>
-            </View>
-          </View>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text}>טלפון </Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(Phone) => setPhone({ Phone })} placeholder='052-1234567'></TextInput>
-            </View>
-          </View>
-        </View>
-        <Text style={styles.headlines}>פרטי התחברות: </Text>
-        <View style={{ backgroundColor: '#f0efed' }}>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >סיסמה</Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(Password) => setPassword({ Password })} placeholder='הקלד סיסמה כאן'></TextInput>
-            </View>
-          </View>
-          <View style={styles.names}>
-            <View style={styles.fields}>
-              <Text style={styles.text} >אימות סיסמה </Text>
-            </View>
-            <View style={styles.fields}>
-              <TextInput onChangeText={(RePassword) => setRePassword({ RePassword })} placeholder='הקלד שוב את הסיסמה'></TextInput>
-            </View>
-          </View>
-        </View>
-        <Text style={styles.text}>הורים גרושים</Text>
-        <Switch value={switchValue} onChangeText={(switchValue) => setSwitchValue({ switchValue })} />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            console.log("ButtonPressed " + numOfPersons);
+        <Formik
+          initialValues={{ lastName: '', numOfPersons: 0, email: '', phone: '', isSingleParent: false }}
+          validationSchema={FamilySchema}
+          onSubmit={(values, actions) => {
+            actions.resetForm();
+            console.log('values', values);
             var createFamily = firebase.functions().httpsCallable('createFamily');
-            console.log(133);
-            var family = {
-              familyName: LastName,
-              numOfPersons
-
-            }
             console.log(141);
-            createFamily(family)
+            createFamily(values)
               .then(function (resp) {
                 //Display success
                 console.log(resp.data.result);
@@ -150,8 +48,110 @@ const AddNewFamily = () => {
               });
           }}
         >
-          <Text style={styles.buttonText}> הוסף </Text>
-        </TouchableOpacity>
+          {(props) => (
+            <View>
+              <Text style={styles.headlines}> פרטי משפחה:</Text>
+              <View style={{ backgroundColor: '#8b96d9' }}>
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Text style={styles.text} >שם משפחה</Text>
+                  </View>
+                  <View style={styles.fields}>
+                    <TextInput
+                      onChangeText={props.handleChange('lastName')}
+                      value={props.values.lastName}
+                      placeholder='שם משפחה'
+                      textAlign='right'
+                      placeholderTextColor='#b5bef5'
+                      onBlur={props.handleBlur('lastName')}
+                    />
+                  </View>
+                </View>
+                {props.errors.lastName && props.touched.lastName ? <Text style={styles.errorMsg}>{props.errors.lastName}</Text> : null}
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Text style={styles.text}>מספר נפשות</Text>
+                  </View>
+                  <View style={styles.fields}>
+                    <Picker
+                      selectedValue={props.values.numOfPersons}
+                      style={{ height: 30, width: 110 }}
+                      onValueChange={props.handleChange('numOfPersons')}
+                    >
+                      <Picker.Item label='בחר/י' value='0' />
+                      <Picker.Item label='2' value='2' />
+                      <Picker.Item label='3' value='3' />
+                      <Picker.Item label='4' value='4' />
+                      <Picker.Item label='5' value='5' />
+                      <Picker.Item label='6' value='6' />
+                      <Picker.Item label='7' value='7' />
+                      <Picker.Item label='8' value='8' />
+                      <Picker.Item label='9' value='9' />
+                      <Picker.Item label='10' value='10' />
+                    </Picker>
+                  </View>
+                </View>
+                {props.errors.numOfPersons && props.touched.numOfPersons ? <Text style={styles.errorMsg}>{props.errors.numOfPersons}</Text> : null}
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Text style={styles.text}>חד הורית</Text>
+                  </View>
+                  <View style={{ alignSelf: 'center' }}>
+                    <Switch
+                      style={{ alignItems: 'center' }}
+                      value={props.values.isSingleParent}
+                      onValueChange={value => props.setFieldValue('isSingleParent', value)}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <Text style={styles.headlines}>פרטי קשר:</Text>
+              <View style={{ backgroundColor: '#8b96d9' }}>
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Text style={styles.text}>אימייל</Text>
+                  </View>
+                  <View style={styles.fields}>
+                    <TextInput
+                      onChangeText={props.handleChange('email')}
+                      value={props.values.email}
+                      placeholder='name@domain.com'
+                      placeholderTextColor='#b5bef5'
+                      onBlur={props.handleBlur('email')}
+                    />
+                  </View>
+                </View>
+                {props.errors.email && props.touched.email ? <Text style={styles.errorMsg}>{props.errors.email}</Text> : null}
+
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Text style={styles.text}>טלפון </Text>
+                  </View>
+                  <View style={styles.fields}>
+                    <TextInput
+                      keyboardType='numeric'
+                      onChangeText={props.handleChange('phone')}
+                      value={props.values.phone}
+                      placeholder='052-1234567'
+                      placeholderTextColor='#b5bef5'
+                      onBlur={props.handleBlur('phone')}
+                    />
+                  </View>
+                </View>
+                {props.errors.phone && props.touched.phone ? <Text style={styles.errorMsg}>{props.errors.phone}</Text> : null}
+              </View>
+
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={props.handleSubmit}
+              >
+                <Text style={styles.buttonText}> הוסף </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Formik>
       </View>
     </ScrollView>
 
@@ -163,12 +163,13 @@ export default AddNewFamily;
 const styles = StyleSheet.create({
   container: {
     //flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#b5bef5',
     marginBottom: 100
   },
   names: {
     flexDirection: 'row-reverse',
-    margin: 7,
+    marginVertical: 10,
+    marginHorizontal: 10,
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#d6d7da',
@@ -183,25 +184,28 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     marginVertical: 7,
-    marginRight: 7
+    marginHorizontal: 5
   },
   fields: {
-    flex: 3,
-    textAlign: 'left',
+    flex: 2,
+    textAlign: 'right',
+    marginHorizontal: 5
   },
   button: {
     width: 150,
-    backgroundColor: 'steelblue',
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#d6d7da',
+    backgroundColor: '#8b96d9',
     borderRadius: 25,
-    marginHorizontal: 110,
-    marginBottom: 30,
-    padding: 13,
-    justifyContent: 'center'
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#ffffff',
+    color: 'black',
     textAlign: 'center'
   },
   heading: {
@@ -212,6 +216,13 @@ const styles = StyleSheet.create({
     paddingTop: 25,
 
   },
+  errorMsg: {
+    marginHorizontal: 7,
+    color: 'crimson',
+    fontSize: 15,
+    fontWeight:'bold',
+    marginBottom: 5
+  }
 
 });
 

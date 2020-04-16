@@ -18,6 +18,7 @@
     "expo": "^37.0.0",
     "express": "^4.17.1",
     "firebase": "^7.6.1",
+    "formik": "^2.1.4",
     "moment": "^2.24.0",
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.3",
@@ -43,7 +44,8 @@
     "react-navigation": "^4.0.10",
     "react-navigation-drawer": "^2.3.3",
     "react-navigation-stack": "^1.10.3",
-    "react-navigation-tabs": "^2.6.2"
+    "react-navigation-tabs": "^2.6.2",
+    "yup": "^0.28.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
