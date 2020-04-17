@@ -19,12 +19,12 @@ export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      test: '',
-      morningTasks: [],
-      noonTasks: [],
-      afternoonTasks: [],
-      eveningTasks: [],
-      customTasks: [],
+      test:'',
+      morningTasks:[],
+      noonTasks:[],
+      afternoonTasks:[],
+      eveningTasks:[],
+      customTasks:[],
     }
   }
 
@@ -54,81 +54,28 @@ export default class App extends Component {
           console.log('No such document!');
         } else {
           let allData = doc.data();
-          this.setState({ morningTasks: allData.tasks })
+          this.setState({morningTasks:allData.tasks})
           // console.log('Document data:', this.state.morningTasks);
         }
       })
       .catch(err => {
         console.log('Error getting document', err);
       });
-
-    let noonTasks = firebase.firestore().collection('RoutineTasks').doc('noon');
-    getDoc = noonTasks.get()
-      .then(doc => {
-        if (!doc.exists) {
-          console.log('No such document!');
-        } else {
-          let allData = doc.data();
-          this.setState({ noonTasks: allData.tasks })
-          // console.log('Document data:', this.state.noonTasks);
-        }
-      })
-      .catch(err => {
-        console.log('Error getting document', err);
-      });
-
-    let afternoonTasks = firebase.firestore().collection('RoutineTasks').doc('afterNoon');
-    getDoc = afternoonTasks.get()
-      .then(doc => {
-        if (!doc.exists) {
-          console.log('No such document!');
-        } else {
-          let allData = doc.data();
-          this.setState({ afternoonTasks: allData.tasks })
-          // console.log('Document data:', this.state.afternoonTasks);
-        }
-      })
-      .catch(err => {
-        console.log('Error getting document', err);
-      });
-
-    let eveningTasks = firebase.firestore().collection('RoutineTasks').doc('evening');
-    getDoc = eveningTasks.get()
-      .then(doc => {
-        if (!doc.exists) {
-          console.log('No such document!');
-        } else {
-          let allData = doc.data();
-          this.setState({ eveningTasks: allData.tasks })
-          // console.log('Document data:', this.state.eveningTasks);
-        }
-      })
-      .catch(err => {
-        console.log('Error getting document', err);
-      });
-
-    const swFamilies = await firebase
-      .firestore()
-      .collection('tasks')
-      .where('family_id', '==', familyId)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          // console.log('doc: ',doc._document.key.path.segments[6]);
-          let state = this.state.customTasks;
-          state.push(doc._document)
-          this.setState({ customTasks: state })
-          // console.log('custom tasks arr: ',this.state.customTasks);
-
+      
+      let noonTasks = firebase.firestore().collection('RoutineTasks').doc('noon');
+      getDoc = noonTasks.get()
+        .then(doc => {
+          if (!doc.exists) {
+            console.log('No such document!');
+          } else {
+            let allData = doc.data();
+            this.setState({noonTasks:allData.tasks})
+            // console.log('Document data:', this.state.noonTasks);
+          }
+        })
+        .catch(err => {
+          console.log('Error getting document', err);
         });
-        // this.setState({ data: allFamilies });
-        // console.log('data: ', this.state.data);
-      })
-      .catch(error => {
-        console.log("Error getting documents: ", error);
-      });
-
-
 
         let afternoonTasks = firebase.firestore().collection('RoutineTasks').doc('afterNoon');
         getDoc = afternoonTasks.get()
@@ -312,17 +259,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  tasks: {
-    alignItems: "center",
-    color: 'green',
+  tasks:{
+    alignItems:"center",
+    color:'green',
     width: 400,
-    height: 250,
-    alignSelf: 'center',
+    height:250,
+    alignSelf:'center',
     borderWidth: 3,
-    bottom: -400,
-    flex: 3,
+    bottom:-400,
+    flex:3,
 
-
+    
   },
   tasksTitle:{
     fontSize:20,
