@@ -17,7 +17,7 @@ const task = (props)=>{
     return (
     <TouchableHighlight >
         <View>
-            <Text>{props.task.name}</Text>
+            <Text>{props.task}</Text>
         </View>
     </TouchableHighlight >
     )

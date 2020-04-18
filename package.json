@@ -32,6 +32,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "~1.6.0",
+    "react-native-list-view-select": "^1.0.4",
     "react-native-numeric-input": "^1.8.3",
     "react-native-picker-select": "^6.5.0",
     "react-native-reanimated": "~1.7.0",
@@ -51,7 +52,8 @@
     "@types/cors": "^2.8.6",
     "babel-preset-expo": "^8.1.0",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "react-native-select-lists": "^1.0.1"
   },
   "private": true
 }
