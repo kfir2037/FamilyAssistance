@@ -253,6 +253,7 @@ import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
 import firebase from '../../config/config';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default class MainPage extends Component {
   constructor(props) {
@@ -328,12 +329,13 @@ export default class MainPage extends Component {
       <View
         style={{
           flex: 1,
-          borderWidth: 3,
+          backgroundColor: '#b5bef5',
+          //borderWidth: 1,
           alignItems: 'flex-end',
           justifyContent: 'center',
           paddingVertical: 20,
           paddingHorizontal: 10,
-          borderColor: 'black'
+          borderColor: '#767ead'
         }}
       >
         <Text>HI</Text>
@@ -358,13 +360,17 @@ export default class MainPage extends Component {
               itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
               initialSelectedIndex={[0]}
               cellItemComponent={(item) => this.rowItem(item)}
+              checkIcon={()=> <FontAwesome name='circle' size={25} color='#767ead' />}
+              uncheckIcon= {()=> <FontAwesome name='circle-o' size={25} color='#767ead' />}
+              touchStyles={{backgroundColor:'#b5bef5'}}
             />
           </View>
-          <View>
+          <View style={{ flexDirection: 'column' }}>
             <View style={styles.twoFirstButtons}>
               <View style={styles.buttons}>
                 <Button
                   title="הסרת משפחה"
+                  color='#767ead'
                 />
               </View>
               <View style={styles.buttons}>
@@ -373,22 +379,27 @@ export default class MainPage extends Component {
                     familyId: this.state.familySelectedUid
                   })}
                   title="משימות"
+                  color='#767ead'
                 />
               </View>
             </View>
-            <View style={styles.button}>
-              <Button
-                title="צפייה בפרטי המשפחה"
-                onPress={() => this.props.navigation.navigate('WatchFamilies', {
-                  familyId: this.state.familySelectedUid
-                })}
-              />
-            </View>
-            <View style={styles.button}>
-              <Button
-                onPress={() => this.props.navigation.navigate('AddNewFamily')}
-                title="הוספת משפחה חדשה"
-              />
+            <View style={styles.twoFirstButtons}>
+              <View style={styles.buttons}>
+                <Button
+                  title="צפייה בפרטי המשפחה"
+                  onPress={() => this.props.navigation.navigate('WatchFamilies', {
+                    familyId: this.state.familySelectedUid
+                  })}
+                  color='#767ead'
+                />
+              </View>
+              <View style={styles.buttons}>
+                <Button
+                  onPress={() => this.props.navigation.navigate('AddNewFamily')}
+                  title="הוספת משפחה חדשה"
+                  color='#767ead'
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -402,14 +413,15 @@ export default class MainPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40
+    paddingTop: 40,
+    backgroundColor: '#b5bef5'
     // alignItems:'center'
 
   },
   familiesList: {
     borderRadius: 2,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: '#767ead',
     height: 400
   },
   titleText: {

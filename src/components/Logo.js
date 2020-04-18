@@ -20,8 +20,8 @@ export default class Logo extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flexGrow: 1,
-		justifyContent: 'flex-end',
+		//flexGrow: 1,
+		//justifyContent: 'flex-end',
 		alignItems: 'center'
 	},
 	logoText: {

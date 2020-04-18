@@ -14,16 +14,21 @@ export default class Login extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            <Logo />
-            <Form type="Login" navigation={this.props.navigation} />
-            <View style={styles.signupTextCont}>
+
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
+            <View style={styles.logoContainer}>
+              <Logo />
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+            <View>
+              <Form type="Login" navigation={this.props.navigation} />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+
+      </TouchableWithoutFeedback>
+
     )
   }
 }
@@ -31,25 +36,17 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#8b96d9',
-    flex: 1,
+    height: '100%',
+    width: '100%',
+    //flex: 2,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  signupTextCont: {
-    flexGrow: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    flexDirection: 'row'
-  },
-  signupText: {
-    color: 'rgba(255,255,255,0.6)',
-    fontSize: 16
-  },
-  signupButton: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '500',
-
-  },
+  logoContainer: {
+    marginBottom: 20
+    //alignItems: 'center',
+    //flex: 2,
+    // borderColor:'black',
+    // borderWidth:1
+  }
 });

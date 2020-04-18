@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
 import firebase from '../../config/config';
 import { Formik } from 'formik';

@@ -25,16 +25,16 @@ export default class Login extends Component {
     };
 
     var that = this;
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
       user = firebase.auth().currentUser;
       //console.log('Loading   '+user);
-      if(user){
+      if (user) {
         that.props.navigation.navigate('SwDashboard');
-      }else{
+      } else {
         that.props.navigation.navigate('Welcome');
       }
     })
-    
+
     // firebase.auth().onAuthStateChanged(function(user) {
     //   if(user){
     //     that.setState({ loggedIn:true });
@@ -46,14 +46,14 @@ export default class Login extends Component {
     //   }
     // });
   }
-  
+
   render() {
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ backgroundColor: '#8b96d9' }}>
         <View style={styles.container}>
-          <Logo style={{flex:2}}/>
-          <Spinner/>
-         
+          <Logo />
+          <Spinner />
+
         </View>
       </TouchableWithoutFeedback>
     )
@@ -64,8 +64,8 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#8b96d9',
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center'
   }
 });
