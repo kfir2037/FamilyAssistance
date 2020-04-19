@@ -18,7 +18,7 @@ import firebase from '../../config/config';
 import { Select, Option } from 'react-native-select-lists';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { FontAwesome } from '@expo/vector-icons';
-
+const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 
 export default class Settings extends Component {
@@ -32,6 +32,7 @@ export default class Settings extends Component {
             afternoonTasks:[],
             eveningTasks:[],
             data:[],
+            taskDeleteSelected:'',
         };
     }
 
@@ -184,6 +185,7 @@ export default class Settings extends Component {
 
 
         }
+        
         this.setState({ page: el.props.name })
         console.log("tasks: ",this.state.tasks)
     }
@@ -194,14 +196,32 @@ export default class Settings extends Component {
             console.log('selected still undefined');
           }
           else {
-            console.log('selected: ', (selectedItem[0]).id);
-            this.setState({ familySelectedUid: (selectedItem[0]).id })
+            console.log('selected: ', selectedItem[0]);
+            this.setState({ taskDeleteSelected: selectedItem[0] })
       
           }
     }
 
+    deleteTask=()=>{
+        console.log('task to delete: ', this.state.taskDeleteSelected)
+        if(this.state.page=='בוקר'){
+            let doc=firebase.firestore().collection('RoutineTasks').doc('morning');
+            doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 
+            console.log('2222')
+        }
+        else if(this.state.page=='צהריים'){
+            
+        }
+        else if(this.state.page=='אחר הצהריים'){
+            
+        }
+        else if(this.state.page=='ערב'){
+            
+        }
+    }
+
     rowItem = (item) => {
-        //console.log('item :', item);
+        console.log('item :', item);
         return (
           <View
             style={{
@@ -215,14 +235,13 @@ export default class Settings extends Component {
               borderColor: '#767ead'
             }}
           >
-            <Text>HI</Text>
-            {/* <Text>{item.data().lastName}</Text> */}
+            {/* <Text>HI</Text> */}
+            <Text>{item}</Text>
     
           </View>
         );
       }
     render() {
-        console.log('2');
         return (
             <ScrollView>
                 <View style={styles.container}>
@@ -426,7 +445,20 @@ export default class Settings extends Component {
               touchStyles={{backgroundColor:'#b5bef5'}}
             />
           </View>
-                    <View>
+          <View style={{ margin: 20 }}>
+                <Button
+                onPress={this.deleteTask}
+                    icon={
+                        <Icon
+                            name="trash"
+                            size={20}
+                            color="white"
+                        />
+                    }
+                    title="  הסרת משימה  "
+                />
+            </View>
+                    {/* <View>
                         <View style={{ height: 200, backgroundColor: 'lightblue' }}>
                             <Text style={styles.instructions}>
                                 משימות שנבחרו: {this.state.page}
@@ -450,7 +482,7 @@ export default class Settings extends Component {
                                 title="  הסרת משימה  "
                             />
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.lineStyle} />
                     <View>
                         <View style={styles.addTask}>
