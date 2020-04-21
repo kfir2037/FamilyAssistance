@@ -90,7 +90,7 @@ export default class Form extends Component {
           placeholder="תעודת זהות"
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
-          keyboardType="numeric"
+          keyboardType="email-address"
           onSubmitEditing={() => this.password.focus()}
         />
 

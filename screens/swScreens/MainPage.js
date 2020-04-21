@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
 import firebase from '../../config/config';
 import { FontAwesome } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-navigation';
 
 export default class MainPage extends Component {
   constructor(props) {
@@ -97,12 +98,14 @@ export default class MainPage extends Component {
 
   render() {
     return (
+      <ScrollView>
       <>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
           </View>
           <View style={styles.familiesList}>
+            <SafeAreaView style={{flex:1}}>
             <SelectableFlatlist
               data={this.state.data}
               state={STATE.EDIT}
@@ -114,6 +117,7 @@ export default class MainPage extends Component {
               uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
               touchStyles={{ backgroundColor: '#b5bef5' }}
             />
+            </SafeAreaView>
           </View>
           <View style={{ flexDirection: 'column' }}>
             <View style={styles.twoFirstButtons}>
@@ -154,6 +158,7 @@ export default class MainPage extends Component {
           </View>
         </View>
       </>
+      </ScrollView>
     )
   }
 }

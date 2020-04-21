@@ -204,9 +204,10 @@ export default class Settings extends Component {
 
     deleteTask=()=>{
         console.log('task to delete: ', this.state.taskDeleteSelected)
+        deleteTask2(this.state.taskDeleteSelected)
         if(this.state.page=='בוקר'){
             let doc=firebase.firestore().collection('RoutineTasks').doc('morning');
-            doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 
+            // doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 
             console.log('2222')
         }
         else if(this.state.page=='צהריים'){
