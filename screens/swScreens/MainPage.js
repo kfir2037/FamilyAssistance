@@ -89,7 +89,6 @@ export default class MainPage extends Component {
           borderColor: '#767ead'
         }}
       >
-        <Text>HI</Text>
         <Text>{item.data().lastName}</Text>
 
       </View>
@@ -111,9 +110,9 @@ export default class MainPage extends Component {
               itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
               initialSelectedIndex={[0]}
               cellItemComponent={(item) => this.rowItem(item)}
-              checkIcon={()=> <FontAwesome name='circle' size={25} color='#767ead' />}
-              uncheckIcon= {()=> <FontAwesome name='circle-o' size={25} color='#767ead' />}
-              touchStyles={{backgroundColor:'#b5bef5'}}
+              checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
+              uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
+              touchStyles={{ backgroundColor: '#b5bef5' }}
             />
           </View>
           <View style={{ flexDirection: 'column' }}>
@@ -165,7 +164,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 40,
-    backgroundColor: '#b5bef5'
+    backgroundColor: '#b5bef5',
+
     // alignItems:'center'
 
   },

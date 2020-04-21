@@ -44,9 +44,9 @@ const WatchFamilies = ({ navigation }) => {
         <ScrollView style={styles.scrollView} >
           <View style={styles.detailsContainer}>
             <Text style={styles.headlineText}>פרטי משפחה:</Text>
-            <Text style={styles.detailsText}>מצב משפחתי:</Text>
-            <Text style={styles.detailsText}>מספר נפשות:</Text>
-            <Text style={styles.detailsText}>סטטוס פעילות:</Text>
+            <Text style={styles.detailsText}>מצב משפחתי: </Text>
+            <Text style={styles.detailsText}>מספר נפשות: {familyObj.numOfPersons}</Text>
+            <Text style={styles.detailsText}>סטטוס פעילות: {familyObj.status ? <Text style={{color:'green'}}>פעילה</Text> : <Text style={{color:'crimson'}}>לא פעילה</Text>}</Text>
             <View style={styles.parentsDetails}>
               <Text style={styles.headlineText}>הורים:</Text>
               <View>

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text,Switch,Image, View } from "react-native";
+import { StyleSheet, Text, Switch, Image, View } from "react-native";
 
 import List, { List as ListModel } from "./List";
 import { Suspense } from "react";
@@ -16,65 +16,63 @@ import { Suspense } from "react";
 // };
 
 
-let allTasks=[
+let allTasks = [
   {
-    "id":1,
-    "title":"משימות בוקר",
-    "time":"11:30",
-    "place":"בית",
-    "details":"לקלח עם סבון",
-    "isDone":"false",
-    "picture":'sun.jpg'
+    "id": 1,
+    "title": "משימות בוקר",
+    "time": "11:30",
+    "place": "בית",
+    "details": "לקלח עם סבון",
+    "isDone": "false",
+    "picture": 'sun.jpg'
   },
   {
-    "id":2,
-    "title":"משימות צהריים",
-    "time":"17:00",
-    "place":"בית ספר",
-    "details":"לבוא רבע שעה לפני",
-    "isDone":"true",
-    "picture":'lunch.png'           
+    "id": 2,
+    "title": "משימות צהריים",
+    "time": "17:00",
+    "place": "בית ספר",
+    "details": "לבוא רבע שעה לפני",
+    "isDone": "true",
+    "picture": 'lunch.png'
   },
   {
-    "id":3,
-    "title":"משימות אחר הצהריים",
-    "time":"18:00",
-    "place":"מרכז ילדים-הורים",
-    "details":"אין",
-    "isDone":"true",
-    "picture":'games.jpg'
-        
+    "id": 3,
+    "title": "משימות אחר הצהריים",
+    "time": "18:00",
+    "place": "מרכז ילדים-הורים",
+    "details": "אין",
+    "isDone": "true",
+    "picture": 'games.jpg'
+
   },
   {
-    "id":4,
-    "title":"משימות ערב",
-    "time":"19:00",
-    "place":"בית",
-    "details":"הם אוהבים סטייק אנטריקוט 200 גרם",
-    "isDone":"true",
-    "picture":'moon.png'
-      
+    "id": 4,
+    "title": "משימות ערב",
+    "time": "19:00",
+    "place": "בית",
+    "details": "הם אוהבים סטייק אנטריקוט 200 גרם",
+    "isDone": "true",
+    "picture": 'moon.png'
+
   }
 ]
 
+var tasks = [];
 
-
-var tasks=[];
-
-for(let i = 0; i < allTasks.length; i++){
+for (let i = 0; i < allTasks.length; i++) {
 
   const list: ListModel = {
-    name: allTasks[i]['title'], 
-    items: [ 
-      { name: "משימה" , points: allTasks[i]['title']},
+    name: allTasks[i]['title'],
+    items: [
+      { name: "משימה", points: allTasks[i]['title'] },
       { name: "זמן", points: allTasks[i]['time'] },
       { name: "מקום לביצוע", points: allTasks[i]['place'] },
       { name: "פרטים", points: allTasks[i]['details'] },
       { name: "האם בוצע?", points: allTasks[i]['isDone'] },
     ],
-    picture:"sun",
-    test:'test',
-  }; 
+    picture: "sun",
+    test: 'test',
+  };
 
   tasks.push(
     <List key={allTasks[i]['id']} {...{ list }} />
@@ -82,7 +80,7 @@ for(let i = 0; i < allTasks.length; i++){
   // tasks.push( 
   //   <Switch key={allTasks[i]['id']+5} {...{ list }}/>
   // )
-  let picPath = '../icons/'+'sun.jpg'
+  let picPath = '../icons/' + 'sun.jpg'
   // let picName = allTasks[i]['picture']
   // let fullPath = picPath+picName
   // alert(picPath)
@@ -93,9 +91,10 @@ for(let i = 0; i < allTasks.length; i++){
 
 let date = new Date();
 let currentDate = date.getDate();
-let currentMonth = date.getMonth()+1;
+let currentMonth = date.getMonth() + 1;
 let currentYear = date.getFullYear();
-let fullDate = currentDate+'.'+currentMonth+'.'+currentYear
+let fullDate = currentDate + '.' + currentMonth + '.' + currentYear;
+
 export default () => {
   return (
     <View style={styles.container}>
@@ -115,8 +114,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#8b96d9",
     padding: 16
   },
-  header:{
-    flexDirection:'row-reverse',
+  header: {
+    flexDirection: 'row-reverse',
   },
   title: {
     fontSize: 25,

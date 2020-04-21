@@ -31,7 +31,7 @@ export default class Form extends Component {
           that.props.navigation.navigate('SwDashboard');
         } else {
         }
-      }catch {
+      } catch {
         console.log('error get current user');
       }
     });

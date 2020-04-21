@@ -29,7 +29,7 @@ export default class Login extends Component {
       user = firebase.auth().currentUser;
       //console.log('Loading   '+user);
       if (user) {
-        that.props.navigation.navigate('SwDashboard');
+        that.props.navigation.navigate('ParentsDashboard');
       } else {
         that.props.navigation.navigate('Welcome');
       }

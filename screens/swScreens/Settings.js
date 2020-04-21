@@ -18,7 +18,7 @@ import firebase from '../../config/config';
 import { Select, Option } from 'react-native-select-lists';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { FontAwesome } from '@expo/vector-icons';
-const FieldValue = require('firebase-admin').firestore.FieldValue;
+//const FieldValue = require('firebase-admin').firestore.FieldValue;
 
 
 export default class Settings extends Component {

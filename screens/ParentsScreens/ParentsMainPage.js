@@ -1,31 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View,ScrollView,TextInput,Alert,Switch,ProgressBarAndroid,TouchableOpacity } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage, Header,Button,ButtonGroup} from 'react-native-elements';
-import  Accordion  from '../../src/components/Accordion';
+import { StyleSheet, Text, View, ScrollView, TextInput, Alert, Switch, ProgressBarAndroid, TouchableOpacity } from 'react-native';
+import { FormLabel, FormInput, FormValidationMessage, Header, Button, ButtonGroup } from 'react-native-elements';
+import Accordion from '../../src/components/Accordion';
 
 
-export default class ParentsMainPage extends React.Component{
+export default class ParentsMainPage extends React.Component {
 
-  constructor () {
+  constructor() {
     super()
     this.state = {
       selectedIndex: 2
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
-  
-  updateIndex (selectedIndex) {
-    this.setState({selectedIndex})
+
+  updateIndex(selectedIndex) {
+    this.setState({ selectedIndex })
   }
-  
-  render () {
+
+  render() {
     // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
     // const { selectedIndex } = this.state
 
-  return (
+    return (
       <View style={styles.container}>
         <ScrollView>
-      
+
           <View style={styles.container}>
             {/* <ButtonGroup
               onPress={this.updateIndex}
@@ -35,15 +35,15 @@ export default class ParentsMainPage extends React.Component{
             /> */}
 
 
-              {/* <ProgressBarAndroid
+            {/* <ProgressBarAndroid
                 styleAttr="Horizontal"
                 indeterminate={false}
                 progress={tasksDone/allTasks.length}
               />             */}
 
-                {/* { tasks } */}
+            {/* { tasks } */}
 
-              <Accordion/>
+            <Accordion />
 
           </View>
 
@@ -59,41 +59,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#8b96d9',
     // alignItems: 'center',
     justifyContent: 'center',
-    paddingTop:15,
+    paddingTop: 15,
   },
-  days:{
-    flex:1,
-    flexDirection:'row-reverse',
-  
+  days: {
+    flex: 1,
+    flexDirection: 'row-reverse',
+
   },
-  button:{
+  button: {
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 10,
-    width:45,
-    marginLeft:6
+    width: 45,
+    marginLeft: 6
   },
-  text:{
-    fontSize:30,
+  text: {
+    fontSize: 30,
   },
-  task:{
-    flex:1,
-    borderStyle:'solid',
-    borderWidth:0.5, 
-    backgroundColor:'#9ec3ff',
-    marginBottom:10,
+  task: {
+    flex: 1,
+    borderStyle: 'solid',
+    borderWidth: 0.5,
+    backgroundColor: '#9ec3ff',
+    marginBottom: 10,
 
   },
-  field:{
-    flex:1,
-    borderStyle:'solid',
-    borderWidth:0.5,
-    flexDirection:'row-reverse',
-    margin:7,
+  field: {
+    flex: 1,
+    borderStyle: 'solid',
+    borderWidth: 0.5,
+    flexDirection: 'row-reverse',
+    margin: 7,
     borderRadius: 4,
   },
-  temp:{
-    flex:1,
-    textAlign:'left'
+  temp: {
+    flex: 1,
+    textAlign: 'left'
   }
 });
