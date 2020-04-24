@@ -204,7 +204,8 @@ export default class Settings extends Component {
 
     deleteTask=()=>{
         console.log('task to delete: ', this.state.taskDeleteSelected)
-        deleteTask2(this.state.taskDeleteSelected)
+        //deleteTask2(this.state.taskDeleteSelected)
+        firebase.functions().httpsCallable()('deleteTask2')();
         if(this.state.page=='בוקר'){
             let doc=firebase.firestore().collection('RoutineTasks').doc('morning');
             // doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 

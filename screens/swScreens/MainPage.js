@@ -29,6 +29,10 @@ export default class MainPage extends Component {
 
     }
 
+  };
+
+  familiesListener = async () => {
+    firebase.firestore().collection('families').onSnapshot(this.getFamilies());
   }
 
   getFamilies = async () => {
@@ -98,66 +102,66 @@ export default class MainPage extends Component {
 
   render() {
     return (
-      <ScrollView>
-      <>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
-          </View>
-          <View style={styles.familiesList}>
-            <SafeAreaView style={{flex:1}}>
-            <SelectableFlatlist
-              data={this.state.data}
-              state={STATE.EDIT}
-              multiSelect={false}
-              itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
-              initialSelectedIndex={[0]}
-              cellItemComponent={(item) => this.rowItem(item)}
-              checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
-              uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
-              touchStyles={{ backgroundColor: '#b5bef5' }}
-            />
-            </SafeAreaView>
-          </View>
-          <View style={{ flexDirection: 'column' }}>
-            <View style={styles.twoFirstButtons}>
-              <View style={styles.buttons}>
-                <Button
-                  title="הסרת משפחה"
-                  color='#767ead'
+      <ScrollView style={{ backgroundColor: '#b5bef5' }} >
+        <>
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
+            </View>
+            <View style={styles.familiesList}>
+              <SafeAreaView style={{ flex: 1 }}>
+                <SelectableFlatlist
+                  data={this.state.data}
+                  state={STATE.EDIT}
+                  multiSelect={false}
+                  itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
+                  initialSelectedIndex={[0]}
+                  cellItemComponent={(item) => this.rowItem(item)}
+                  checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
+                  uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
+                  touchStyles={{ backgroundColor: '#b5bef5' }}
                 />
+              </SafeAreaView>
+            </View>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={styles.twoFirstButtons}>
+                <View style={styles.buttons}>
+                  <Button
+                    title="הסרת משפחה"
+                    color='#767ead'
+                  />
+                </View>
+                <View style={styles.buttons}>
+                  <Button
+                    onPress={() => this.props.navigation.navigate('Tasks2', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    title="משימות"
+                    color='#767ead'
+                  />
+                </View>
               </View>
-              <View style={styles.buttons}>
-                <Button
-                  onPress={() => this.props.navigation.navigate('Tasks2', {
-                    familyId: this.state.familySelectedUid
-                  })}
-                  title="משימות"
-                  color='#767ead'
-                />
+              <View style={styles.twoFirstButtons}>
+                <View style={styles.buttons}>
+                  <Button
+                    title="צפייה בפרטי המשפחה"
+                    onPress={() => this.props.navigation.navigate('WatchFamilies', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    color='#767ead'
+                  />
+                </View>
+                <View style={styles.buttons}>
+                  <Button
+                    onPress={() => this.props.navigation.navigate('AddNewFamily')}
+                    title="הוספת משפחה חדשה"
+                    color='#767ead'
+                  />
+                </View>
               </View>
             </View>
-            <View style={styles.twoFirstButtons}>
-              <View style={styles.buttons}>
-                <Button
-                  title="צפייה בפרטי המשפחה"
-                  onPress={() => this.props.navigation.navigate('WatchFamilies', {
-                    familyId: this.state.familySelectedUid
-                  })}
-                  color='#767ead'
-                />
-              </View>
-              <View style={styles.buttons}>
-                <Button
-                  onPress={() => this.props.navigation.navigate('AddNewFamily')}
-                  title="הוספת משפחה חדשה"
-                  color='#767ead'
-                />
-              </View>
-            </View>
           </View>
-        </View>
-      </>
+        </>
       </ScrollView>
     )
   }
@@ -170,7 +174,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     backgroundColor: '#b5bef5',
-
+    height: '100%',
+    width: '100%'
     // alignItems:'center'
 
   },

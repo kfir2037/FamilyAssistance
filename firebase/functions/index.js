@@ -36,9 +36,9 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
-export function deleteTask2(task){
-    console.log('test file')
-    }
+exports.deleteTask2 = functions.https.onCall(async (data,context)=> {
+    console.log('test file');
+});
 
 exports.createUser = functions.https.onCall(async (data, context) => {
     console.log(38);
