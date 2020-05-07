@@ -209,6 +209,7 @@ export default class Settings extends Component {
         if(this.state.page=='בוקר'){
             let doc=firebase.firestore().collection('RoutineTasks').doc('morning');
             // doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 
+            firebase.functions().httpsCallable()('deleteTask2')(this.state.taskDeleteSelected);
             console.log('2222')
         }
         else if(this.state.page=='צהריים'){
