@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, Text,Switch,Image, TouchableWithoutFeedback } from "react-native";
-import { CheckBox } from 'react-native-elements'
+import {
+  StyleSheet,
+  Text,
+  Switch,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { CheckBox } from "react-native-elements";
 import Animated, { Easing } from "react-native-reanimated";
 import { bInterpolate, bin, useTransition } from "react-native-redash";
 import Chevron from "./Chevron";
 import Item, { LIST_ITEM_HEIGHT, ListItem } from "./ListItem";
-import {images} from '../ImagesClass'
+import { images } from "../ImagesClass";
 const { not, interpolate } = Animated;
 const styles = StyleSheet.create({
   container: {
@@ -16,54 +22,60 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   items: {
-    overflow: "hidden"
+    overflow: "hidden",
   },
-  image:{
-    width:50,
-    height:50,
-  }
+  image: {
+    width: 50,
+    height: 50,
+  },
 });
 
 export interface List {
   name: string;
   items: ListItem[];
-  picture:string;
-  test:string;
+  picture: string;
+  test: string;
+  markMission:any
 }
 
 interface ListProps {
   list: List;
 }
 
-// const images = {
-//   sun: {
-//     imgName: 'sun', 
-//     uri: "../icons/sun.jpg"
-//   },
-//   moon: {
-//     imgName: 'moon', 
-//     uri: '../icons/moon.png'
-//   },
-//   lunch: {
-//     imgName: 'lunch', 
-//     uri: '../icons/lunch.png'
-//   },
-//   games: {
-//     imgName: 'games', 
-//     uri: '../icons/games.jpg'
-//   },
-
-// }
+const images2 = {
+  sun: {
+    imgName: "sun",
+    uri: "../icons/sun.jpg",
+  },
+  moon: {
+    imgName: "moon",
+    uri: "../icons/moon.png",
+  },
+  lunch: {
+    imgName: "lunch",
+    uri: "../icons/lunch.png",
+  },
+  games: {
+    imgName: "games",
+    uri: "../icons/games.jpg",
+  },
+};
 
 export default ({ list }: ListProps) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => {
+    setIsEnabled((prev) => !prev);
+    list.markMission('test')
+  };
   const [open, setOpen] = useState(false);
+  // console.log('list: ',list)
   const transition = useTransition(
     open,
     not(bin(open)),
@@ -78,45 +90,49 @@ export default ({ list }: ListProps) => {
   );
   const bottomRadius = interpolate(transition, {
     inputRange: [0, 16 / 400],
-    outputRange: [8, 0]
+    outputRange: [8, 0],
   });
 
-  
-  // if (list.picture==images.sun.imgName){
-  //  pic = images.sun.uri
+
+
+  // let pic = "../icons/moon.png";
+  let pic2 = "../icons/sun.png";
+  // let pic3 = "../icons/moon.png";
+  // console.log('list: ',list.picture)
+  // if(list.picture=='sun'){
+  //   pic=pic2
+  //   console.log(pic)
   // }
-  // alert("list.picture: "+list.picture)
-  // alert("pic: "+pic)
-  // alert("images.sun.imgName: "+images.sun.imgName)
-  
-let pic =images.sun.uri;
+  var pic = "../icons/"+list.picture+".png";
+  console.log('pic: ',pic)
   return (
     <>
-      <TouchableWithoutFeedback onPress={() => setOpen(prev => !prev)}>
+      <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
         <Animated.View
           style={[
             styles.container,
             {
               borderBottomLeftRadius: bottomRadius,
-              borderBottomRightRadius: bottomRadius
-            }          
+              borderBottomRightRadius: bottomRadius,
+            },
           ]}
-        >          
-        
-          <Text style={styles.title}>{list.items[0]['points']}</Text>
+        >
+          <Text style={styles.title}>{list.name}</Text>
           {/* <Image style={styles.image} source={require(pic)} /> */}
-          
-          <Image style={styles.image} source={require('../icons/sun.jpg')} />
+          <Image style={styles.image} source={require(pic2)} />
+          <Switch
+            style={{ alignItems: "center" }}
+            value={isEnabled}
+            onValueChange={toggleSwitch}
+          />
           <Chevron {...{ transition }} />
-          </Animated.View>
-        
+        </Animated.View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, { height }]}>
         {list.items.map((item, key) => (
           <Item {...{ item, key }} isLast={key === list.items.length - 1} />
         ))}
       </Animated.View>
-
     </>
   );
 };

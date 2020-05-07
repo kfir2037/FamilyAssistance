@@ -25,12 +25,35 @@ export default class Form extends Component {
     var that = this;
     firebase.auth().onAuthStateChanged(function (user) {
       try {
-        user = firebase.auth().currentUser.uid;
-        console.log(user);
-        if (user) {
-          that.props.navigation.navigate('SwDashboard');
-        } else {
-        }
+        user = firebase.auth().currentUser;
+        userUid = user.uid
+
+
+        // console.log("user22: ",user);
+        firebase.firestore().collection('users').doc(userUid).get()
+        .then(doc => {
+          // console.log("doc: ", doc)
+          console.log("doc role: ", doc._document.proto.fields.role.stringValue)
+          let role = doc._document.proto.fields.role.stringValue;
+          console.log('role: ',role)
+          if (role=='sw') {
+            that.props.navigation.navigate('SwDashboard');
+          } 
+          else if(role=='parent') {
+            that.props.navigation.navigate('ParentsDashboard');
+          }
+          else if(role=='child')
+          {
+            that.props.navigation.navigate('KidsDashboard');
+          }else{
+            that.props.navigation.navigate('Welcome');
+          }
+        })
+
+        // if (userUid) {
+        //   that.props.navigation.navigate('SwDashboard');
+        // } else {
+        // }
       } catch {
         console.log('error get current user');
       }

@@ -27,9 +27,9 @@ const WatchTasksStackNavigator = createStackNavigator({
       headerRight: (
         <Icon style={{ padding: 10 }}
           name="md-exit"
-          onPress={async () => {
+          onPress={() => {
             try {
-              await firebase.auth().signOut();
+              firebase.auth().signOut();
               navigation.navigate('Welcome');
             } catch (error) {
               console.log(error);

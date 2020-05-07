@@ -175,7 +175,7 @@ export default class App extends Component {
         // let date = this.state.customTasks;
         // let state = this.state.customTasks;
         let date = doc._document.proto.fields.date.timestampValue;
-        console.log('doc._document: ',doc._document.proto.fields.date.timestampValue)
+        // console.log('doc._document: ',doc._document.proto.fields.date.timestampValue)
         taskDay = date[8]+date[9];
         taskMonth = date[5]+date[6];
         taskYear = date[0]+date[1]+date[2]+date[3];
@@ -191,6 +191,7 @@ export default class App extends Component {
       });
       console.log('chosenDayTasks: ',chosenDayTasks)
       console.log(taskDay+taskMonth+taskYear)
+      
       // let taskTimeStamp = this.toTimestamp2(taskYear,taskMonth,taskDay);
       // console.log('timestamp2: ',taskTimeStamp);
     })

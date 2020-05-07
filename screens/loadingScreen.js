@@ -26,13 +26,42 @@ export default class Login extends Component {
 
     var that = this;
     firebase.auth().onAuthStateChanged(function (user) {
-      user = firebase.auth().currentUser;
-      //console.log('Loading   '+user);
-      if (user) {
-        that.props.navigation.navigate('SwDashboard');
-      } else {
-        that.props.navigation.navigate('Welcome');
+      try {
+        user = firebase.auth().currentUser;
+        userUid = user.uid
+        firebase.firestore().collection('users').doc(userUid).get()
+        .then(doc => {
+          console.log('loading')
+          let role = doc._document.proto.fields.role.stringValue;
+          if (role=='sw') {
+            that.props.navigation.navigate('SwDashboard');
+          } 
+          else if(role=='parent') {
+            that.props.navigation.navigate('ParentsDashboard');
+          }
+          else if(role=='child')
+          {
+            that.props.navigation.navigate('KidsDashboard');
+          }else{
+            that.props.navigation.navigate('Welcome');
+          }
+        })
+
+        // if (userUid) {
+        //   that.props.navigation.navigate('SwDashboard');
+        // } else {
+        // }
+      } catch {
+        console.log('error get current user');
       }
+      // user = firebase.auth().currentUser;
+      // //console.log('Loading   '+user);
+      // console.log('loading');
+      // if (user) {
+      //   that.props.navigation.navigate('SwDashboard');
+      // } else {
+      //   that.props.navigation.navigate('Welcome');
+      // }
     })
 
     // firebase.auth().onAuthStateChanged(function(user) {

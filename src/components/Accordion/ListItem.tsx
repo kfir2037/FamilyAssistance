@@ -57,7 +57,7 @@ export default ({ item, isLast }: ListItemProps) => {
         <View style={styles.pointsContainer}>
             <Text style={styles.points}>{item.points}</Text>
         </View>
-        <Switch/>
+        {/* <Switch/> */}
       </View>
       
     </View>
