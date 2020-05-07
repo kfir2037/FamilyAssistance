@@ -215,6 +215,7 @@ export default class Settings extends Component {
             }
             deleteTask(data);
             // doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)}); 
+            firebase.functions().httpsCallable()('deleteTask2')(this.state.taskDeleteSelected);
             console.log('2222')
         }
         else if (this.state.page == 'צהריים') {
