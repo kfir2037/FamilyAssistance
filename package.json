@@ -10,6 +10,7 @@
   "dependencies": {
     "@azure/cosmos": "^3.5.2",
     "@expo/vector-icons": "^10.0.6",
+    "@react-native-community/datetimepicker": "^2.3.2",
     "appcenter": "2.6.1",
     "appcenter-analytics": "2.6.1",
     "appcenter-crashes": "2.6.1",

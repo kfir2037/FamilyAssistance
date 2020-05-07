@@ -41,15 +41,12 @@ exports.deleteTask2 = functions.https.onCall(async (data,context)=> {
 });
 
 exports.createUser = functions.https.onCall(async (data, context) => {
-    console.log(38);
     try {
-        console.log(40);
         //Checking that the user calling the Cloud Function is authenticated
         if (!context.auth) {
             throw new UnauthenticatedError('The user is not authenticated. Only authenticated Admin users can create new users.');
         }
-        console.log(44);
-
+        
         //Checking that the user calling the Cloud Function is an Admin user
         const callerUid = context.auth.uid;  //uid of the user calling the Cloud Function
         const callerUserRecord = await admin.auth().getUser(callerUid);

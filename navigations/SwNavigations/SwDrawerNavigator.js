@@ -27,6 +27,7 @@ const SwDrawerNavigator = createDrawerNavigator({
     },
     Reports:{
       screen:ReportsStackNavigator,
+      
     }
   })
 
