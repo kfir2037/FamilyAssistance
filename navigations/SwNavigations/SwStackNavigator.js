@@ -8,10 +8,12 @@ import AddNewFamily from '../../screens/swScreens/AddNewFamily';
 import Tasks2 from '../../screens/swScreens/WatchFamiliesTasks';
 import WatchFamilies from '../../screens/swScreens/WatchFamilies';
 import Reports from '../../screens/swScreens/Reports';
+import AddNewTask from '../../screens/swScreens/AddNewTask';
 
 
 const SwStackNavigator = createStackNavigator({
   Main: Main,
+  AddNewTask:AddNewTask,
   AddNewFamily:AddNewFamily,
   Tasks2:Tasks2,
   WatchFamilies:WatchFamilies,

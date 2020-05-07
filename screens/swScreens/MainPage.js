@@ -159,6 +159,17 @@ export default class MainPage extends Component {
                   />
                 </View>
               </View>
+              <View style={styles.twoFirstButtons}>
+                <View style={styles.buttons}>
+                  <Button
+                    title="הוספת משימה חדשה"
+                    onPress={() => this.props.navigation.navigate('AddNewTask', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    color='#767ead'
+                  />
+                </View>
+              </View>
             </View>
           </View>
         </>
