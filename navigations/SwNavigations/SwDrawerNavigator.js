@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
-import {createSwitchNavigator, createAppContainer} from 'react-navigation';
-import {createDrawerNavigator} from 'react-navigation-drawer';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 import WatchTasks from '../../screens/swScreens/MainPage';
 import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
@@ -13,22 +13,36 @@ import ReportsStackNavigator from './ReportsStackNavigator'
 
 
 const SwDrawerNavigator = createDrawerNavigator({
-    Main:{
-      screen:SwStackNavigator,
-    },
-    AddNewFamily:{
-      screen:SwAddNewFamilyStackNavigator,
-    },
-    WatchFamilies:{
-      screen:SwWatchFamiliesStackNavigator,
-    },
-    Settings:{
-      screen:SettingsStackNavigator,
-    },
-    Reports:{
-      screen:ReportsStackNavigator,
-      
+  Main: {
+    screen: SwStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'ראשי'
     }
-  })
+  },
+  AddNewFamily: {
+    screen: SwAddNewFamilyStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'הוסף משפחה'
+    }
+  },
+  WatchFamilies: {
+    screen: SwWatchFamiliesStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'משפחות'
+    }
+  },
+  Settings: {
+    screen: SettingsStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'הגדרות'
+    }
+  },
+  Reports: {
+    screen: ReportsStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'דוחות'
+    }
+  }
+})
 
-  export default SwDrawerNavigator;
+export default SwDrawerNavigator;

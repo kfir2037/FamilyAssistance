@@ -4,10 +4,13 @@ import firebase from '../../config/config';
 import { Button, Input } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 import AddParentModal from '../../src/components/AddParentModal';
 
 const WatchFamilies = ({ navigation }) => {
 
+  const [modalLoading, setModalLoading] = useState(false);
   const [familyObj, setFamilyObj] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -72,42 +75,130 @@ const WatchFamilies = ({ navigation }) => {
               }}>
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
-              <Text style={{ ...styles.headlineText, alignSelf: 'center' }}>הוספת הורה חדש</Text>
-              <Input containerStyle={styles.modalInput} placeholderTextColor='black' autoCorrect={false} textAlign='right' placeholder='שם פרטי' />
-              <Input containerStyle={styles.modalInput} placeholderTextColor='black' autoCorrect={false} textAlign='right' placeholder='שם משפחה ' />
-              <Input containerStyle={styles.modalInput} placeholderTextColor='black' autoCorrect={false} textAlign='right' keyboardType='phone-pad' placeholder='תעודת זהות' />
+              <Formik
+                initialValues={{ firstName: '', lastName: '', id: '', birthDate: birthDate, phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
+                //validationSchema={}
+                onSubmit={(values, actions) => {
+                  actions.resetForm();
+                  console.log('values', values);
+                  var createUser = firebase.functions().httpsCallable('createUser');
+                  createUser(values)
+                    .then(function (resp) {
+                      //Display success
+                      console.log(resp.data.result);
+                      setModalLoading(false);
+                      return (
+                        <Text>הוספת הורה הצליחה</Text>
+                      );
+                    })
+                    .catch(function (error) {
+                      var code = error.code;
+                      var message = error.message;
+                      //Display error
+                      console.log(code + ' ' + message);
+                      setModalLoading(false);
+                      return (
+                        <Text>הוספת הורה נכשלה</Text>
+                      );
+                    });
 
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ alignSelf: 'center' }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.toLocaleDateString()}</Text>
-                </View>
 
-                <View style={styles.birtDateBox}>
-                  <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="בחר תאריך "
-                    onPress={showDatePicker}
+                }}
+              >{(props) => (
+                <>
+                  <Text style={{ ...styles.headlineText, alignSelf: 'center' }}>הוספת הורה חדש</Text>
+                  <Input
+                    value={props.values.firstName}
+                    onChangeText={props.handleChange('firstName')}
+                    onBlur={props.handleBlur('firstName')}
+                    containerStyle={styles.modalInput}
+                    placeholderTextColor='black'
+                    autoCorrect={false}
+                    textAlign='right'
+                    placeholder='שם פרטי'
                   />
-                  <Text style={{ fontSize: 18 }}>תאריך לידה: </Text>
-                  <View>
-                    {show && <DateTimePicker
-                      display='spinner'
-                      style={{ position: 'absolute' }}
-                      value={birthDate}
-                      onChange={onChange}
-                    />
-                    }
-                  </View>
-                </View>
-              </View>
-              <Input containerStyle={styles.modalInput} textAlign='right' placeholderTextColor='black' keyboardType='phone-pad' textContentType='telephoneNumber' placeholder='טלפון' />
-              <Input containerStyle={styles.modalInput} placeholder='דוא"ל' placeholderTextColor='black' keyboardType='email-address' textContentType='emailAddress' />
+                  <Input
+                    value={props.values.lastName}
+                    onChangeText={props.handleChange('lastName')}
+                    onBlur={props.handleBlur('lastName')}
+                    containerStyle={styles.modalInput}
+                    placeholderTextColor='black'
+                    autoCorrect={false}
+                    textAlign='right'
+                    placeholder='שם משפחה '
+                  />
+                  <Input
+                    value={props.values.id}
+                    onChangeText={props.handleChange('id')}
+                    onBlur={props.handleBlur('id')}
+                    containerStyle={styles.modalInput}
+                    placeholderTextColor='black'
+                    autoCorrect={false}
+                    textAlign='right'
+                    keyboardType='phone-pad'
+                    placeholder='תעודת זהות'
+                  />
 
-              <View style={{ alignSelf: 'center', margin: 5 }}>
-                <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף "
-                  onPress={() => {
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                />
-              </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ alignSelf: 'center' }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.toLocaleDateString()}</Text>
+                    </View>
+
+                    <View style={styles.birtDateBox}>
+                      <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="בחר תאריך "
+                        onPress={showDatePicker}
+                      />
+                      <Text style={{ fontSize: 18 }}>תאריך לידה: </Text>
+                      <View>
+                        {show && <DateTimePicker
+                          display='spinner'
+                          style={{ position: 'absolute' }}
+                          value={props.value.birthDate}
+                          onChange={onChange}
+                        />
+                        }
+                      </View>
+                    </View>
+                  </View>
+                  <Input
+                    value={props.values.phone}
+                    onChangeText={props.handleChange('phone')}
+                    onBlur={props.handleBlur('phone')}
+                    containerStyle={styles.modalInput}
+                    textAlign='right'
+                    placeholderTextColor='black'
+                    keyboardType='phone-pad'
+                    textContentType='telephoneNumber'
+                    placeholder='טלפון'
+                  />
+                  <Input
+                    value={props.values.email}
+                    onChangeText={props.handleChange('email')}
+                    onBlur={props.handleBlur('email')}
+                    containerStyle={styles.modalInput}
+                    placeholder='דוא"ל'
+                    placeholderTextColor='black'
+                    keyboardType='email-address'
+                    textContentType='emailAddress'
+                  />
+
+                  <View style={{ alignSelf: 'center', margin: 5 }}>
+                    {modalLoading
+                      ? <ActivityIndicator size={50} color='#767ead' />
+                      : <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף "
+                        onPress={() => {
+                          setModalLoading(true);
+                          props.handleSubmit();
+                          //setIsModalVisible(!isModalVisible);
+                        }}
+                      />
+                    }
+                    
+
+                  </View>
+                </>
+              )}
+              </Formik>
 
             </ScrollView>
           </View>

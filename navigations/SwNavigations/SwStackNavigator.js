@@ -7,13 +7,15 @@ import firebase from '../../config/config';
 import AddNewFamily from '../../screens/swScreens/AddNewFamily';
 import Tasks2 from '../../screens/swScreens/WatchFamiliesTasks';
 import WatchFamilies from '../../screens/swScreens/WatchFamilies';
+import Reports from '../../screens/swScreens/Reports';
 
 
 const SwStackNavigator = createStackNavigator({
   Main: Main,
   AddNewFamily:AddNewFamily,
   Tasks2:Tasks2,
-  WatchFamilies:WatchFamilies
+  WatchFamilies:WatchFamilies,
+  Reports:Reports
 },
   {
     

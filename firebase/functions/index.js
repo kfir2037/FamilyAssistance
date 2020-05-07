@@ -32,12 +32,29 @@ class InvalidRoleError extends Error {
 }
 
 function roleIsValid(role) {
-    const validRoles = ['editor', 'author', 'sw']; //To be adapted with your own list of roles
+    const validRoles = ['editor', 'parent', 'sw']; //To be adapted with your own list of roles
     return validRoles.includes(role);
 }
 
-exports.deleteTask2 = functions.https.onCall(async (data,context)=> {
-    console.log('test file');
+exports.getFamilyMembers = functions.https.onCall(async (data, context) => {
+    let family = await admin.firestore().collection('families').doc(data).get();
+
+
+});
+
+exports.addTask = functions.https.onCall(async (data, context) => {
+    let routineTasksDoc = admin.firestore().collection('RoutineTasks').doc(data.docName);
+    routineTasksDoc.update({
+        tasks:FieldValue.arrayUnion(data.taskToAdd)
+    })
+});
+
+exports.deleteTask2 = functions.https.onCall(async (data, context) => {
+
+    let routineTasksDoc = admin.firestore().collection('RoutineTasks').doc(data.docName);
+    routineTasksDoc.update({
+        tasks: FieldValue.arrayRemove(data.taskToDelete)
+    })
 });
 
 exports.createUser = functions.https.onCall(async (data, context) => {
@@ -46,27 +63,22 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new UnauthenticatedError('The user is not authenticated. Only authenticated Admin users can create new users.');
         }
-        
+
         //Checking that the user calling the Cloud Function is an Admin user
         const callerUid = context.auth.uid;  //uid of the user calling the Cloud Function
         const callerUserRecord = await admin.auth().getUser(callerUid);
         console.log(49);
 
-
         //TODO: FIX THIS!!#####
-        if (!callerUserRecord.customClaims.admin) {
-            throw new NotAnAdminError('Only Admin users can create new users.');
-        }
-
-        console.log(54);
+        // if (!callerUserRecord.customClaims.admin) {
+        //     throw new NotAnAdminError('Only Admin users can create new users.');
+        // }
 
         //Checking that the new user role is valid
         const role = data.role;
         if (!roleIsValid(role)) {
             throw new InvalidRoleError('The "' + role + '" role is not a valid role');
         }
-        console.log(61);
-
 
         const userCreationRequest = {
             userDetails: data,
@@ -74,8 +86,6 @@ exports.createUser = functions.https.onCall(async (data, context) => {
             createdBy: callerUid,
             createdOn: FieldValue.serverTimestamp()
         }
-        console.log(70);
-
 
         const userCreationRequestRef = await admin.firestore().collection("userCreationRequests").add(userCreationRequest);
 
@@ -84,7 +94,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         const newUser = {
             email: data.email,
             emailVerified: false,
-            password: data.password,
+            password: data.id,
             displayName: data.firstName + ' ' + data.lastName,
             disabled: false
         }
@@ -100,9 +110,21 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         const claims = {};
         claims[role] = true;
-        claims['xyzCompanyUser'] = true;
+        //claims['xyzCompanyUser'] = true;
 
         await admin.auth().setCustomUserClaims(userId, claims);
+
+        if (role === 'parent') {
+            await admin.firestore().collection('families').doc(data.familyId)
+                .update({
+                    parents: FieldValue.arrayUnion(userId)
+                })
+        } else if (role === 'kid') {
+            await admin.firestore().collection('families').doc(data.familyId)
+                .update({
+                    kids: FieldValue.arrayUnion(userId)
+                })
+        }
 
         await admin.firestore().collection("users").doc(userId).set(data);
 
@@ -110,8 +132,6 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         console.log(104);
         return { result: 'The new user has been successfully created.' };
-
-
 
     } catch (error) {
 
@@ -163,6 +183,8 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
 
         data['swInCharge'] = callerUid;
         data['status'] = 'active';
+        data['parents'] = [];
+        data['kids'] = [];
 
         const familyCreationRequestRef = await admin.firestore().collection("familyCreationRequests").add(familyCreationRequest);
 
