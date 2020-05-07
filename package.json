@@ -11,6 +11,7 @@
     "@azure/cosmos": "^3.5.2",
     "@expo/vector-icons": "^10.0.6",
     "@react-native-community/datetimepicker": "^2.3.2",
+    "@wwdrew/react-native-numeric-textinput": "^1.1.0",
     "appcenter": "2.6.1",
     "appcenter-analytics": "2.6.1",
     "appcenter-crashes": "2.6.1",
@@ -47,6 +48,7 @@
     "react-navigation-drawer": "^2.3.3",
     "react-navigation-stack": "^1.10.3",
     "react-navigation-tabs": "^2.6.2",
+    "react-numeric-input": "^2.2.3",
     "yup": "^0.28.3"
   },
   "devDependencies": {

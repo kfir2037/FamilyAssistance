@@ -183,6 +183,7 @@ const Accordion2 = (props) => {
   let noonItems = [];
   let afternoonItems = [];
   let eveningItems = [];
+  let customItems = [];
   // console.log("props.morningTasks.tasks: ", props.morningTasks.tasks);
   if (props.morningTasks.tasks != undefined) {
     // console.log("props.morningTasks.tasks22222: ", props.morningTasks.tasks);
@@ -214,6 +215,16 @@ const Accordion2 = (props) => {
       eveningItems.push({
         name: props.eveningTasks.tasks[i],
         time: props.eveningTasks.time.stringValue,
+      });
+    }
+  }
+  if (props.customTasks != undefined) {
+    console.log('counter22 ',props.customTasks)
+    for (let i = 0; i < props.customTasks.length; i++) {
+      console.log('counter')
+      customItems.push({
+        name: props.customTasks[i].title.stringValue,
+        time: props.customTasks[i].time.stringValue,
       });
     }
   }
@@ -250,8 +261,18 @@ const Accordion2 = (props) => {
     markMission:props.markMission,
 
   };
+  console.log('noonTasks: ',props.noonTasks)
+  console.log('customItems: ',props.customItems)
   tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }}/>);
+  var list: ListModel = {
+    name: 'משימות מותאמות',
+    items: customItems.slice(),
+    picture: "moon",
+    test: "test",
+    markMission:props.markMission,
 
+  };
+  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }}/>);
   // for (let i = 0; i < allTasks.length; i++) {
   //   // console.log('test');
   //   const list: ListModel = {

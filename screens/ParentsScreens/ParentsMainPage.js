@@ -9,6 +9,7 @@ import {
   Switch,
   ProgressBarAndroid,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import {
   FormLabel,
@@ -31,6 +32,7 @@ export default class ParentsMainPage extends React.Component {
       noonTasks: [],
       afternoonTasks: [],
       eveningTasks: [],
+      customTasks:[],
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -197,7 +199,12 @@ export default class ParentsMainPage extends React.Component {
     // for(i in this.state.allTasks){
     //   console.log(i)
     // }
-    console.log('morning Tasks: ',this.state.morningTasks)
+    console.log('dsdsdasd',this.state.morningTasks.length)
+if((this.state.eveningTasks&&this.state.eveningTasks.length==0)){
+  return <ActivityIndicator/>
+}
+console.log('allTaskssss: ',this.state.allTasks)
+
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -223,6 +230,7 @@ export default class ParentsMainPage extends React.Component {
               noonTasks={this.state.noonTasks}
               afternoonTasks={this.state.afternoonTasks}
               eveningTasks={this.state.eveningTasks}
+              customTasks={this.state.allTasks}
               markMission={this.markMission.bind(this)}
             />
           </View>

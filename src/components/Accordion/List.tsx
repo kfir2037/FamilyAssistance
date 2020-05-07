@@ -104,7 +104,7 @@ export default ({ list }: ListProps) => {
   //   console.log(pic)
   // }
   var pic = "../icons/"+list.picture+".png";
-  console.log('pic: ',pic)
+  // console.log('pic: ',pic)
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
