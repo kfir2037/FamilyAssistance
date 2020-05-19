@@ -32,7 +32,7 @@ class InvalidRoleError extends Error {
 }
 
 function roleIsValid(role) {
-    const validRoles = ['editor', 'parent', 'sw']; //To be adapted with your own list of roles
+    const validRoles = ['editor', 'parent', 'sw', 'kid ']; //To be adapted with your own list of roles
     return validRoles.includes(role);
 }
 
@@ -45,7 +45,7 @@ exports.getFamilyMembers = functions.https.onCall(async (data, context) => {
 exports.addTask = functions.https.onCall(async (data, context) => {
     let routineTasksDoc = admin.firestore().collection('RoutineTasks').doc(data.docName);
     routineTasksDoc.update({
-        tasks:FieldValue.arrayUnion(data.taskToAdd)
+        tasks: FieldValue.arrayUnion(data.taskToAdd)
     })
 });
 

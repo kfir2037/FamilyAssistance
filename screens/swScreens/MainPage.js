@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, YellowBox, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Button, YellowBox, FlatList, ActivityIndicator } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 // import { Button } from 'native-base';
@@ -12,7 +12,7 @@ export default class MainPage extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
       familySelectedUid: ''
     };
@@ -36,6 +36,7 @@ export default class MainPage extends Component {
   }
 
   getFamilies = async () => {
+
     let allFamilies = []
     let familyObj = {}
     const socialWorkerUid = firebase.auth().currentUser['uid'];
@@ -52,6 +53,7 @@ export default class MainPage extends Component {
           familyObj[doc.id] = Object.assign({}, doc.data());
         });
         this.setState({ data: allFamilies });
+        this.setState({ loading: false });
         // console.log('data: ', this.state.data);
       })
       .catch(error => {
@@ -64,6 +66,7 @@ export default class MainPage extends Component {
 
   async componentDidMount() {
     YellowBox.ignoreWarnings(['Setting a timer']);
+    YellowBox.ignoreWarnings(['VirtualizedLists']);
 
     const arr = [];
     // this.setState({ data: arr })
@@ -75,6 +78,7 @@ export default class MainPage extends Component {
       })
     }
     // console.log('arr: ', arr);
+
 
     //this.setState({ data: arr })
   }
@@ -102,27 +106,29 @@ export default class MainPage extends Component {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: '#b5bef5' }} >
+      <ScrollView showsVerticalScrollIndicator style={{ backgroundColor: '#b5bef5' }} >
         <>
           <View style={styles.container}>
             <View style={styles.header}>
               <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
             </View>
-            <View style={styles.familiesList}>
-              <SafeAreaView style={{ flex: 1 }}>
-                <SelectableFlatlist
-                  data={this.state.data}
-                  state={STATE.EDIT}
-                  multiSelect={false}
-                  itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
-                  initialSelectedIndex={[0]}
-                  cellItemComponent={(item) => this.rowItem(item)}
-                  checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
-                  uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
-                  touchStyles={{ backgroundColor: '#b5bef5' }}
-                />
-              </SafeAreaView>
-            </View>
+            {this.state.loading
+              ? <ActivityIndicator size={50} color='#767ead' />
+              : <View style={styles.familiesList}>
+                <SafeAreaView style={{ flex: 1 }}>
+                  <SelectableFlatlist
+                    data={this.state.data}
+                    state={STATE.EDIT}
+                    multiSelect={false}
+                    itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
+                    initialSelectedIndex={[0]}
+                    cellItemComponent={(item) => this.rowItem(item)}
+                    checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
+                    uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
+                    touchStyles={{ backgroundColor: '#b5bef5' }}
+                  />
+                </SafeAreaView>
+              </View>}
             <View style={{ flexDirection: 'column' }}>
               <View style={styles.twoFirstButtons}>
                 <View style={styles.buttons}>
@@ -192,9 +198,9 @@ const styles = StyleSheet.create({
   },
   familiesList: {
     borderRadius: 2,
-    borderWidth: 1,
+    //borderWidth: 1,
     borderColor: '#767ead',
-    height: 400
+    //height: 400
   },
   titleText: {
     fontSize: 20,
@@ -214,6 +220,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 350,
+
     margin: 20,
     alignItems: 'center'
     // alignContent:'center'

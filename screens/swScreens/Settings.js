@@ -20,7 +20,7 @@ import { Select, Option } from "react-native-select-lists";
 import SelectableFlatlist, { STATE } from "react-native-selectable-flatlist";
 import { FontAwesome } from "@expo/vector-icons";
 //const FieldValue = require('firebase-admin').firestore.FieldValue;
-import NumericInput2 from "@wwdrew/react-native-numeric-textinput";
+
 
 export default class Settings extends Component {
   constructor(props) {
