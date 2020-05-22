@@ -33,6 +33,7 @@ export default class ParentsMainPage extends React.Component {
       afternoonTasks: [],
       eveningTasks: [],
       customTasks:[],
+      numberOftasks:0,
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -60,7 +61,10 @@ export default class ParentsMainPage extends React.Component {
           console.log("No such document!");
         } else {
           let allData = doc.data();
-          this.setState({ morningTasks: allData });
+          this.setState({ morningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
+          // allData.tasks.forEach(task=>{
+          //   if(task)
+          // })
           // console.log("Document data morning: ", this.state.morningTasks);
         }
       })
@@ -72,6 +76,7 @@ export default class ParentsMainPage extends React.Component {
       .firestore()
       .collection("RoutineTasks")
       .doc("noon");
+      
     getDoc = noonTasks
       .get()
       .then((doc) => {
@@ -79,7 +84,8 @@ export default class ParentsMainPage extends React.Component {
           console.log("No such document!");
         } else {
           let allData = doc.data();
-          this.setState({ noonTasks: allData });
+          
+          this.setState({ noonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
           // console.log("Document data noon: ", this.state.noonTasks);
         }
       })
@@ -98,7 +104,7 @@ export default class ParentsMainPage extends React.Component {
           console.log("No such document!");
         } else {
           let allData = doc.data();
-          this.setState({ afternoonTasks: allData });
+          this.setState({ afternoonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
           // console.log("Document data afternoon: ", this.state.afternoonTasks);
         }
       })
@@ -117,7 +123,10 @@ export default class ParentsMainPage extends React.Component {
           console.log("No such document!");
         } else {
           let allData = doc.data();
-          this.setState({ eveningTasks: allData });
+          // console.log('allData: ',allData)
+          // console.log('allDataaaaaaa: ',allData.tasks.length)
+
+          this.setState({ eveningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
           // console.log("Document data evening: ", this.state.eveningTasks);
         }
       })
@@ -173,6 +182,7 @@ export default class ParentsMainPage extends React.Component {
           ) {
             console.log("enter if");
             allTasks.push(doc._document.proto.fields);
+            this.state.numberOftasks++;
           }
           // console.log('doc: ',doc);
           // allFamilies.push(doc);
@@ -203,7 +213,8 @@ export default class ParentsMainPage extends React.Component {
 if((this.state.eveningTasks&&this.state.eveningTasks.length==0)){
   return <ActivityIndicator/>
 }
-console.log('allTaskssss: ',this.state.allTasks)
+// console.log('allTaskssss: ',this.state.allTasks.length)
+console.log('tasksDaone: ',this.state.numberOftasks)
 
     return (
       <View style={styles.container}>
@@ -219,7 +230,7 @@ console.log('allTaskssss: ',this.state.allTasks)
             {/* <ProgressBarAndroid
                 styleAttr="Horizontal"
                 indeterminate={false}
-                progress={tasksDone/allTasks.length}
+                progress={numberOftasks/allTasks.length}
               />             */}
 
             {/* { tasks } */}
