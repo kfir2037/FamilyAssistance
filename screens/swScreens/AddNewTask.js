@@ -1,16 +1,30 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Picker, Platform, StyleSheet, View, Text, ActivityIndicator, ScrollView, SafeAreaView, Modal, TouchableHighlight } from 'react-native';
-import firebase from '../../config/config';
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Picker,
+  Platform,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+  SafeAreaView,
+  Modal,
+  Button,
+  TouchableHighlight,
+  TextInput, 
+} from "react-native";
+import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
-import { CheckBox } from 'react-native-elements'
-import { FlatList } from 'react-native-gesture-handler';
+import { CheckBox } from "react-native-elements";
+import { FlatList } from "react-native-gesture-handler";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 
 function Item({ id, title, selected, onSelect }) {
   return (
-
     <CheckBox
-      checkedColor={'black'}
-      uncheckedColor={'black'}
+      checkedColor={"black"}
+      uncheckedColor={"black"}
       containerStyle={styles.checkBoxStyle}
       textStyle={styles.textCheckBoxStyle}
       iconRight
@@ -31,25 +45,385 @@ function Item({ id, title, selected, onSelect }) {
   );
 }
 
-const AddNewTask = () => {
+function UselessTextInput(props) {
+  return (
+    <TextInput
+      {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
+      editable
+      maxLength={40}
+    />
+  );
+}
+
+const AddNewTask = (familyId) => {
   const [selected, setSelected] = useState(new Map());
   const [tasks, setTasks] = useState([]);
-  const [time, setTime] = useState('morning');
-  const [kidOrParent,setKidOrParent] = useState()
+  const [time, setTime] = useState("morning");
+  const [kidOrParent, setKidOrParent] = useState();
+  const [forKid, setForKid] = useState();
+  const [forParent, setForParent] = useState();
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+  const [dateDestination, setDateDestination] = useState(new Date());
+  const [modeDestination, setModeDestination] = useState("date");
+  const [showDestination, setShowDestination] = useState(false);
+  const [otherTask, setOtherTask] = useState("");
 
   const onSelect = useCallback(
-    id => {
+    (id) => {
       const newSelected = new Map(selected);
       newSelected.set(id, !selected.get(id));
       setSelected(newSelected);
       console.log(selected);
     },
-    [selected],
+    [selected]
   );
 
+  // -----------------------from date--------------------
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
+  const showTimepicker = () => {
+    showMode("time");
+  };
+
+  //-----------------------------------------------------
+  // -----------------------To date--------------------
+  const onChangeDestination = (event, selectedDate) => {
+    const currentDate = selectedDate || dateDestiantion;
+    setShowDestination(Platform.OS === "ios");
+    setDateDestination(currentDate);
+  };
+
+  const showModeDestination = (currentMode) => {
+    setShowDestination(true);
+    setModeDestination(currentMode);
+  };
+
+  const showDatepickerDestination = () => {
+    showModeDestination("date");
+  };
+
+  const showTimepickerDestination = () => {
+    showModeDestination("time");
+  };
+
+  //-----------------------------------------------------
+  const save = async () => {
+    let morningTasks = [];
+    let noonTasks = [];
+    let afternoonTasks = [];
+    let eveningTasks = [];
+    // let familyId = "";
+    let morningTime = "";
+    let noonTime = "";
+    let afternoonTime = "";
+    let eveningTime = "";
+
+    let morning = firebase
+      .firestore()
+      .collection("RoutineTasks")
+      .doc("morning");
+    let getDoc = await morning
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          console.log("No such document!");
+        } else {
+          let allData = doc.data();
+          morningTime = allData.time;
+          morningTasks = allData.tasks.slice();
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting document", err);
+      });
+
+    let noon = firebase
+      .firestore()
+      .collection("RoutineTasks")
+      .doc("noon");
+    let getDoc2 = await noon
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          console.log("No such document@!");
+        } else {
+          let allData = doc.data();
+          noonTime = allData.time;
+          noonTasks = allData.tasks.slice();
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting document", err);
+      });
+
+    let afternoon = firebase
+      .firestore()
+      .collection("RoutineTasks")
+      .doc("afterNoon");
+    let getDoc3 = await afternoon
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          console.log("No such document!1");
+        } else {
+          let allData = doc.data();
+          afternoonTime = allData.time;
+          afternoonTasks = allData.tasks.slice();
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting document1", err);
+      });
+
+    let evening = firebase
+      .firestore()
+      .collection("RoutineTasks")
+      .doc("evening");
+    let getDoc4 = await evening
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          console.log("No such document!2");
+        } else {
+          let allData = doc.data();
+          eveningTime = allData.time;
+          eveningTasks = allData.tasks.slice();
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting document2", err);
+      });
+
+    let userId = firebase.auth().currentUser.uid;
+
+    var familyId2 = familyId.navigation.state.params.familyId;
+    var familyKids = [];
+    var familyParents = [];
+    console.log("familyId: ", familyId.navigation.state.params.familyId);
+    let familyDetails = firebase
+      .firestore()
+      .collection("families")
+      .doc(familyId2);
+    let detailsFamily = await familyDetails
+      .get()
+      .then((doc) => {
+        // console.log("doc: ", doc);
+        if (!doc.exists) {
+          console.log("No such document!4");
+        } else {
+          let allData = doc.data();
+          familyKids = allData.kids.slice();
+          familyParents = allData.parents.slice();
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting document4", err);
+      });
+    var allFamily = [];
+    if (forKid) {
+      allFamily = allFamily.concat(familyKids);
+    }
+    if (forParent) {
+      allFamily = allFamily.concat(familyParents);
+    }
+    // allFamily = familyKids.concat(familyParents);
+
+    allFamily.forEach((member) => {
+      let y = date.toString();
+      console.log("y:", y);
+      let temp = new Date(y);
+      console.log("temp:", temp);
+
+      let sourceDate =
+        moment(new Date(temp)).format("DD/MM/YYYY") + " " + morningTime;
+      let destinationDate =
+        moment(new Date(dateDestination.toString())).format("DD/MM/YYYY") +
+        " " +
+        morningTime;
+      var split = sourceDate.split("/");
+      var split2 = destinationDate.split("/");
+      var days = date;
+
+      let counter = parseInt(split2[0]) - parseInt(split[0]);
+      for (let i = 0; i < counter + 1; i++) {
+        let tempMorningTasks = [];
+        let tempNoonTasks = [];
+        let tempAfternoonTasks = [];
+        let tempEveningTasks = [];
+
+        selected.forEach((key, taskSelected) => {
+          if (key == false) {
+            return;
+          }
+          console.log("taskSelected: ", taskSelected);
+          if (morningTasks.includes(taskSelected)) {
+            tempMorningTasks.push(taskSelected);
+          } else if (noonTasks.includes(taskSelected)) {
+            tempNoonTasks.push(taskSelected);
+          } else if (afternoonTasks.includes(taskSelected)) {
+            tempAfternoonTasks.push(taskSelected);
+          } else if (eveningTasks.includes(taskSelected)) {
+            tempEveningTasks.push(taskSelected);
+          }
+        });
+        var daysString = days.toString();
+        var d = "";
+        console.log("tempMorningTasks: ", tempMorningTasks);
+        console.log("tempNoonTasks: ", tempNoonTasks);
+        console.log("tempAfternoonTasks: ", tempAfternoonTasks);
+        console.log("tempEveningTasks: ", tempEveningTasks);
+
+        if (tempMorningTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            morningTime;
+
+          let addDoc = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: morningTime,
+              tasks: tempMorningTasks,
+              category: "morning",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added morning document with ID: ", ref.id);
+            });
+        }
+        if (tempNoonTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
+          let addDoc2 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: noonTime,
+              tasks: tempNoonTasks,
+              category: "noon",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added noon document with ID: ", ref.id);
+            });
+        }
+        if (tempAfternoonTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            afternoonTime;
+
+          let addDoc3 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: afternoonTime,
+              tasks: tempAfternoonTasks,
+              category: "afternoon",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added afternoon document with ID: ", ref.id);
+            });
+        }
+        if (tempEveningTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            eveningTime;
+
+          let addDoc4 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: eveningTime,
+              tasks: tempEveningTasks,
+              category: "evening",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added evening document with ID: ", ref.id);
+            });
+        }
+        var tasksArr =[];
+        console.log('otherTask: ',otherTask)
+        if (otherTask != "") {
+          tasksArr.push(otherTask)
+          let addDoc4 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: days,
+              familyId: familyId2,
+              userId: member,
+              time: moment(days).format("HH:MM"),
+              tasks: tasksArr,
+              category: "custom tasks",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added special document with ID: ", ref.id);
+            });
+        }
+        var cond;
+        var test = moment(days).format("DD/MM/YYYY");
+        var test2 = moment(dateDestination).format("DD/MM/YYYY");
+        // console.log("test", test);
+        // console.log("test2", test2);
+        cond = test == test2;
+        // cond = moment(test).isSame(test2, "days");
+        // console.log("cond: ", cond);
+        // if (cond) {
+        //   flag = false;
+        //   console.log("flag");
+        //   return;
+        // }
+
+        days = new Date(moment(days, "DD/MM/YYYY HH:MM A").add(1, "days"));
+      }
+    });
+  };
+
+  const setForKidCheckbox = () => {
+    forKid ? setForKid(false) : setForKid(true);
+  };
+  const setForParentCheckbox = () => {
+    forParent ? setForParent(false) : setForParent(true);
+  };
   useEffect(() => {
-    let currentTasks = firebase.firestore().collection('RoutineTasks').doc(time);
-    currentTasks.get().then(function (doc) {
+    let currentTasks = firebase
+      .firestore()
+      .collection("RoutineTasks")
+      .doc(time);
+    currentTasks.get().then(function(doc) {
       if (doc.exists) {
         console.log(doc.data().tasks);
         setTasks(doc.data().tasks);
@@ -57,7 +431,7 @@ const AddNewTask = () => {
         // doc.data() will be undefined in this case
         console.log("No such document!");
       }
-    })
+    });
 
     console.log(tasks);
   }, [time]);
@@ -69,8 +443,8 @@ const AddNewTask = () => {
         <View style={styles.chooseType}>
           <Text style={styles.title}>בחר אשכול:</Text>
           <Picker
-            mode={'dropdown'}
-            itemStyle={{ fontWeight: 'bold' }}
+            mode={"dropdown"}
+            itemStyle={{ fontWeight: "bold" }}
             selectedValue={time}
             style={styles.pickerStyle}
             onValueChange={(itemValue, itemIndex) => setTime(itemValue)}
@@ -83,14 +457,15 @@ const AddNewTask = () => {
         </View>
         <View style={styles.chooseTasks}>
           <Text style={styles.title}>בחר משימות לאשכול:</Text>
-          {tasks.length <= 0
-            ? <ActivityIndicator size={50} color='#767ead' />
-            : <FlatList
+          {tasks.length <= 0 ? (
+            <ActivityIndicator size={50} color="#767ead" />
+          ) : (
+            <FlatList
               inverted
               refreshing
               horizontal
               data={tasks}
-              keyExtractor={item => item}
+              keyExtractor={(item) => item}
               renderItem={({ item }) => (
                 <Item
                   id={item}
@@ -101,34 +476,112 @@ const AddNewTask = () => {
               )}
               extraData={selected}
               contentContainerStyle={{ margin: 5 }}
-            >
-
-            </FlatList>
-          }
-
+            ></FlatList>
+          )}
+        </View>
+        <View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderBottomColor: "#000000",
+              borderBottomWidth: 1,
+            }}
+          >
+          <Text style={styles.title}>משימה מותאמת:</Text>
+            <UselessTextInput
+              multiline
+              numberOfLines={4}
+              onChangeText={(text) => setOtherTask(text)}
+              value={otherTask}
+            />
+          </View>
         </View>
         <View style={styles.kidOrParent}>
           <Text style={styles.title}>המשימה עבור:</Text>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "row" }}>
             <CheckBox
               iconRight
               right
               textStyle={styles.textCheckBoxStyle}
-              title='הורה'
-              containerStyle={{...styles.checkBoxStyle,height:40}}
-              checkedColor={'black'}
-              uncheckedColor={'black'}
+              title="הורה"
+              containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
+              checkedColor={"black"}
+              uncheckedColor={"black"}
+              checked={forParent}
+              onPress={setForParentCheckbox}
             />
             <CheckBox
               iconRight
               right
               textStyle={styles.textCheckBoxStyle}
-              title='ילד'
-              containerStyle={{...styles.checkBoxStyle,height:40}}
-              checkedColor={'black'}
-              uncheckedColor={'black'}
+              title="ילד"
+              containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
+              checkedColor={"black"}
+              uncheckedColor={"black"}
+              checked={forKid}
+              onPress={setForKidCheckbox}
             />
           </View>
+        </View>
+
+        <View>
+          <Text style={styles.title}>מתאריך:</Text>
+          <View>
+            <View>
+              <Button
+                onPress={showDatepicker}
+                title={moment(date).format("DD/MM/YYYY")}
+              />
+            </View>
+            <View>
+              <Button
+                onPress={showTimepicker}
+                title={moment(date).format("H:MM:SS A")}
+              />
+            </View>
+            {show && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                timeZoneOffsetInMinutes={0}
+                value={date}
+                mode={mode}
+                is24Hour={true}
+                display="default"
+                onChange={onChange}
+              />
+            )}
+          </View>
+        </View>
+        <View>
+          <Text style={styles.title}>עד תאריך:</Text>
+          <View>
+            <View>
+              <Button
+                onPress={showDatepickerDestination}
+                title={moment(dateDestination).format("DD/MM/YYYY A")}
+              />
+            </View>
+            <View>
+              <Button
+                onPress={showTimepickerDestination}
+                title={moment(dateDestination).format("H:MM:SS A")}
+              />
+            </View>
+            {showDestination && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                timeZoneOffsetInMinutes={0}
+                value={dateDestination}
+                mode={modeDestination}
+                is24Hour={true}
+                display="default"
+                onChange={onChangeDestination}
+              />
+            )}
+          </View>
+        </View>
+        <View>
+          <Button onPress={save} title={"הוסף"} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -137,36 +590,33 @@ const AddNewTask = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#b5bef5',
-    height: '100%',
-    width: '100%'
+    backgroundColor: "#b5bef5",
+    height: "100%",
+    width: "100%",
   },
   headerTitle: {
     fontSize: 25,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    margin: 5
-
+    fontWeight: "bold",
+    alignSelf: "center",
+    margin: 5,
   },
   chooseType: {
     margin: 5,
     marginBottom: 10,
-    flexDirection: 'row-reverse',
+    flexDirection: "row-reverse",
     // borderColor:'black',
     // borderWidth:1
-
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     //alignSelf: 'center',
     marginLeft: 10,
-    margin: 5
+    margin: 5,
   },
   pickerStyle: {
     height: 50,
     width: 170,
-
   },
 
   chooseTasks: {
@@ -177,21 +627,18 @@ const styles = StyleSheet.create({
 
   checkBoxStyle: {
     height: 50,
-    backgroundColor: '#767ead',
-    borderColor: 'black',
+    backgroundColor: "#767ead",
+    borderColor: "black",
     borderRadius: 10,
-
   },
 
   textCheckBoxStyle: {
-    color: 'black',
+    color: "black",
   },
   kidOrParent: {
     margin: 5,
-    flexDirection: 'row-reverse',
-
-
-  }
+    flexDirection: "row-reverse",
+  },
 });
 
 export default AddNewTask;

@@ -21,6 +21,7 @@ import {
 } from "react-native-elements";
 import Accordion from "../../src/components/Accordion";
 import firebase from "../../config/config";
+import moment from "moment";
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -32,7 +33,8 @@ export default class ParentsMainPage extends React.Component {
       noonTasks: [],
       afternoonTasks: [],
       eveningTasks: [],
-      customTasks:[],
+      customTasks: [],
+      numberOftasks: 0,
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -48,83 +50,160 @@ export default class ParentsMainPage extends React.Component {
   }
 
   getCustomTasks = async () => {
-    let morningTasks = firebase
+    var user = firebase.auth().currentUser.uid;
+    var currentDate = moment(new Date()).format("DD/MM/YYYY");
+    var morningTasks = [];
+    var noonTasks = [];
+    var afternoonTasks = [];
+    var eveningTasks = [];
+    const swFamilies = await firebase
       .firestore()
-      .collection("RoutineTasks")
-      .doc("morning");
-
-    let getDoc = morningTasks
+      .collection("tasks")
+      .where("userId", "==", user)
       .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!");
-        } else {
-          let allData = doc.data();
-          this.setState({ morningTasks: allData });
-          // console.log("Document data morning: ", this.state.morningTasks);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document", err);
-      });
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          let data = doc.data();
+          let timeFromTheServer = moment("2020-05-22").format("DD/MM/YYYY");
 
-    let noonTasks = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("noon");
-    getDoc = noonTasks
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!");
-        } else {
-          let allData = doc.data();
-          this.setState({ noonTasks: allData });
-          // console.log("Document data noon: ", this.state.noonTasks);
-        }
+          Object.keys(data).forEach((name) => {
+            console.log(name, data[name]);
+          });
+          if (timeFromTheServer == currentDate) {
+            // console.log("same");
+            if (data.category == "morning") {
+              // console.log("dataaaaaaa:", data);
+              morningTasks.push({
+                userUid:data.userUid,
+                familyId: data.familyId,
+                data: data.date,
+                category: data.category,
+                tasjs:data.tasks,
+              });
+            } else if (data.category == "noon") {
+              // console.log("dataaaaaaa:", data);
+              noonTasks.push({
+                userUid:data.userUid,
+                familyId: data.familyId,
+                data: data.date,
+                category: data.category,
+                tasjs:data.tasks,
+              });
+            } else if (data.category == "afternoon") {
+              // console.log("dataaaaaaa:", data);
+              afternoonTasks.push({
+                userUid:data.userUid,
+                familyId: data.familyId,
+                data: data.date,
+                category: data.category,
+                tasjs:data.tasks,
+              });
+            } else if (data.category == "evening") {
+              // console.log("dataaaaaaa:", data);
+              eveningTasks.push({
+                userUid:data.userUid,
+                familyId: data.familyId,
+                data: data.date,
+                category: data.category,
+                tasjs:data.tasks,
+              });
+            }
+          } else {
+            console.log("not same");
+          }
+        });
       })
-      .catch((err) => {
-        console.log("Error getting document", err);
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
       });
-
-    let afternoonTasks = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("afterNoon");
-    getDoc = afternoonTasks
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!");
-        } else {
-          let allData = doc.data();
-          this.setState({ afternoonTasks: allData });
-          // console.log("Document data afternoon: ", this.state.afternoonTasks);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document", err);
-      });
-
-    let eveningTasks = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("evening");
-    getDoc = eveningTasks
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!");
-        } else {
-          let allData = doc.data();
-          this.setState({ eveningTasks: allData });
-          // console.log("Document data evening: ", this.state.eveningTasks);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document", err);
-      });
+      this.setState({morningTasks:morningTasks,noonTasks:noonTasks,afternoonTasks:afternoonTasks,eveningTasks:eveningTasks})
   };
+  // getCustomTasks = async () => {
+  //   let morningTasks = firebase
+  //     .firestore()
+  //     .collection("RoutineTasks")
+  //     .doc("morning");
+
+  //   let getDoc = morningTasks
+  //     .get()
+  //     .then((doc) => {
+  //       if (!doc.exists) {
+  //         console.log("No such document!");
+  //       } else {
+  //         let allData = doc.data();
+  //         this.setState({ morningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
+  //         // allData.tasks.forEach(task=>{
+  //         //   if(task)
+  //         // })
+  //         // console.log("Document data morning: ", this.state.morningTasks);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error getting document", err);
+  //     });
+
+  //   let noonTasks = firebase
+  //     .firestore()
+  //     .collection("RoutineTasks")
+  //     .doc("noon");
+
+  //   getDoc = noonTasks
+  //     .get()
+  //     .then((doc) => {
+  //       if (!doc.exists) {
+  //         console.log("No such document!");
+  //       } else {
+  //         let allData = doc.data();
+
+  //         this.setState({ noonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
+  //         // console.log("Document data noon: ", this.state.noonTasks);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error getting document", err);
+  //     });
+
+  //   let afternoonTasks = firebase
+  //     .firestore()
+  //     .collection("RoutineTasks")
+  //     .doc("afterNoon");
+  //   getDoc = afternoonTasks
+  //     .get()
+  //     .then((doc) => {
+  //       if (!doc.exists) {
+  //         console.log("No such document!");
+  //       } else {
+  //         let allData = doc.data();
+  //         this.setState({ afternoonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
+  //         // console.log("Document data afternoon: ", this.state.afternoonTasks);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error getting document", err);
+  //     });
+
+  //   let eveningTasks = firebase
+  //     .firestore()
+  //     .collection("RoutineTasks")
+  //     .doc("evening");
+  //   getDoc = eveningTasks
+  //     .get()
+  //     .then((doc) => {
+  //       if (!doc.exists) {
+  //         console.log("No such document!");
+  //       } else {
+  //         let allData = doc.data();
+  //         // console.log('allData: ',allData)
+  //         // console.log('allDataaaaaaa: ',allData.tasks.length)
+
+  //         this.setState({ eveningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
+  //         // console.log("Document data evening: ", this.state.eveningTasks);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error getting document", err);
+  //     });
+  // };
   getTasks = async () => {
     let date = new Date();
     let currentDate = date.getDate();
@@ -173,6 +252,7 @@ export default class ParentsMainPage extends React.Component {
           ) {
             console.log("enter if");
             allTasks.push(doc._document.proto.fields);
+            this.state.numberOftasks++;
           }
           // console.log('doc: ',doc);
           // allFamilies.push(doc);
@@ -188,9 +268,9 @@ export default class ParentsMainPage extends React.Component {
 
     this.setState({ allTasks });
   };
-  markMission(x){
-    console.log(x)
-    console.log('mission done')
+  markMission(x) {
+    console.log(x);
+    console.log("mission done");
   }
   render() {
     // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
@@ -199,11 +279,12 @@ export default class ParentsMainPage extends React.Component {
     // for(i in this.state.allTasks){
     //   console.log(i)
     // }
-    console.log('dsdsdasd',this.state.morningTasks.length)
-if((this.state.eveningTasks&&this.state.eveningTasks.length==0)){
-  return <ActivityIndicator/>
-}
-console.log('allTaskssss: ',this.state.allTasks)
+    console.log("dsdsdasd", this.state.morningTasks.length);
+    // if((this.state.eveningTasks&&this.state.eveningTasks.length==0)){
+    //   return <ActivityIndicator/>
+    // }
+    // console.log('allTaskssss: ',this.state.allTasks.length)
+    console.log("tasksDaone: ", this.state.numberOftasks);
 
     return (
       <View style={styles.container}>
@@ -219,7 +300,7 @@ console.log('allTaskssss: ',this.state.allTasks)
             {/* <ProgressBarAndroid
                 styleAttr="Horizontal"
                 indeterminate={false}
-                progress={tasksDone/allTasks.length}
+                progress={numberOftasks/allTasks.length}
               />             */}
 
             {/* { tasks } */}

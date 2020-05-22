@@ -30,6 +30,7 @@ export default class Login extends Component {
         user = firebase.auth().currentUser;
         if (user) {
           let userUid = user.uid;
+          console.log(userUid)
           firebase.firestore().collection('users').doc(userUid).get()
             .then(doc => {
               console.log('loading')
