@@ -201,23 +201,6 @@ const AddNewTask = (familyId) => {
 
     let userId = firebase.auth().currentUser.uid;
 
-    // let userDetails = firebase
-    //   .firestore()
-    //   .collection("users")
-    //   .doc(userId);
-    // let details = await userDetails
-    //   .get()
-    //   .then((doc) => {
-    //     if (!doc.exists) {
-    //       console.log("No such document!3");
-    //     } else {
-    //       let allData = doc.data();
-    //       familyId = allData.familyId;
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error getting document3", err);
-    //   });
     var familyId2 = familyId.navigation.state.params.familyId;
     var familyKids = [];
     var familyParents = [];
@@ -229,77 +212,170 @@ const AddNewTask = (familyId) => {
     let detailsFamily = await familyDetails
       .get()
       .then((doc) => {
+        // console.log("doc: ", doc);
         if (!doc.exists) {
           console.log("No such document!4");
         } else {
           let allData = doc.data();
-          // console.log('allData: ',allData)
-          allData.kids.forEach((kid) => {
-            familyKids.push(kid);
-          });
-          allData.parents.forEach((parent) => {
-            familyParents.push(parent);
-          });
+          familyKids = allData.kids.slice();
+          familyParents = allData.parents.slice();
         }
       })
       .catch((err) => {
         console.log("Error getting document4", err);
       });
-
-    var allFamily = familyKids.slice();
-    var allFamily = familyParents.slice();
-    // console.log("allFamily: ", allFamily);
-    // selected.filter((key) => {
-    //   return key == true;
-    // });
-    for (let k of selected.keys()) {
-      return k ? true : false;
+    var allFamily = [];
+    if (forKid) {
+      allFamily = allFamily.concat(familyKids);
     }
-    console.log('selected ',selected)
-    console.log('dddd ')
+    if (forParent) {
+      allFamily = allFamily.concat(familyParents);
+    }
+    // allFamily = familyKids.concat(familyParents);
+
     allFamily.forEach((member) => {
-      console.log("3");
+      let y = date.toString();
+      console.log("y:", y);
+      let temp = new Date(y);
+      console.log("temp:", temp);
 
-      selected.forEach((taskSelected) => {
-        console.log("2");
+      let sourceDate =
+        moment(new Date(temp)).format("DD/MM/YYYY") + " " + morningTime;
+      let destinationDate =
+        moment(new Date(dateDestination.toString())).format("DD/MM/YYYY") +
+        " " +
+        morningTime;
+      var split = sourceDate.split("/");
+      var split2 = destinationDate.split("/");
+      var days = date;
 
-        if (morningTasks.includes(taskSelected)) {
-          let flag = true;
-          let days = data;
-          console.log("1");
-          while (flag) {
-            let addDoc = db
-              .collection("tasks")
-              .add({
-                date: new Date(
-                  moment(days)
-                    .format("DD/MM/YYYY A")
-                    .toString() +
-                    " " +
-                    morningTime
-                ),
-                familyId: familyId,
-                userId: member,
-                time: morningTime,
-                title: taskSelected,
-                tasks: [],
-                category: "morning",
-              })
-              .then((ref) => {
-                console.log("Added document with ID: ", ref.id);
-              });
-            days = moment(days, "DD/MM/YYYY HH:MM A").add(1, "days");
-            if (
-              moment(moment(days).format("DD/MM/YYYY")).isSame(
-                moment(moment(dateDestination).format("DD/MM/YYYY")),
-                "days"
-              )
-            ) {
-              flag = false;
-            }
+      let counter = parseInt(split2[0]) - parseInt(split[0]);
+      for (let i = 0; i < counter + 1; i++) {
+        let tempMorningTasks = [];
+        let tempNoonTasks = [];
+        let tempAfternoonTasks = [];
+        let tempEveningTasks = [];
+
+        selected.forEach((key, taskSelected) => {
+          if (key == false) {
+            return;
           }
+          console.log("taskSelected: ", taskSelected);
+          if (morningTasks.includes(taskSelected)) {
+            tempMorningTasks.push(taskSelected);
+          } else if (noonTasks.includes(taskSelected)) {
+            tempNoonTasks.push(taskSelected);
+          } else if (afternoonTasks.includes(taskSelected)) {
+            tempAfternoonTasks.push(taskSelected);
+          } else if (eveningTasks.includes(taskSelected)) {
+            tempEveningTasks.push(taskSelected);
+          }
+        });
+        var daysString = days.toString();
+        var d = "";
+        console.log("tempMorningTasks: ", tempMorningTasks);
+        console.log("tempNoonTasks: ", tempNoonTasks);
+        console.log("tempAfternoonTasks: ", tempAfternoonTasks);
+        console.log("tempEveningTasks: ", tempEveningTasks);
+
+        if (tempMorningTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            morningTime;
+
+          let addDoc = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: morningTime,
+              tasks: tempMorningTasks,
+              category: "morning",
+            })
+            .then((ref) => {
+              console.log("Added morning document with ID: ", ref.id);
+            });
+        } 
+         if (tempNoonTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
+          console.log("44444444444444: ", tempNoonTasks);
+          let addDoc2 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: noonTime,
+              tasks: tempNoonTasks,
+              category: "noon",
+            })
+            .then((ref) => {
+              console.log("Added noon document with ID: ", ref.id);
+            });
+        } 
+         if (tempAfternoonTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            afternoonTime;
+
+          let addDoc3 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: afternoonTime,
+              tasks: tempAfternoonTasks,
+              category: "afternoon",
+            })
+            .then((ref) => {
+              console.log("Added afternoon document with ID: ", ref.id);
+            });
+        } 
+         if (tempEveningTasks.length > 0) {
+          d =
+            moment(new Date(daysString)).format("DD/MM/YYYY") +
+            " " +
+            eveningTime;
+
+          let addDoc4 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: d,
+              familyId: familyId2,
+              userId: member,
+              time: eveningTime,
+              tasks: tempEveningTasks,
+              category: "evening",
+            })
+            .then((ref) => {
+              console.log("Added evening document with ID: ", ref.id);
+            });
         }
-      });
+        var cond;
+        var test = moment(days).format("DD/MM/YYYY");
+        var test2 = moment(dateDestination).format("DD/MM/YYYY");
+        // console.log("test", test);
+        // console.log("test2", test2);
+        cond = test == test2;
+        // cond = moment(test).isSame(test2, "days");
+        // console.log("cond: ", cond);
+        // if (cond) {
+        //   flag = false;
+        //   console.log("flag");
+        //   return;
+        // }
+
+        days = new Date(moment(days, "DD/MM/YYYY HH:MM A").add(1, "days"));
+      }
     });
   };
 
