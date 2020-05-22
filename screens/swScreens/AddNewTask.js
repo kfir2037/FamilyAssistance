@@ -11,6 +11,7 @@ import {
   Modal,
   Button,
   TouchableHighlight,
+  TextInput, 
 } from "react-native";
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
@@ -44,6 +45,16 @@ function Item({ id, title, selected, onSelect }) {
   );
 }
 
+function UselessTextInput(props) {
+  return (
+    <TextInput
+      {...props} // Inherit any props passed to it; e.g., multiline, numberOfLines below
+      editable
+      maxLength={40}
+    />
+  );
+}
+
 const AddNewTask = (familyId) => {
   const [selected, setSelected] = useState(new Map());
   const [tasks, setTasks] = useState([]);
@@ -57,6 +68,7 @@ const AddNewTask = (familyId) => {
   const [dateDestination, setDateDestination] = useState(new Date());
   const [modeDestination, setModeDestination] = useState("date");
   const [showDestination, setShowDestination] = useState(false);
+  const [otherTask, setOtherTask] = useState("");
 
   const onSelect = useCallback(
     (id) => {
@@ -134,13 +146,11 @@ const AddNewTask = (familyId) => {
           let allData = doc.data();
           morningTime = allData.time;
           morningTasks = allData.tasks.slice();
-          // console.log("66666",morningTasks)
         }
       })
       .catch((err) => {
         console.log("Error getting document", err);
       });
-    // console.log("22323",morningTasks)
 
     let noon = firebase
       .firestore()
@@ -294,15 +304,15 @@ const AddNewTask = (familyId) => {
               time: morningTime,
               tasks: tempMorningTasks,
               category: "morning",
+              isDone: false,
             })
             .then((ref) => {
               console.log("Added morning document with ID: ", ref.id);
             });
-        } 
-         if (tempNoonTasks.length > 0) {
+        }
+        if (tempNoonTasks.length > 0) {
           d =
             moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
-          console.log("44444444444444: ", tempNoonTasks);
           let addDoc2 = firebase
             .firestore()
             .collection("tasks")
@@ -313,12 +323,13 @@ const AddNewTask = (familyId) => {
               time: noonTime,
               tasks: tempNoonTasks,
               category: "noon",
+              isDone: false,
             })
             .then((ref) => {
               console.log("Added noon document with ID: ", ref.id);
             });
-        } 
-         if (tempAfternoonTasks.length > 0) {
+        }
+        if (tempAfternoonTasks.length > 0) {
           d =
             moment(new Date(daysString)).format("DD/MM/YYYY") +
             " " +
@@ -334,12 +345,13 @@ const AddNewTask = (familyId) => {
               time: afternoonTime,
               tasks: tempAfternoonTasks,
               category: "afternoon",
+              isDone: false,
             })
             .then((ref) => {
               console.log("Added afternoon document with ID: ", ref.id);
             });
-        } 
-         if (tempEveningTasks.length > 0) {
+        }
+        if (tempEveningTasks.length > 0) {
           d =
             moment(new Date(daysString)).format("DD/MM/YYYY") +
             " " +
@@ -355,9 +367,30 @@ const AddNewTask = (familyId) => {
               time: eveningTime,
               tasks: tempEveningTasks,
               category: "evening",
+              isDone: false,
             })
             .then((ref) => {
               console.log("Added evening document with ID: ", ref.id);
+            });
+        }
+        var tasksArr =[];
+        console.log('otherTask: ',otherTask)
+        if (otherTask != "") {
+          tasksArr.push(otherTask)
+          let addDoc4 = firebase
+            .firestore()
+            .collection("tasks")
+            .add({
+              date: days,
+              familyId: familyId2,
+              userId: member,
+              time: moment(days).format("HH:MM"),
+              tasks: tasksArr,
+              category: "custom tasks",
+              isDone: false,
+            })
+            .then((ref) => {
+              console.log("Added special document with ID: ", ref.id);
             });
         }
         var cond;
@@ -445,6 +478,23 @@ const AddNewTask = (familyId) => {
               contentContainerStyle={{ margin: 5 }}
             ></FlatList>
           )}
+        </View>
+        <View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderBottomColor: "#000000",
+              borderBottomWidth: 1,
+            }}
+          >
+          <Text style={styles.title}>משימה מותאמת:</Text>
+            <UselessTextInput
+              multiline
+              numberOfLines={4}
+              onChangeText={(text) => setOtherTask(text)}
+              value={otherTask}
+            />
+          </View>
         </View>
         <View style={styles.kidOrParent}>
           <Text style={styles.title}>המשימה עבור:</Text>
