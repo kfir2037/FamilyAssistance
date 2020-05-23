@@ -42,7 +42,7 @@ export interface List {
   items: ListItem[];
   picture: string;
   test: string;
-  markMission:any
+  markMission:any;
 }
 
 interface ListProps {

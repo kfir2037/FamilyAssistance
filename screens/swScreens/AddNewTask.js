@@ -9,13 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
   Modal,
-  Button,
+
   TouchableHighlight,
-  TextInput, 
+  TextInput,
 } from "react-native";
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
-import { CheckBox } from "react-native-elements";
+import { CheckBox, Button } from "react-native-elements";
 import { FlatList } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -373,8 +373,8 @@ const AddNewTask = (familyId) => {
               console.log("Added evening document with ID: ", ref.id);
             });
         }
-        var tasksArr =[];
-        console.log('otherTask: ',otherTask)
+        var tasksArr = [];
+        console.log('otherTask: ', otherTask)
         if (otherTask != "") {
           tasksArr.push(otherTask)
           let addDoc4 = firebase
@@ -423,7 +423,7 @@ const AddNewTask = (familyId) => {
       .firestore()
       .collection("RoutineTasks")
       .doc(time);
-    currentTasks.get().then(function(doc) {
+    currentTasks.get().then(function (doc) {
       if (doc.exists) {
         console.log(doc.data().tasks);
         setTasks(doc.data().tasks);
@@ -460,39 +460,39 @@ const AddNewTask = (familyId) => {
           {tasks.length <= 0 ? (
             <ActivityIndicator size={50} color="#767ead" />
           ) : (
-            <FlatList
-              inverted
-              refreshing
-              horizontal
-              data={tasks}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <Item
-                  id={item}
-                  title={item}
-                  selected={!!selected.get(item)}
-                  onSelect={onSelect}
-                />
-              )}
-              extraData={selected}
-              contentContainerStyle={{ margin: 5 }}
-            ></FlatList>
-          )}
+              <FlatList
+                inverted
+                refreshing
+                horizontal
+                data={tasks}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <Item
+                    id={item}
+                    title={item}
+                    selected={!!selected.get(item)}
+                    onSelect={onSelect}
+                  />
+                )}
+                extraData={selected}
+                contentContainerStyle={{ margin: 5 }}
+              ></FlatList>
+            )}
         </View>
         <View>
           <View
             style={{
-              backgroundColor: 'white',
-              borderBottomColor: "#000000",
-              borderBottomWidth: 1,
+              backgroundColor: "#b5bef5"
             }}
           >
-          <Text style={styles.title}>משימה מותאמת:</Text>
+            <Text style={styles.title}>משימה מותאמת:</Text>
             <UselessTextInput
               multiline
               numberOfLines={4}
               onChangeText={(text) => setOtherTask(text)}
               value={otherTask}
+              textAlign='right'
+              style={{ margin: 5, backgroundColor: "#b5bef5", borderWidth: 1 }}
             />
           </View>
         </View>
@@ -526,17 +526,24 @@ const AddNewTask = (familyId) => {
 
         <View>
           <Text style={styles.title}>מתאריך:</Text>
-          <View>
+          <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
             <View>
               <Button
                 onPress={showDatepicker}
                 title={moment(date).format("DD/MM/YYYY")}
+                buttonStyle={styles.button}
+                containerStyle={styles.containerButton}
+                titleStyle={{ color: 'black' }}
               />
+
             </View>
             <View>
               <Button
                 onPress={showTimepicker}
-                title={moment(date).format("H:MM:SS A")}
+                title={moment(date).format("H:MM")}
+                buttonStyle={styles.button}
+                containerStyle={styles.containerButton}
+                titleStyle={{ color: 'black' }}
               />
             </View>
             {show && (
@@ -554,18 +561,26 @@ const AddNewTask = (familyId) => {
         </View>
         <View>
           <Text style={styles.title}>עד תאריך:</Text>
-          <View>
+          <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
             <View>
               <Button
                 onPress={showDatepickerDestination}
-                title={moment(dateDestination).format("DD/MM/YYYY A")}
+                title={moment(dateDestination).format("DD/MM/YYYY")}
+                buttonStyle={styles.button}
+                containerStyle={styles.containerButton}
+                titleStyle={{ color: 'black' }}
               />
+
             </View>
             <View>
               <Button
                 onPress={showTimepickerDestination}
-                title={moment(dateDestination).format("H:MM:SS A")}
+                title={moment(dateDestination).format("H:MM")}
+                buttonStyle={styles.button}
+                containerStyle={styles.containerButton}
+                titleStyle={{ color: 'black' }}
               />
+
             </View>
             {showDestination && (
               <DateTimePicker
@@ -580,8 +595,14 @@ const AddNewTask = (familyId) => {
             )}
           </View>
         </View>
-        <View>
-          <Button onPress={save} title={"הוסף"} />
+        <View style={{marginTop:10}}>
+          <Button
+            onPress={save}
+            title={"הוסף"}
+            buttonStyle={styles.button}
+            containerStyle={styles.containerButton}
+            titleStyle={{ color: 'black' }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -638,6 +659,19 @@ const styles = StyleSheet.create({
   kidOrParent: {
     margin: 5,
     flexDirection: "row-reverse",
+  },
+  button: {
+    backgroundColor: '#767ead',
+    width: 110,
+    height: 40,
+    borderRadius: 15,
+    borderWidth:1,
+    borderColor:'black'
+  },
+  containerButton: {
+    alignItems: 'center',
+    margin: 5,
+
   },
 });
 
