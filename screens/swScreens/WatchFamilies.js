@@ -11,7 +11,8 @@ const WatchFamilies = ({ navigation }) => {
 
   const [modalLoading, setModalLoading] = useState(false);
   const [familyObj, setFamilyObj] = useState({});
-  const [parentDetails,setParentDetails] = useState({});
+
+  const [parentDetails, setParentDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isParentModalVisible, setIsParentModalVisible] = useState(false);
   const [isKidModalVisible, setIsKidModalVisible] = useState(false);
@@ -45,9 +46,8 @@ const WatchFamilies = ({ navigation }) => {
 
       });
 
-      
-    return <Text>{parentDetails['firstName']}</Text>
 
+    return <Text>{parentDetails['firstName']}</Text>
 
   }
 
@@ -58,10 +58,24 @@ const WatchFamilies = ({ navigation }) => {
       .then(doc => {
         setFamilyObj(doc.data());
         setIsLoading(false);
+        doc.data().parents.forEach(parentID => {
+          firebase.firestore().collection('users').doc(parentID).get()
+            .then(doc => {
+              parentDetails.push({
+                firstName: doc.data().firstName,
+                birthDate: doc.data().birthDate,
+                gender: doc.data().gender
+              })
+            }
+
+            )
+        })
         console.log('familyObj', familyObj);
+        //firebase.firestore().collection('users').doc()
       })
 
-    //await firebase.firestore().collection('users').doc(familyObj)
+
+    //firebase.firestore().collection('users').doc(familyObj['parents'][0])
 
   }
 
@@ -410,7 +424,7 @@ const WatchFamilies = ({ navigation }) => {
                 <FlatList
                   //style={{ backgroundColor: 'white' }}
                   data={familyObj['parents']}
-                  renderItem={({ item }) => parentListItem(item)}
+                  renderItem={({ item }) => { }}
                   keyExtractor={item => item}
                 />
                 <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
