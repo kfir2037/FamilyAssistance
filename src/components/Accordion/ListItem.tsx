@@ -40,6 +40,7 @@ interface ListItemProps {
 
 export default ({ item, isLast }: ListItemProps) => {
   const bottomRadius = isLast ? 8 : 0;
+
   return (
     
     <View>
@@ -53,7 +54,7 @@ export default ({ item, isLast }: ListItemProps) => {
         ]}
         
       >
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name}>{item}</Text>
         <View style={styles.pointsContainer}>
             <Text style={styles.points}>{item.points}</Text>
         </View>
