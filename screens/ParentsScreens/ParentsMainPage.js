@@ -56,6 +56,7 @@ export default class ParentsMainPage extends React.Component {
     var noonTasks = [];
     var afternoonTasks = [];
     var eveningTasks = [];
+    let taskId = "";
     const swFamilies = await firebase
       .firestore()
       .collection("tasks")
@@ -64,49 +65,75 @@ export default class ParentsMainPage extends React.Component {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let data = doc.data();
-          let timeFromTheServer = moment("2020-05-22").format("DD/MM/YYYY");
-
-          Object.keys(data).forEach((name) => {
-            console.log(name, data[name]);
-          });
+          // console.log('doc id: ',doc.id)
+          taskId = doc.id;
+          // let timeFromTheServer = moment("2020-05-22").format("DD/MM/YYYY");
+          // console.log('timeFromTheServer: ',timeFromTheServer)
+          // console.log('currentDate: ',currentDate)
+          // var temp =data.date;
+          // var test2 = new Date(temp)
+          // console.log('test2:, ',test)
+          // temp = moment(test2).format("DD/MM/YYYY")
+          // console.log('doc.date: ',temp)
+          // console.log('data.date: ',data.date)
+          console.log(data.date.seconds);
+          // console.log('new date: ',new Date(data.date.seconds*1000))
+          let timeFromTheServer = moment(
+            new Date(data.date.seconds * 1000)
+          ).format("DD/MM/YYYY");
+          // console.log('timeFromTheServer: ',timeFromTheServer)
+          // console.log('currentDate: ',currentDate)
+          // console.log('condiftion: ',timeFromTheServer == currentDate)
           if (timeFromTheServer == currentDate) {
-            // console.log("same");
+            console.log("same");
             if (data.category == "morning") {
               // console.log("dataaaaaaa:", data);
               morningTasks.push({
-                userUid:data.userUid,
+                userUid: data.userUid,
                 familyId: data.familyId,
                 data: data.date,
                 category: data.category,
-                tasjs:data.tasks,
+                tasks: data.tasks,
+                taskId: taskId,
+                isDone: data.isDone,
               });
+              console.log("added to morning tasks");
             } else if (data.category == "noon") {
               // console.log("dataaaaaaa:", data);
               noonTasks.push({
-                userUid:data.userUid,
+                userUid: data.userUid,
                 familyId: data.familyId,
                 data: data.date,
                 category: data.category,
-                tasjs:data.tasks,
+                tasks: data.tasks,
+                taskId: taskId,
+                isDone: data.isDone,
               });
+              console.log("added to noon tasks");
             } else if (data.category == "afternoon") {
               // console.log("dataaaaaaa:", data);
               afternoonTasks.push({
-                userUid:data.userUid,
+                userUid: data.userUid,
                 familyId: data.familyId,
                 data: data.date,
                 category: data.category,
-                tasjs:data.tasks,
+                tasks: data.tasks,
+                taskId: taskId,
+                isDone: data.isDone,
               });
+              console.log("added to afternoon tasks");
             } else if (data.category == "evening") {
               // console.log("dataaaaaaa:", data);
               eveningTasks.push({
-                userUid:data.userUid,
+                userUid: data.userUid,
                 familyId: data.familyId,
                 data: data.date,
                 category: data.category,
-                tasjs:data.tasks,
+                tasks: data.tasks,
+                taskId: taskId,
+                isDone: data.isDone,
               });
+              console.log("added to evening tasks");
             }
           } else {
             console.log("not same");
@@ -116,7 +143,12 @@ export default class ParentsMainPage extends React.Component {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
-      this.setState({morningTasks:morningTasks,noonTasks:noonTasks,afternoonTasks:afternoonTasks,eveningTasks:eveningTasks})
+    this.setState({
+      morningTasks: morningTasks,
+      noonTasks: noonTasks,
+      afternoonTasks: afternoonTasks,
+      eveningTasks: eveningTasks,
+    });
   };
   // getCustomTasks = async () => {
   //   let morningTasks = firebase
@@ -209,9 +241,6 @@ export default class ParentsMainPage extends React.Component {
     let currentDate = date.getDate();
     let currentMonth = date.getMonth() + 1;
     let currentYear = date.getFullYear();
-    console.log("day: ", currentDate);
-    console.log("month: ", currentMonth);
-    console.log("year: ", currentYear);
 
     let taskDay = "";
     let taskMonth = "";
@@ -268,9 +297,32 @@ export default class ParentsMainPage extends React.Component {
 
     this.setState({ allTasks });
   };
-  markMission(x) {
-    console.log(x);
-    console.log("mission done");
+  async markMission(task) {
+    console.log("task: ", task);
+    var isDone;
+    await firebase
+      .firestore()
+      .collection("tasks")
+      .doc(task)
+      .get()
+      .then((doc) => {
+        //console.log(doc.data().firstName);
+        var data = doc.data();
+        isDone = data.isDone;
+
+        console.log("isDone2222: ", isDone);
+      })
+      .catch((error) => {});
+      console.log("isDone33333: ", isDone);
+
+    await firebase
+      .firestore()
+      .collection("tasks")
+      .doc(task)
+      .update({
+        isDone: !isDone
+      });
+      console.log('isDone: ',isDone)
   }
   render() {
     // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
@@ -279,12 +331,18 @@ export default class ParentsMainPage extends React.Component {
     // for(i in this.state.allTasks){
     //   console.log(i)
     // }
-    console.log("dsdsdasd", this.state.morningTasks.length);
-    // if((this.state.eveningTasks&&this.state.eveningTasks.length==0)){
-    //   return <ActivityIndicator/>
-    // }
+
+    console.log("morningTasks", this.state.morningTasks);
+    console.log("noonTasks", this.state.noonTasks);
+    console.log("afternoonTasks", this.state.afternoonTasks);
+    console.log("eveningTasks", this.state.eveningTasks);
+
+    if (this.state.eveningTasks && this.state.eveningTasks.length == 0) {
+      return <ActivityIndicator />;
+    }
     // console.log('allTaskssss: ',this.state.allTasks.length)
-    console.log("tasksDaone: ", this.state.numberOftasks);
+
+    // console.log("tasksDaone: ", this.state.numberOftasks);
 
     return (
       <View style={styles.container}>
@@ -297,11 +355,11 @@ export default class ParentsMainPage extends React.Component {
               containerStyle={{height: 50,borderRadius:6} }
             /> */}
 
-            {/* <ProgressBarAndroid
-                styleAttr="Horizontal"
-                indeterminate={false}
-                progress={numberOftasks/allTasks.length}
-              />             */}
+            <ProgressBarAndroid
+              styleAttr="Horizontal"
+              indeterminate={false}
+              progress={2 / 3}
+            />
 
             {/* { tasks } */}
 
