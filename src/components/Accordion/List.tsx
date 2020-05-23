@@ -44,6 +44,7 @@ export interface List {
   test: string;
   markMission:any,
   taskId:string,
+  isDone:boolean,
 }
 
 interface ListProps {
@@ -70,7 +71,7 @@ const images2 = {
 };
 
 export default ({ list }: ListProps) => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(list.isDone);
   const toggleSwitch = (x) => {
     setIsEnabled((prev) => !prev);
     console.log('list: ',list)
@@ -96,6 +97,8 @@ export default ({ list }: ListProps) => {
   });
 
 
+  // setIsEnabled(list.isDone)
+  
 
   // let pic = "../icons/moon.png";
   let pic2 = "../icons/sun.png";

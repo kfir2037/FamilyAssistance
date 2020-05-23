@@ -100,8 +100,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.morningTasks[0] ? props.morningTasks[0].taskId : "",
+    isDone: props.morningTasks[0] ? props.morningTasks[0].isDone : "",
   };
-  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }} />);
+  tasks.push(<List /* key={1} */ {...{ list }} />);
   var list: ListModel = {
     name: "משימות צהריים",
     items: props.noonTasks[0] ? props.noonTasks[0].tasks.slice() : [],
@@ -110,8 +111,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.noonTasks[0] ? props.noonTasks[0].taskId : "",
+    isDone: props.noonTasks[0] ? props.noonTasks[0].isDone : "",
   };
-  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }} />);
+  tasks.push(<List /* key={2} */ {...{ list }} />);
   var list: ListModel = {
     name: "משימות אחר הצהריים",
     items: props.afternoonTasks[0] ? props.afternoonTasks[0].tasks.slice() : [],
@@ -120,8 +122,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.afternoonTasks[0] ? props.afternoonTasks[0].taskId : "",
+    isDone: props.afternoonTasks[0] ? props.afternoonTasks[0].isDone : "",
   };
-  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }} />);
+  tasks.push(<List /* key={3} */ {...{ list }} />);
   var list: ListModel = {
     name: "משימות ערב",
     items: props.eveningTasks[0] ? props.eveningTasks[0].tasks.slice() : [],
@@ -130,19 +133,22 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.eveningTasks[0] ? props.eveningTasks[0].taskId : "",
+    isDone: props.eveningTasks[0] ? props.eveningTasks[0].isDone : "",
   };
   console.log("noonTasks: ", props.noonTasks);
   console.log("customItems: ", props.customItems);
-  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }} />);
+  tasks.push(<List /* key={4} */ {...{ list }} />);
   var list: ListModel = {
     name: "משימות מותאמות",
-    items: customItems.slice(),
+    items: props.customTasks[0] ? props.customTasks[0].tasks.slice() : [],
     picture: "moon",
     test: "test",
     markMission: props.markMission,
-    taskId: "123123",
+    taskId: props.customTasks[0] ? props.customTasks[0].taskId : "",
+    isDone: props.customTasks[0] ? props.customTasks[0].isDone : "",
+
   };
-  tasks.push(<List /* key={allTasks[i]["id"]} */ {...{ list }} />);
+  tasks.push(<List /* key={5} */ {...{ list }} />);
   // for (let i = 0; i < allTasks.length; i++) {
   //   // console.log('test');
   //   const list: ListModel = {
