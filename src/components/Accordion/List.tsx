@@ -42,7 +42,8 @@ export interface List {
   items: ListItem[];
   picture: string;
   test: string;
-  markMission:any
+  markMission:any,
+  taskId:string,
 }
 
 interface ListProps {
@@ -70,9 +71,10 @@ const images2 = {
 
 export default ({ list }: ListProps) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {
+  const toggleSwitch = (x) => {
     setIsEnabled((prev) => !prev);
-    list.markMission('test')
+    console.log('list: ',list)
+    list.markMission(list.taskId)
   };
   const [open, setOpen] = useState(false);
   // console.log('list: ',list)
@@ -107,6 +109,7 @@ export default ({ list }: ListProps) => {
   // console.log('pic: ',pic)
   return (
     <>
+   
       <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
         <Animated.View
           style={[

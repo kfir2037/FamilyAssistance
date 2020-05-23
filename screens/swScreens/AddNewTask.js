@@ -11,7 +11,7 @@ import {
   Modal,
   Button,
   TouchableHighlight,
-  TextInput, 
+  TextInput,
 } from "react-native";
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
@@ -245,9 +245,7 @@ const AddNewTask = (familyId) => {
 
     allFamily.forEach((member) => {
       let y = date.toString();
-      console.log("y:", y);
       let temp = new Date(y);
-      console.log("temp:", temp);
 
       let sourceDate =
         moment(new Date(temp)).format("DD/MM/YYYY") + " " + morningTime;
@@ -282,17 +280,30 @@ const AddNewTask = (familyId) => {
           }
         });
         var daysString = days.toString();
-        var d = "";
-        console.log("tempMorningTasks: ", tempMorningTasks);
-        console.log("tempNoonTasks: ", tempNoonTasks);
-        console.log("tempAfternoonTasks: ", tempAfternoonTasks);
-        console.log("tempEveningTasks: ", tempEveningTasks);
+        // var d = "";
+        var d;
+        // console.log("tempMorningTasks: ", tempMorningTasks);
+        // console.log("tempNoonTasks: ", tempNoonTasks);
+        // console.log("tempAfternoonTasks: ", tempAfternoonTasks);
+        // console.log("tempEveningTasks: ", tempEveningTasks);
 
         if (tempMorningTasks.length > 0) {
-          d =
-            moment(new Date(daysString)).format("DD/MM/YYYY") +
-            " " +
-            morningTime;
+          var split = morningTime.split(":");
+          var taskDate = moment(daysString).format('YYYY:MM:DD')
+          var taskDate2 = taskDate.split(":")
+
+          var year = taskDate2[0]
+          var month = taskDate2[1]
+          var day = taskDate2[2]
+          var hour = split[0]
+          var minute = split[1]
+  
+          d = new Date(year,month,day,hour,minute)
+          console.log('d: ',d)
+          // d =
+          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+          //   " " +
+          //   morningTime;
 
           let addDoc = firebase
             .firestore()
@@ -311,8 +322,18 @@ const AddNewTask = (familyId) => {
             });
         }
         if (tempNoonTasks.length > 0) {
-          d =
-            moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
+          var split = noonTime.split(":");
+          var taskDate = moment(daysString).format('YYYY:MM:DD')
+          var taskDate2 = taskDate.split(":")
+
+          var year = taskDate2[0]
+          var month = taskDate2[1]
+          var day = taskDate2[2]
+          var hour = split[0]
+          var minute = split[1]
+  
+          d = new Date(year,month,day,hour,minute)
+          //   moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
           let addDoc2 = firebase
             .firestore()
             .collection("tasks")
@@ -330,10 +351,22 @@ const AddNewTask = (familyId) => {
             });
         }
         if (tempAfternoonTasks.length > 0) {
-          d =
-            moment(new Date(daysString)).format("DD/MM/YYYY") +
-            " " +
-            afternoonTime;
+          var split = afternoonTime.split(":");
+          var taskDate = moment(daysString).format('YYYY:MM:DD')
+          var taskDate2 = taskDate.split(":")
+
+          var year = taskDate2[0]
+          var month = taskDate2[1]
+          var day = taskDate2[2]
+          var hour = split[0]
+          var minute = split[1]
+  
+          d = new Date(year,month,day,hour,minute)
+          console.log('d: ',d)
+          // d =
+          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+          //   " " +
+          //   afternoonTime;
 
           let addDoc3 = firebase
             .firestore()
@@ -352,10 +385,22 @@ const AddNewTask = (familyId) => {
             });
         }
         if (tempEveningTasks.length > 0) {
-          d =
-            moment(new Date(daysString)).format("DD/MM/YYYY") +
-            " " +
-            eveningTime;
+          var split = eveningTime.split(":");
+          var taskDate = moment(daysString).format('YYYY:MM:DD')
+          var taskDate2 = taskDate.split(":")
+
+          var year = taskDate2[0]
+          var month = taskDate2[1]
+          var day = taskDate2[2]
+          var hour = split[0]
+          var minute = split[1]
+  
+          d = new Date(year,month,day,hour,minute)
+          console.log('d: ',d)
+          // d =
+          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+          //   " " +
+          //   eveningTime;
 
           let addDoc4 = firebase
             .firestore()
@@ -373,10 +418,10 @@ const AddNewTask = (familyId) => {
               console.log("Added evening document with ID: ", ref.id);
             });
         }
-        var tasksArr =[];
-        console.log('otherTask: ',otherTask)
+        var tasksArr = [];
+        console.log("otherTask: ", otherTask);
         if (otherTask != "") {
-          tasksArr.push(otherTask)
+          tasksArr.push(otherTask);
           let addDoc4 = firebase
             .firestore()
             .collection("tasks")
@@ -396,16 +441,8 @@ const AddNewTask = (familyId) => {
         var cond;
         var test = moment(days).format("DD/MM/YYYY");
         var test2 = moment(dateDestination).format("DD/MM/YYYY");
-        // console.log("test", test);
-        // console.log("test2", test2);
+
         cond = test == test2;
-        // cond = moment(test).isSame(test2, "days");
-        // console.log("cond: ", cond);
-        // if (cond) {
-        //   flag = false;
-        //   console.log("flag");
-        //   return;
-        // }
 
         days = new Date(moment(days, "DD/MM/YYYY HH:MM A").add(1, "days"));
       }
@@ -482,12 +519,12 @@ const AddNewTask = (familyId) => {
         <View>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderBottomColor: "#000000",
               borderBottomWidth: 1,
             }}
           >
-          <Text style={styles.title}>משימה מותאמת:</Text>
+            <Text style={styles.title}>משימה מותאמת:</Text>
             <UselessTextInput
               multiline
               numberOfLines={4}
