@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import { trackEvent } from "appcenter-analytics";
 import { Row } from "native-base";
+import { color } from "react-native-reanimated";
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -222,11 +223,12 @@ export default class App extends Component {
   returnMorningTasks() {
     return this.state.morningTasks.map((obj, i) => {
       return (
-        <View key={i}>
-          <Text>{obj.name}</Text>
-          <Text>{obj.time}</Text>
-          <Text>{obj.isDone}</Text>
-          <Text>{obj.tasks}</Text>
+        <View style={{flexDirection:'row-reverse'}} key={i}>
+
+          <Text style={{fontWeight:'bold'}}> {obj.time} </Text>
+          <Text> {obj.name} </Text>
+          <Text> {obj.isDone} </Text>
+          <Text> {obj.tasks} </Text>
         </View>
       );
     });
@@ -309,6 +311,8 @@ export default class App extends Component {
 
         <View >
           <DateTime
+            customWeekdays={['א','ב','ג','ד','ה','ו','ש']}
+            warpRowControlMonthYear={{color:'white'}}
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format="YYYY-MM-DD"
@@ -317,23 +321,23 @@ export default class App extends Component {
         </View>
         <ScrollView>
           <View >
-            <View>
+            <View style={styles.tasksGroup}>
               <Text style={styles.tasksTitle}>משימות בוקר</Text>
               <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
             </View>
-            <View>
+            <View style={styles.tasksGroup}>
               <Text style={styles.tasksTitle}>משימות צהריים</Text>
               <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
             </View>
-            <View>
+            <View style={styles.tasksGroup}>
               <Text style={styles.tasksTitle}>משימות אחר הצהריים</Text>
               <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
             </View>
-            <View>
+            <View style={styles.tasksGroup}>
               <Text style={styles.tasksTitle}>משימות ערב</Text>
               <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
             </View>
-            <View>
+            <View style={styles.tasksGroup}>
               <Text style={styles.tasksTitle}>משימות מותאמות</Text>
               <View style={styles.tasksList}>{this.returnCustomTasks()}</View>
             </View>
@@ -371,6 +375,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
     fontWeight: "bold",
+  },
+  tasksList: {
+    alignItems: 'flex-end',
+    marginRight:10
+  },
+  tasksGroup:{
+    marginRight:10,
   },
   icLockRed: {
     width: 13 / 2,
