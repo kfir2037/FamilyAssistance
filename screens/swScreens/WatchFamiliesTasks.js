@@ -58,6 +58,7 @@ export default class App extends Component {
     var noonTasks = [];
     var afternoonTasks = [];
     var eveningTasks = [];
+    var customTasks = [];
     var today = moment(new Date()).format("DD/MM/YYYY");
     var allTasks = [];
     var familyMembers = {};
@@ -77,81 +78,6 @@ export default class App extends Component {
           }
         });
       });
-
-    // const routinMorningTasks = await firebase
-    //   .firestore()
-    //   .collection("RoutineTasks")
-    //   .doc("morning")
-    //   .get()
-    //   .then((doc) => {
-    //     if (!doc.exists) {
-    //       console.log("No such document!");
-    //     } else {
-    //       let allData = doc.data();
-    //       morningTasks = allData.tasks.slice();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error getting document", err);
-    //   });
-
-    // const routinNoonTasks = await firebase
-    //   .firestore()
-    //   .collection("RoutineTasks")
-    //   .doc("noon")
-    //   .get()
-    //   .then((doc) => {
-    //     if (!doc.exists) {
-    //       console.log("No such document!");
-    //     } else {
-    //       let allData = doc.data();
-    //       noonTasks = allData.tasks.slice();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error getting document", err);
-    //   });
-
-    // const routinAfternoonTasks = await firebase
-    //   .firestore()
-    //   .collection("RoutineTasks")
-    //   .doc("afterNoon")
-    //   .get()
-    //   .then((doc) => {
-    //     if (!doc.exists) {
-    //       console.log("No such document!");
-    //     } else {
-    //       let allData = doc.data();
-    //       afternoonTasks = allData.tasks.slice();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error getting document", err);
-    //   });
-
-    // const routinEveningTasks = await firebase
-    //   .firestore()
-    //   .collection("RoutineTasks")
-    //   .doc("evening")
-    //   .get()
-    //   .then((doc) => {
-    //     if (!doc.exists) {
-    //       console.log("No such document!");
-    //     } else {
-    //       let allData = doc.data();
-    //       eveningTasks = allData.tasks.slice();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log("Error getting document", err);
-    //   });
-
-    // this.setState({
-    //   morningTasks: morningTasks,
-    //   noonTasks: noonTasks,
-    //   afternoonTasks: afternoonTasks,
-    //   eveningTasks: eveningTasks,
-    // });
 
     const tasks = await firebase
       .firestore()
@@ -198,6 +124,15 @@ export default class App extends Component {
                 date: allData.date,
                 tasks: allData.tasks.slice(),
               });
+            } else if (allData.category == "custom tasks") {
+              console.log('custom')
+              customTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.slice(),
+              });
             }
           }
         });
@@ -211,6 +146,7 @@ export default class App extends Component {
       noonTasks: noonTasks,
       afternoonTasks: afternoonTasks,
       eveningTasks: eveningTasks,
+      customTasks: customTasks,
     });
     return familyId;
   };
@@ -333,9 +269,41 @@ export default class App extends Component {
       );
     });
   }
+    // returnCustomTasks() {
+    //   return this.state.customTasks.map((obj, i) => {
+    //     return (
+    //       <View key={i}>
+    //         {/* <Text>{obj.name}</Text> */}
+    //         {/* <Text>{obj.time}</Text> */}
+    //         {/* <Text>{obj.isDone}</Text> */}
+    //         {/* <View style={styles.courses}> */}
+    //           {/* <Text>{obj.tasks}</Text> */}
+    //         {/* </View> */}
+    //       </View>
+    //     );
+    //   });
+    // }
+  returnCustomTasks() {
+    console.log('kfir kfir,',this.state.customTasks)
+    return this.state.customTasks.map((obj, i) => {
+      return (
+        <View key={i}>
+          <Text>{obj.name}</Text>
+          <Text>{obj.time}</Text>
+          <Text>{obj.isDone}</Text>
+          <View style={styles.courses}>
+            <Text>{obj.tasks}</Text>
+          </View>
+        </View>
+      );
+    });
+  }
   render() {
-
+    console.log("morning tasks: ", this.state.morningTasks);
+    console.log("noon tasks: ", this.state.eveningTasks);
+    console.log("afternoon tasks: ", this.state.afternoonTasks);
     console.log("evening tasks: ", this.state.eveningTasks);
+    console.log("custom tasks: ", this.state.customTasks);
     return (
       <SafeAreaView style={styles.container}>
 
@@ -367,7 +335,7 @@ export default class App extends Component {
             </View>
             <View>
               <Text style={styles.tasksTitle}>משימות מותאמות</Text>
-              {/* <Text style={styles.tasksList}>{cusTasks}</Text> */}
+              <View style={styles.tasksList}>{this.returnCustomTasks()}</View>
             </View>
           </View>
         </ScrollView>
