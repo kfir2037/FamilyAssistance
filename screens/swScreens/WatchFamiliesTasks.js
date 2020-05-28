@@ -6,6 +6,7 @@ import {
   View,
   YellowBox,
   Image,
+  SafeAreaView,
   ActivityIndicator,
 } from "react-native";
 import DateTime from "react-native-customize-selected-date";
@@ -40,6 +41,7 @@ export default class App extends Component {
   async componentDidMount() {
     let tasks = await this.getTasks();
   }
+
   toTimestamp2(year, month, day) {
     console.log("year: ", year);
     console.log("month: ", month);
@@ -335,47 +337,51 @@ export default class App extends Component {
 
     console.log("evening tasks: ", this.state.eveningTasks);
     return (
-      <View>
-        {/* <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+
+        <View >
           <DateTime
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format="YYYY-MM-DD"
             renderChildDay={(day) => this.renderChildDay(day)}
           />
-        </View> */}
-        {/* <ScrollView> */}
-        <View>
-          <View>
-            <Text style={styles.tasksTitle}>משימות בוקר</Text>
-            <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
-          </View>
-          <View>
-            <Text style={styles.tasksTitle}>משימות צהריים</Text>
-            <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
-          </View>
-          <View>
-            <Text style={styles.tasksTitle}>משימות אחר הצהריים</Text>
-            <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
-          </View>
-          <View>
-            <Text style={styles.tasksTitle}>משימות ערב</Text>
-            <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
-          </View>
-          <View>
-            <Text style={styles.tasksTitle}>משימות מותאמות</Text>
-            {/* <Text style={styles.tasksList}>{cusTasks}</Text> */}
-          </View>
         </View>
-        {/* </ScrollView> */}
-      </View>
+        <ScrollView>
+          <View >
+            <View>
+              <Text style={styles.tasksTitle}>משימות בוקר</Text>
+              <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
+            </View>
+            <View>
+              <Text style={styles.tasksTitle}>משימות צהריים</Text>
+              <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
+            </View>
+            <View>
+              <Text style={styles.tasksTitle}>משימות אחר הצהריים</Text>
+              <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
+            </View>
+            <View>
+              <Text style={styles.tasksTitle}>משימות ערב</Text>
+              <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
+            </View>
+            <View>
+              <Text style={styles.tasksTitle}>משימות מותאמות</Text>
+              {/* <Text style={styles.tasksList}>{cusTasks}</Text> */}
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
+    backgroundColor: '#b5bef5',
+    height: '100%',
+    width: '100%'
   },
   task: {
     flexDirection: "row-reverse",
@@ -395,7 +401,7 @@ const styles = StyleSheet.create({
   },
   tasksTitle: {
     fontSize: 20,
-    color: "red",
+    color: "black",
     fontWeight: "bold",
   },
   icLockRed: {
