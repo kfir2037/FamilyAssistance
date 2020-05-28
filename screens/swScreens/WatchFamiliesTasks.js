@@ -39,7 +39,7 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
-    let tasks = await this.getTasks();
+    let tasks = await this.getTasks(new Date());
   }
 
   toTimestamp2(year, month, day) {
@@ -51,7 +51,7 @@ export default class App extends Component {
     return datum.getTime() / 1000;
   }
 
-  getTasks = async () => {
+  getTasks = async (date) => {
     YellowBox.ignoreWarnings(["Setting a timer"]);
     const familyId = this.props.navigation.state.params.familyId;
     var morningTasks = [];
@@ -59,7 +59,8 @@ export default class App extends Component {
     var afternoonTasks = [];
     var eveningTasks = [];
     var customTasks = [];
-    var today = moment(new Date()).format("DD/MM/YYYY");
+    // var today = moment(new Date()).format("DD/MM/YYYY");
+    var today = moment(date).format("DD/MM/YYYY");
     var allTasks = [];
     var familyMembers = {};
     console.log("family id: ", familyId);
@@ -151,52 +152,9 @@ export default class App extends Component {
     return familyId;
   };
   async onChangeDate(date) {
-    let chosenDayTasks = [];
 
-    this.setState({ customTasks: chosenDayTasks });
-    console.log("date type: ", date);
-    let chooseDate = moment(date).format("DD/MM/YYYY");
-    console.log("chooseDate type: ", chooseDate);
-    let chooseDay = date[8] + date[9];
-    let chooseMonth = date[5] + date[6];
-    let chooseYear = date[0] + date[1] + date[2] + date[3];
-    // let chooseDateTimestamp = this.toTimestamp2(chooseYear,chooseMonth,chooseDay);
-    let taskDay = "";
-    let taskMonth = "";
-    let taskYear = "";
+    this.getTasks(date)
 
-    const familyId = this.props.navigation.state.params.familyId;
-    console.log("family_id: ", familyId);
-    const swFamilies = await firebase
-      .firestore()
-      .collection("tasks")
-      .where("familyId", "==", familyId)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let date = doc._document.proto.fields.date.timestampValue;
-          date = moment(date).format("DD/MM/YYYY");
-          console.log("dateee: ", date);
-
-          if (date == chooseDate) {
-            console.log("day");
-            let state = this.state.customTasks;
-            console.log("doc._document.proto: ", doc._document.proto);
-            state.push(doc._document.proto);
-            this.setState({ customTasks: state });
-          }
-          // state.push(doc._document)
-          // this.setState({customTasks:state})
-        });
-        // console.log("chosenDayTasks: ", chosenDayTasks);
-        console.log(taskDay + taskMonth + taskYear);
-
-        // let taskTimeStamp = this.toTimestamp2(taskYear,taskMonth,taskDay);
-        // console.log('timestamp2: ',taskTimeStamp);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
   }
 
   renderChildDay(day) {
