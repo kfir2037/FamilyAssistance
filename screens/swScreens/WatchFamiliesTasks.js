@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTime from "react-native-customize-selected-date";
 import _ from "lodash";
 import firebase from "../../config/config";
@@ -37,6 +38,15 @@ export default class App extends Component {
       eveningTasks: [],
       customTasks: [],
     };
+
+    LocaleConfig.locales['heb'] = {
+      monthNames: ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],
+      monthNamesShort: ["'ינו'","פבר","מרץ","אפר'",'מאי',"יונ'","יול'","אוג,","ספט'","אוק'","נוב'","דצמ'"],
+      dayNames: ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'],
+      dayNamesShort: ['א','ב','ג','ד','ה','ו','ש'],
+      today: 'היום\'hui'
+    };
+    LocaleConfig.defaultLocale = 'heb';
   }
 
   async componentDidMount() {
@@ -181,9 +191,9 @@ export default class App extends Component {
   returnMorningTasks() {
     return this.state.morningTasks.map((obj, i) => {
       return (
-        <View style={{flexDirection:'row-reverse'}} key={i}>
+        <View style={{ flexDirection: 'row-reverse' }} key={i}>
 
-          <Text style={{fontWeight:'bold'}}> {obj.time} </Text>
+          <Text style={{ fontWeight: 'bold' }}> {obj.time} </Text>
           <Text> {obj.name} </Text>
           <Text> {obj.isDone} </Text>
           <Text> {obj.tasks} </Text>
@@ -229,22 +239,22 @@ export default class App extends Component {
       );
     });
   }
-    // returnCustomTasks() {
-    //   return this.state.customTasks.map((obj, i) => {
-    //     return (
-    //       <View key={i}>
-    //         {/* <Text>{obj.name}</Text> */}
-    //         {/* <Text>{obj.time}</Text> */}
-    //         {/* <Text>{obj.isDone}</Text> */}
-    //         {/* <View style={styles.courses}> */}
-    //           {/* <Text>{obj.tasks}</Text> */}
-    //         {/* </View> */}
-    //       </View>
-    //     );
-    //   });
-    // }
+  // returnCustomTasks() {
+  //   return this.state.customTasks.map((obj, i) => {
+  //     return (
+  //       <View key={i}>
+  //         {/* <Text>{obj.name}</Text> */}
+  //         {/* <Text>{obj.time}</Text> */}
+  //         {/* <Text>{obj.isDone}</Text> */}
+  //         {/* <View style={styles.courses}> */}
+  //           {/* <Text>{obj.tasks}</Text> */}
+  //         {/* </View> */}
+  //       </View>
+  //     );
+  //   });
+  // }
   returnCustomTasks() {
-    console.log('kfir kfir,',this.state.customTasks)
+    console.log('kfir kfir,', this.state.customTasks)
     return this.state.customTasks.map((obj, i) => {
       return (
         <View key={i}>
@@ -268,14 +278,34 @@ export default class App extends Component {
       <SafeAreaView style={styles.container}>
 
         <View >
-          <DateTime
-            customWeekdays={['א','ב','ג','ד','ה','ו','ש']}
-            warpRowControlMonthYear={{color:'white'}}
+          <Calendar
+            onDayPress={(day)=> this.onChangeDate(day)}
+            monthFormat={'MMM yyyy'}
+            displayLoadingIndicator
+            //markedDates={{'2020-05-29':{selected:true}}}
+            //style={{borderWidth:1, borderColor:'gray'}}
+            theme={{
+              backgroundColor:'#5b6de3',
+              arrowColor:'#b5bef5',
+              calendarBackground:'#767ead',
+              todayTextColor:'black',
+              selectedDayBackgroundColor: '#00adf5',
+              textSectionTitleColor: 'black',
+              dayTextColor: 'lightgray',
+              textDisabledColor: '#b5bef5',
+              monthTextColor:'black'
+
+
+            }}
+          />
+          {/* <DateTime
+            customWeekdays={['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש']}
+            warpRowControlMonthYear={{ color: 'white' }}
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format="YYYY-MM-DD"
             renderChildDay={(day) => this.renderChildDay(day)}
-          />
+          /> */}
         </View>
         <ScrollView>
           <View >
@@ -336,10 +366,10 @@ const styles = StyleSheet.create({
   },
   tasksList: {
     alignItems: 'flex-end',
-    marginRight:10
+    marginRight: 10
   },
-  tasksGroup:{
-    marginRight:10,
+  tasksGroup: {
+    marginRight: 10,
   },
   icLockRed: {
     width: 13 / 2,
