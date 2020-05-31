@@ -289,17 +289,21 @@ const AddNewTask = (familyId) => {
 
         if (tempMorningTasks.length > 0) {
           var split = morningTime.split(":");
-          var taskDate = moment(daysString).format('YYYY:MM:DD')
-          var taskDate2 = taskDate.split(":")
+          var taskDate = moment(daysString).toDate();
+          //var taskDate2 = taskDate.split(":")
+          
+          console.log('taskDate', taskDate);
 
-          var year = taskDate2[0]
-          var month = taskDate2[1]
-          var day = taskDate2[2]
-          var hour = split[0]
-          var minute = split[1]
-  
-          d = new Date(year,month,day,hour,minute)
-          console.log('d: ',d)
+          // var year = taskDate2[0]
+          // var month = taskDate2[1]
+          // var day = taskDate2[2]
+          // var hour = split[0]
+          // var minute = split[1]
+
+          // console.log('taskDate2', taskDate2);
+
+          // d = new Date(year, month, day, hour, minute)
+          // console.log('d: ', d)
           // d =
           //   moment(new Date(daysString)).format("DD/MM/YYYY") +
           //   " " +
@@ -309,7 +313,7 @@ const AddNewTask = (familyId) => {
             .firestore()
             .collection("tasks")
             .add({
-              date: d,
+              date: taskDate,
               familyId: familyId2,
               userId: member,
               time: morningTime,
@@ -331,8 +335,8 @@ const AddNewTask = (familyId) => {
           var day = taskDate2[2]
           var hour = split[0]
           var minute = split[1]
-  
-          d = new Date(year,month,day,hour,minute)
+
+          d = new Date(year, month, day, hour, minute)
           //   moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
           let addDoc2 = firebase
             .firestore()
@@ -360,9 +364,9 @@ const AddNewTask = (familyId) => {
           var day = taskDate2[2]
           var hour = split[0]
           var minute = split[1]
-  
-          d = new Date(year,month,day,hour,minute)
-          console.log('d: ',d)
+
+          d = new Date(year, month, day, hour, minute)
+          console.log('d: ', d)
           // d =
           //   moment(new Date(daysString)).format("DD/MM/YYYY") +
           //   " " +
@@ -394,9 +398,9 @@ const AddNewTask = (familyId) => {
           var day = taskDate2[2]
           var hour = split[0]
           var minute = split[1]
-  
-          d = new Date(year,month,day,hour,minute)
-          console.log('d: ',d)
+
+          d = new Date(year, month, day, hour, minute)
+          console.log('d: ', d)
           // d =
           //   moment(new Date(daysString)).format("DD/MM/YYYY") +
           //   " " +
@@ -563,7 +567,7 @@ const AddNewTask = (familyId) => {
 
         <View>
           <Text style={styles.title}>מתאריך:</Text>
-          <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
+          <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
             <View>
               <Button
                 onPress={showDatepicker}
@@ -598,7 +602,7 @@ const AddNewTask = (familyId) => {
         </View>
         <View>
           <Text style={styles.title}>עד תאריך:</Text>
-          <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
+          <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
             <View>
               <Button
                 onPress={showDatepickerDestination}
@@ -632,7 +636,7 @@ const AddNewTask = (familyId) => {
             )}
           </View>
         </View>
-        <View style={{marginTop:10}}>
+        <View style={{ marginTop: 10 }}>
           <Button
             onPress={save}
             title={"הוסף"}
@@ -702,8 +706,8 @@ const styles = StyleSheet.create({
     width: 110,
     height: 40,
     borderRadius: 15,
-    borderWidth:1,
-    borderColor:'black'
+    borderWidth: 1,
+    borderColor: 'black'
   },
   containerButton: {
     alignItems: 'center',

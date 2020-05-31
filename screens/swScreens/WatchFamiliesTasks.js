@@ -163,7 +163,7 @@ export default class App extends Component {
     return familyId;
   };
   async onChangeDate(date) {
-
+    console.log('dateChanged: ', date);
     this.getTasks(date)
 
   }
@@ -268,6 +268,7 @@ export default class App extends Component {
       );
     });
   }
+
   render() {
     console.log("morning tasks: ", this.state.morningTasks);
     console.log("noon tasks: ", this.state.eveningTasks);
@@ -278,7 +279,7 @@ export default class App extends Component {
       <SafeAreaView style={styles.container}>
 
         <View >
-          <Calendar
+          {/* <Calendar
             onDayPress={(day)=> this.onChangeDate(day)}
             monthFormat={'MMM yyyy'}
             displayLoadingIndicator
@@ -297,15 +298,15 @@ export default class App extends Component {
 
 
             }}
-          />
-          {/* <DateTime
+          /> */}
+          <DateTime
             customWeekdays={['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש']}
             warpRowControlMonthYear={{ color: 'white' }}
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format="YYYY-MM-DD"
             renderChildDay={(day) => this.renderChildDay(day)}
-          /> */}
+          />
         </View>
         <ScrollView>
           <View >
