@@ -42,9 +42,9 @@ export interface List {
   items: ListItem[];
   picture: string;
   test: string;
-  markMission:any,
-  taskId:string,
-  isDone:boolean,
+  markMission: any;
+  taskId: string;
+  isDone: boolean;
 }
 
 interface ListProps {
@@ -96,9 +96,7 @@ export default ({ list }: ListProps) => {
     outputRange: [8, 0],
   });
 
-
   // setIsEnabled(list.isDone)
-  
 
   // let pic = "../icons/moon.png";
   let pic2 = "../icons/sun.png";
@@ -108,11 +106,10 @@ export default ({ list }: ListProps) => {
   //   pic=pic2
   //   console.log(pic)
   // }
-  var pic = "../icons/"+list.picture+".png";
+  var pic = "../icons/" + list.picture + ".png";
   // console.log('pic: ',pic)
   return (
     <>
-   
       <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
         <Animated.View
           style={[
@@ -128,7 +125,7 @@ export default ({ list }: ListProps) => {
           <Image style={styles.image} source={require(pic2)} />
           <Switch
             style={{ alignItems: "center" }}
-            value={isEnabled}
+            value={list.isDone}
             onValueChange={toggleSwitch}
           />
           <Chevron {...{ transition }} />

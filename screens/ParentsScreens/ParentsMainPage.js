@@ -34,7 +34,8 @@ export default class ParentsMainPage extends React.Component {
       afternoonTasks: [],
       eveningTasks: [],
       customTasks: [],
-      numberOftasks: 0,
+      numberOftasks: 1,
+      numberOftasksDone: 1,
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -44,9 +45,8 @@ export default class ParentsMainPage extends React.Component {
   }
 
   async UNSAFE_componentWillMount() {
-    await this.getTasks();
+    // await this.getTasks();
     await this.getCustomTasks();
-    // console.log('alltasks222: ',this.state.allTasks)
   }
 
   getCustomTasks = async () => {
@@ -58,41 +58,30 @@ export default class ParentsMainPage extends React.Component {
     var eveningTasks = [];
     var customTasks = [];
     let taskId = "";
-    console.log('user: ',user)
+    var numberOftasks = 0;
+    var numberOftasksDone = 0;
+    console.log("user: ", user);
     const swFamilies = await firebase
       .firestore()
       .collection("tasks")
       .where("userId", "==", user)
       .get()
-      .then((querySnapshot) => {   
+      .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let data = doc.data();
-          // console.log('doc id: ',doc.id)
           taskId = doc.id;
-          // let timeFromTheServer = moment("2020-05-22").format("DD/MM/YYYY");
-          // console.log('timeFromTheServer: ',timeFromTheServer)
-          // console.log('currentDate: ',currentDate)
-          // var temp =data.date;
-          // var test2 = new Date(temp)
-          // console.log('test2:, ',test)
-          // temp = moment(test2).format("DD/MM/YYYY")
-          // console.log('doc.date: ',temp)
-          // console.log('data.date: ',data.date)
-          // console.log(data.date.seconds);
-          // console.log('new date: ',new Date(data.date.seconds*1000))
+
           let timeFromTheServer = moment(
             new Date(data.date.seconds * 1000)
           ).format("DD/MM/YYYY");
-          console.log('timeFromTheServer: ',timeFromTheServer)
-          console.log('currentDate: ',currentDate)
-          console.log('condiftion: ',timeFromTheServer == currentDate)
-          if (timeFromTheServer == currentDate) {
-            console.log('2222222: ',doc.id)
-            console.log('333333333: ',data)
 
-            console.log("same");
+          if (timeFromTheServer == currentDate) {
             if (data.category == "morning") {
-              // console.log("dataaaaaaa:", data);
+              numberOftasks = numberOftasks + 1;
+              if (data.isDone == true) {
+                numberOftasksDone = numberOftasksDone + 1;
+
+              }
               morningTasks.push({
                 userUid: data.userUid,
                 familyId: data.familyId,
@@ -104,7 +93,10 @@ export default class ParentsMainPage extends React.Component {
               });
               console.log("added to morning tasks");
             } else if (data.category == "noon") {
-              // console.log("dataaaaaaa:", data);
+              numberOftasks = numberOftasks + 1;
+              if (data.isDone == true) {
+                numberOftasksDone = numberOftasksDone + 1;
+              }
               noonTasks.push({
                 userUid: data.userUid,
                 familyId: data.familyId,
@@ -116,7 +108,10 @@ export default class ParentsMainPage extends React.Component {
               });
               console.log("added to noon tasks");
             } else if (data.category == "afternoon") {
-              // console.log("dataaaaaaa:", data);
+              numberOftasks = numberOftasks + 1;
+              if (data.isDone == true) {
+                numberOftasksDone = numberOftasksDone + 1;
+              }
               afternoonTasks.push({
                 userUid: data.userUid,
                 familyId: data.familyId,
@@ -128,7 +123,10 @@ export default class ParentsMainPage extends React.Component {
               });
               console.log("added to afternoon tasks");
             } else if (data.category == "evening") {
-              // console.log("dataaaaaaa:", data);
+              numberOftasks = numberOftasks + 1;
+              if (data.isDone == true) {
+                numberOftasksDone = numberOftasksDone + 1;
+              }
               eveningTasks.push({
                 userUid: data.userUid,
                 familyId: data.familyId,
@@ -139,8 +137,11 @@ export default class ParentsMainPage extends React.Component {
                 isDone: data.isDone,
               });
               console.log("added to evening tasks");
-            }else if (data.category == "custom tasks") {
-              console.log("dataaaaaaa:", data);
+            } else if (data.category == "custom tasks") {
+              numberOftasks = numberOftasks + 1;
+              if (data.isDone == true) {
+                numberOftasksDone = numberOftasksDone + 1;
+              }
               customTasks.push({
                 userUid: data.userUid,
                 familyId: data.familyId,
@@ -160,78 +161,21 @@ export default class ParentsMainPage extends React.Component {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
+
+      // console.log("numberOftasks2222: ", this.state.numberOftasks);
+      // console.log("numberOftasksDone22222: ", this.state.numberOftasksDone);
     this.setState({
       morningTasks: morningTasks,
       noonTasks: noonTasks,
       afternoonTasks: afternoonTasks,
       eveningTasks: eveningTasks,
       customTasks: customTasks,
+      numberOftasks: numberOftasks,
+      numberOftasksDone: numberOftasksDone,
     });
   };
 
-  getTasks = async () => {
-    let date = new Date();
-    let currentDate = date.getDate();
-    let currentMonth = date.getMonth() + 1;
-    let currentYear = date.getFullYear();
-
-    let taskDay = "";
-    let taskMonth = "";
-    let taskYear = "";
-    let allTasks = [];
-    userUid = await firebase.auth().currentUser.uid;
-    let UserDoc = await firebase
-      .firestore()
-      .collection("users")
-      .doc(userUid)
-      .get();
-    let familyId = UserDoc._document.proto.fields.familyId.stringValue;
-    console.log("familyId: ", familyId);
-    const swFamilies = await firebase
-      .firestore()
-      .collection("tasks")
-      .where("familyId", "==", familyId)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let date = doc._document.proto.fields.date.timestampValue;
-          console.log("date: ", date);
-          taskDay = date[8] + date[9];
-          taskMonth = date[5] + date[6];
-          taskYear = date[0] + date[1] + date[2] + date[3];
-          let fixTaskDay = (parseInt(taskDay) + 1).toString();
-          if (parseInt(fixTaskDay) < 10) {
-            // console.log(fixTaskDay);
-            fixTaskDay = "0" + fixTaskDay;
-            // console.log(fixTaskDay);
-          }
-          // console.log(taskDay);
-          // console.log((parseInt(taskDay)+1).toString())
-          if (
-            fixTaskDay == currentDate &&
-            taskMonth == currentMonth &&
-            taskYear == currentYear
-          ) {
-            console.log("enter if");
-            allTasks.push(doc._document.proto.fields);
-            this.state.numberOftasks++;
-          }
-          // console.log('doc: ',doc);
-          // allFamilies.push(doc);
-          // familyObj[doc.id] = Object.assign({}, doc.data());
-        });
-        // this.setState({ data: allFamilies });
-        // console.log('data: ', this.state.data);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-    // console.log("allTasks222: ", allTasks);
-
-    this.setState({ allTasks });
-  };
   async markMission(task) {
-    console.log("task: ", task);
     var isDone;
     await firebase
       .firestore()
@@ -239,61 +183,39 @@ export default class ParentsMainPage extends React.Component {
       .doc(task)
       .get()
       .then((doc) => {
-        //console.log(doc.data().firstName);
         var data = doc.data();
         isDone = data.isDone;
-
-        console.log("isDone2222: ", isDone);
       })
       .catch((error) => {});
-      console.log("isDone33333: ", isDone);
-
+      if(isDone){
+        this.setState({numberOftasksDone:this.state.numberOftasksDone+1})
+        console.log('count+1')
+      }else{
+        this.setState({numberOftasksDone:this.state.numberOftasksDone-1})
+        console.log('count-1')
+      }
     await firebase
       .firestore()
       .collection("tasks")
       .doc(task)
       .update({
-        isDone: !isDone
+        isDone: !isDone,
       });
-      console.log('isDone: ',isDone)
   }
   render() {
-    // const buttons = ['שבת', 'שישי', 'חמישי','רביעי','שלישי','שני','ראשון',]
-    // const { selectedIndex } = this.state
-    // console.log('alltasks: ',this.state.allTasks)
-    // for(i in this.state.allTasks){
-    //   console.log(i)
-    // }
-
-    console.log("morningTasks", this.state.morningTasks);
-    console.log("noonTasks", this.state.noonTasks);
-    console.log("afternoonTasks", this.state.afternoonTasks);
-    console.log("eveningTasks", this.state.eveningTasks);
-    console.log("customTasks", this.state.customTasks);
-
-    // if (this.state.eveningTasks && this.state.eveningTasks.length == 0) {
-    //   return <ActivityIndicator />;
-    // }
-
+    console.log("numberOftasksDone: ", this.state.numberOftasksDone);
+    console.log("numberOftasks: ", this.state.numberOftasks);
     return (
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.container}>
-            {/* <ButtonGroup
-              onPress={this.updateIndex}
-              selectedIndex={selectedIndex}
-              buttons={buttons}
-              containerStyle={{height: 50,borderRadius:6} }
-            /> */}
 
             <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
-              progress={2 / 3}
+              // progress={tasks / tasksDone}
+              progress={this.state.numberOftasksDone / this.state.numberOftasks}
             />
-
-            {/* { tasks } */}
-
             <Accordion
               allTasks={this.state.allTasks}
               morningTasks={this.state.morningTasks}
