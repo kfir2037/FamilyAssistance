@@ -22,6 +22,7 @@ import {
 import Accordion from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -36,6 +37,7 @@ export default class ParentsMainPage extends React.Component {
       customTasks: [],
       numberOftasks: 1,
       numberOftasksDone: 1,
+      showAlert: false,
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -80,7 +82,6 @@ export default class ParentsMainPage extends React.Component {
               numberOftasks = numberOftasks + 1;
               if (data.isDone == true) {
                 numberOftasksDone = numberOftasksDone + 1;
-
               }
               morningTasks.push({
                 userUid: data.userUid,
@@ -162,8 +163,8 @@ export default class ParentsMainPage extends React.Component {
         console.log("Error getting documents: ", error);
       });
 
-      // console.log("numberOftasks2222: ", this.state.numberOftasks);
-      // console.log("numberOftasksDone22222: ", this.state.numberOftasksDone);
+    // console.log("numberOftasks2222: ", this.state.numberOftasks);
+    // console.log("numberOftasksDone22222: ", this.state.numberOftasksDone);
     this.setState({
       morningTasks: morningTasks,
       noonTasks: noonTasks,
@@ -174,8 +175,21 @@ export default class ParentsMainPage extends React.Component {
       numberOftasksDone: numberOftasksDone,
     });
   };
+  showAlert = () => {
+    this.setState({
+      showAlert: true,
+    });
+  };
+
+  hideAlert = () => {
+    this.setState({
+      showAlert: false,
+    });
+  };
 
   async markMission(task) {
+    // this.showAlert()
+
     var isDone;
     await firebase
       .firestore()
@@ -187,13 +201,30 @@ export default class ParentsMainPage extends React.Component {
         isDone = data.isDone;
       })
       .catch((error) => {});
-      if(isDone){
-        this.setState({numberOftasksDone:this.state.numberOftasksDone+1})
-        console.log('count+1')
-      }else{
-        this.setState({numberOftasksDone:this.state.numberOftasksDone-1})
-        console.log('count-1')
+    if (isDone) {
+      console.log(
+        "this.state.numberOftasksDone+1: ",
+        this.state.numberOftasksDone + 1
+      );
+      console.log("this.state.numberOftasks: ", this.state.numberOftasks);
+      if (
+        (this.state.numberOftasksDone + 1) / this.state.numberOftasks >=
+        0.6
+      ) {
+        console.log("111");
+        this.setState({
+          numberOftasksDone: this.state.numberOftasksDone + 1,
+          textForAlert: "אתה בדרך הנכונה, כל הכבוד!",
+        });
+        this.showAlert();
+      } else {
+        this.setState({ numberOftasksDone: this.state.numberOftasksDone + 1 });
       }
+      console.log("count+1");
+    } else {
+      this.setState({ numberOftasksDone: this.state.numberOftasksDone - 1 });
+      console.log("count-1");
+    }
     await firebase
       .firestore()
       .collection("tasks")
@@ -203,13 +234,12 @@ export default class ParentsMainPage extends React.Component {
       });
   }
   render() {
-    console.log("numberOftasksDone: ", this.state.numberOftasksDone);
-    console.log("numberOftasks: ", this.state.numberOftasks);
+    const { showAlert } = this.state;
+
     return (
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.container}>
-
             <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
@@ -224,6 +254,25 @@ export default class ParentsMainPage extends React.Component {
               eveningTasks={this.state.eveningTasks}
               customTasks={this.state.customTasks}
               markMission={this.markMission.bind(this)}
+            />
+            <AwesomeAlert
+              show={showAlert}
+              showProgress={false}
+              title="כל הכבוד"
+              message="אתה בדרך הנכונה!"
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+              cancelText="No, cancel"
+              confirmText="סגור"
+              confirmButtonColor="#DD6B55"
+              onCancelPressed={() => {
+                this.hideAlert();
+              }}
+              onConfirmPressed={() => {
+                this.hideAlert();
+              }}
             />
           </View>
         </ScrollView>
@@ -260,6 +309,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     backgroundColor: "#9ec3ff",
     marginBottom: 10,
+  },
+  button: {
+    margin: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 5,
+    backgroundColor: "#AEDEF4",
+  },
+  text: {
+    color: "#fff",
+    fontSize: 15,
   },
   field: {
     flex: 1,
