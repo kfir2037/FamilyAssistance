@@ -242,7 +242,6 @@ export default class App extends Component {
     //   });
     // }
   returnCustomTasks() {
-    console.log('kfir kfir,',this.state.customTasks)
     return this.state.customTasks.map((obj, i) => {
       return (
         <View key={i}>
@@ -257,11 +256,7 @@ export default class App extends Component {
     });
   }
   render() {
-    console.log("morning tasks: ", this.state.morningTasks);
-    console.log("noon tasks: ", this.state.eveningTasks);
-    console.log("afternoon tasks: ", this.state.afternoonTasks);
-    console.log("evening tasks: ", this.state.eveningTasks);
-    console.log("custom tasks: ", this.state.customTasks);
+
     return (
       <SafeAreaView style={styles.container}>
 

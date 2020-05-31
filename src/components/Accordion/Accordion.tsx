@@ -9,6 +9,7 @@ import { images } from "../ImagesClass";
 const Accordion2 = (props) => {
   var tasks = [];
   console.log("propssss: ", props);
+  console.log("prop2222: ", props.customTasks);
 
   // for (let i = 0; i < allTasks.length; i++) {
   // // console.log('test');
@@ -49,6 +50,8 @@ const Accordion2 = (props) => {
   let eveningItems = [];
   let customItems = [];
   // console.log("props.morningTasks.tasks: ", props.morningTasks.tasks);
+  console.log("counter",props);
+
   if (props.morningTasks.tasks != undefined) {
     // console.log("props.morningTasks.tasks22222: ", props.morningTasks.tasks);
     for (let i = 0; i < props.morningTasks.tasks.length; i++) {
@@ -82,16 +85,18 @@ const Accordion2 = (props) => {
       });
     }
   }
-  if (props.customTasks != undefined) {
-    console.log("counter22 ", props.customTasks);
-    for (let i = 0; i < props.customTasks.length; i++) {
-      console.log("counter");
-      customItems.push({
-        name: props.customTasks[i].title.stringValue,
-        time: props.customTasks[i].time.stringValue,
-      });
-    }
-  }
+  // if (props.customTasks != undefined) {
+    // console.log("counter22 ", props.customTasks);
+    // for (let i = 0; i < props.customTasks.tasks.length; i++) {
+    //   console.log("counter",props);
+    //   customItems.push({
+    //     // name: props.customTasks[i].title.stringValue,
+    //     // time: props.customTasks[i].time.stringValue,
+    //     name: props.customTasks.tasks[i],
+    //     time: props.customTasks.time.stringValue,
+    //   });
+    // }
+  // }
   var list: ListModel = {
     name: "משימות בוקר",
     items: props.morningTasks[0] ? props.morningTasks[0].tasks.slice() : [],

@@ -56,13 +56,15 @@ export default class ParentsMainPage extends React.Component {
     var noonTasks = [];
     var afternoonTasks = [];
     var eveningTasks = [];
+    var customTasks = [];
     let taskId = "";
+    console.log('user: ',user)
     const swFamilies = await firebase
       .firestore()
       .collection("tasks")
       .where("userId", "==", user)
       .get()
-      .then((querySnapshot) => {
+      .then((querySnapshot) => {   
         querySnapshot.forEach((doc) => {
           let data = doc.data();
           // console.log('doc id: ',doc.id)
@@ -76,15 +78,18 @@ export default class ParentsMainPage extends React.Component {
           // temp = moment(test2).format("DD/MM/YYYY")
           // console.log('doc.date: ',temp)
           // console.log('data.date: ',data.date)
-          console.log(data.date.seconds);
+          // console.log(data.date.seconds);
           // console.log('new date: ',new Date(data.date.seconds*1000))
           let timeFromTheServer = moment(
             new Date(data.date.seconds * 1000)
           ).format("DD/MM/YYYY");
-          // console.log('timeFromTheServer: ',timeFromTheServer)
-          // console.log('currentDate: ',currentDate)
-          // console.log('condiftion: ',timeFromTheServer == currentDate)
+          console.log('timeFromTheServer: ',timeFromTheServer)
+          console.log('currentDate: ',currentDate)
+          console.log('condiftion: ',timeFromTheServer == currentDate)
           if (timeFromTheServer == currentDate) {
+            console.log('2222222: ',doc.id)
+            console.log('333333333: ',data)
+
             console.log("same");
             if (data.category == "morning") {
               // console.log("dataaaaaaa:", data);
@@ -134,6 +139,18 @@ export default class ParentsMainPage extends React.Component {
                 isDone: data.isDone,
               });
               console.log("added to evening tasks");
+            }else if (data.category == "custom tasks") {
+              console.log("dataaaaaaa:", data);
+              customTasks.push({
+                userUid: data.userUid,
+                familyId: data.familyId,
+                data: data.date,
+                category: data.category,
+                tasks: data.tasks,
+                taskId: taskId,
+                isDone: data.isDone,
+              });
+              console.log("added to custom tasks");
             }
           } else {
             console.log("not same");
@@ -148,94 +165,10 @@ export default class ParentsMainPage extends React.Component {
       noonTasks: noonTasks,
       afternoonTasks: afternoonTasks,
       eveningTasks: eveningTasks,
+      customTasks: customTasks,
     });
   };
-  // getCustomTasks = async () => {
-  //   let morningTasks = firebase
-  //     .firestore()
-  //     .collection("RoutineTasks")
-  //     .doc("morning");
 
-  //   let getDoc = morningTasks
-  //     .get()
-  //     .then((doc) => {
-  //       if (!doc.exists) {
-  //         console.log("No such document!");
-  //       } else {
-  //         let allData = doc.data();
-  //         this.setState({ morningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
-  //         // allData.tasks.forEach(task=>{
-  //         //   if(task)
-  //         // })
-  //         // console.log("Document data morning: ", this.state.morningTasks);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error getting document", err);
-  //     });
-
-  //   let noonTasks = firebase
-  //     .firestore()
-  //     .collection("RoutineTasks")
-  //     .doc("noon");
-
-  //   getDoc = noonTasks
-  //     .get()
-  //     .then((doc) => {
-  //       if (!doc.exists) {
-  //         console.log("No such document!");
-  //       } else {
-  //         let allData = doc.data();
-
-  //         this.setState({ noonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
-  //         // console.log("Document data noon: ", this.state.noonTasks);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error getting document", err);
-  //     });
-
-  //   let afternoonTasks = firebase
-  //     .firestore()
-  //     .collection("RoutineTasks")
-  //     .doc("afterNoon");
-  //   getDoc = afternoonTasks
-  //     .get()
-  //     .then((doc) => {
-  //       if (!doc.exists) {
-  //         console.log("No such document!");
-  //       } else {
-  //         let allData = doc.data();
-  //         this.setState({ afternoonTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
-  //         // console.log("Document data afternoon: ", this.state.afternoonTasks);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error getting document", err);
-  //     });
-
-  //   let eveningTasks = firebase
-  //     .firestore()
-  //     .collection("RoutineTasks")
-  //     .doc("evening");
-  //   getDoc = eveningTasks
-  //     .get()
-  //     .then((doc) => {
-  //       if (!doc.exists) {
-  //         console.log("No such document!");
-  //       } else {
-  //         let allData = doc.data();
-  //         // console.log('allData: ',allData)
-  //         // console.log('allDataaaaaaa: ',allData.tasks.length)
-
-  //         this.setState({ eveningTasks: allData, numberOftasks:this.state.numberOftasks+allData.tasks.length });
-  //         // console.log("Document data evening: ", this.state.eveningTasks);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error getting document", err);
-  //     });
-  // };
   getTasks = async () => {
     let date = new Date();
     let currentDate = date.getDate();
@@ -336,13 +269,11 @@ export default class ParentsMainPage extends React.Component {
     console.log("noonTasks", this.state.noonTasks);
     console.log("afternoonTasks", this.state.afternoonTasks);
     console.log("eveningTasks", this.state.eveningTasks);
+    console.log("customTasks", this.state.customTasks);
 
-    if (this.state.eveningTasks && this.state.eveningTasks.length == 0) {
-      return <ActivityIndicator />;
-    }
-    // console.log('allTaskssss: ',this.state.allTasks.length)
-
-    // console.log("tasksDaone: ", this.state.numberOftasks);
+    // if (this.state.eveningTasks && this.state.eveningTasks.length == 0) {
+    //   return <ActivityIndicator />;
+    // }
 
     return (
       <View style={styles.container}>
@@ -369,7 +300,7 @@ export default class ParentsMainPage extends React.Component {
               noonTasks={this.state.noonTasks}
               afternoonTasks={this.state.afternoonTasks}
               eveningTasks={this.state.eveningTasks}
-              customTasks={this.state.allTasks}
+              customTasks={this.state.customTasks}
               markMission={this.markMission.bind(this)}
             />
           </View>
