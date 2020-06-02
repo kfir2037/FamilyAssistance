@@ -3,6 +3,7 @@ import { FlatList, Picker, Platform, StyleSheet, View, Text, ActivityIndicator, 
 import firebase from '../../config/config';
 import { Button, Input, ListItem } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
+import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -16,7 +17,7 @@ const WatchFamilies = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isParentModalVisible, setIsParentModalVisible] = useState(false);
   const [isKidModalVisible, setIsKidModalVisible] = useState(false);
-  const [birthDate, setBirthDate] = useState(new Date());
+  const [birthDate, setBirthDate] = useState(moment(new Date()));
   const [message, setMessage] = useState('');
   const [show, setShow] = useState(false);
 
@@ -84,7 +85,9 @@ const WatchFamilies = ({ navigation }) => {
   };
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || birthDate;
+    console.log("event ", event);
+    
+    const currentDate = moment(selectedDate) || birthDate;
     setShow(Platform.OS === 'ios');
     setBirthDate(currentDate);
     console.log(birthDate);
@@ -127,6 +130,7 @@ const WatchFamilies = ({ navigation }) => {
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
+                re
                 initialValues={{ firstName: '', lastName: '', id: '', gender: '', birthDate: birthDate, phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
                 //validationSchema={}
                 onSubmit={(values, actions) => {
@@ -188,7 +192,7 @@ const WatchFamilies = ({ navigation }) => {
 
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ alignSelf: 'center' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.toLocaleDateString()}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.format('DD/MM/YYYY').toString()}</Text>
                     </View>
 
                     <View style={styles.birtDateBox}>
@@ -200,7 +204,8 @@ const WatchFamilies = ({ navigation }) => {
                         {show && <DateTimePicker
                           display='spinner'
                           style={{ position: 'absolute' }}
-                          value={props.values.birthDate}
+                          value={props.values.birthDate.toDate()}
+                          
                           onChange={(event, selectedDate) => {
                             props.handleChange('birthDate');
                             onChange(event, selectedDate);
