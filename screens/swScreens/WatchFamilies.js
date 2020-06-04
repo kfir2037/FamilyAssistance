@@ -192,7 +192,7 @@ const WatchFamilies = ({ navigation }) => {
 
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ alignSelf: 'center' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.format('DD/MM/YYYY').toString()}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.format('DD/MM/YYYY').toString()}</Text>
                     </View>
 
                     <View style={styles.birtDateBox}>

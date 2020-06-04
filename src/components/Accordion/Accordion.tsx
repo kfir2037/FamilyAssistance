@@ -97,7 +97,7 @@ const Accordion2 = (props) => {
   var list: ListModel = {
     name: "משימות מותאמות",
     items: props.customTasks[0] ? props.customTasks[0].tasks.slice() : [],
-    picture: "moon",
+    picture: "custom",
     test: "test",
     markMission: props.markMission,
     taskId: props.customTasks[0] ? props.customTasks[0].taskId : "",

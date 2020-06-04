@@ -200,24 +200,30 @@ export default class ParentsMainPage extends React.Component {
         var data = doc.data();
         isDone = data.isDone;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     if (isDone) {
       console.log(
         "this.state.numberOftasksDone+1: ",
         this.state.numberOftasksDone + 1
       );
       console.log("this.state.numberOftasks: ", this.state.numberOftasks);
-      if (
-        (this.state.numberOftasksDone + 1) / this.state.numberOftasks >=
-        0.6
-      ) {
+      if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks >= 0.6 && (this.state.numberOftasksDone + 1) / this.state.numberOftasks != 1) {
         console.log("111");
         this.setState({
           numberOftasksDone: this.state.numberOftasksDone + 1,
           textForAlert: "אתה בדרך הנכונה, כל הכבוד!",
         });
         this.showAlert();
-      } else {
+      } else if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks == 1) {
+        console.log("2222");
+        this.setState({
+          numberOftasksDone: this.state.numberOftasksDone + 1,
+          textForAlert: "סיימת את המשימות להיום, כל הכבוד!",
+        });
+        this.showAlert();
+      }
+
+      else {
         this.setState({ numberOftasksDone: this.state.numberOftasksDone + 1 });
       }
       console.log("count+1");
@@ -240,12 +246,12 @@ export default class ParentsMainPage extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.container}>
-            <ProgressBarAndroid
+            {/* <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
-            />
+            /> */}
             <Accordion
               allTasks={this.state.allTasks}
               morningTasks={this.state.morningTasks}

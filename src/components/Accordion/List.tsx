@@ -74,7 +74,7 @@ export default ({ list }: ListProps) => {
   const [isEnabled, setIsEnabled] = useState(list.isDone);
   const toggleSwitch = (x) => {
     setIsEnabled((prev) => !prev);
-    console.log('list: ',list)
+    console.log('list: ', list)
     list.markMission(list.taskId)
   };
   const [open, setOpen] = useState(false);
@@ -96,46 +96,228 @@ export default ({ list }: ListProps) => {
     outputRange: [8, 0],
   });
 
-  // setIsEnabled(list.isDone)
 
-  // let pic = "../icons/moon.png";
-  let pic2 = "../icons/sun.png";
-  // let pic3 = "../icons/moon.png";
-  // console.log('list: ',list.picture)
-  // if(list.picture=='sun'){
-  //   pic=pic2
-  //   console.log(pic)
-  // }
-  var pic = "../icons/" + list.picture + ".png";
-  // console.log('pic: ',pic)
-  return (
-    <>
-      <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
-        <Animated.View
-          style={[
-            styles.container,
-            {
-              borderBottomLeftRadius: bottomRadius,
-              borderBottomRightRadius: bottomRadius,
-            },
-          ]}
-        >
-          <Text style={styles.title}>{list.name}</Text>
-          {/* <Image style={styles.image} source={require(pic)} /> */}
-          <Image style={styles.image} source={require(pic2)} />
-          <Switch
-            style={{ alignItems: "center" }}
-            value={list.isDone}
-            onValueChange={toggleSwitch}
-          />
-          <Chevron {...{ transition }} />
+  const sunPic = "../icons/sun.png";
+  const gamesPic = "../icons/games.png";
+  const moonPic = "../icons/moon.png";
+  const lunchPic = "../icons/lunch.png";
+  const customPic = "../icons/custom.png";
+
+  const returnSun = () => {
+    return (
+      <>
+        <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+          <Animated.View
+            style={[
+              styles.container,
+              {
+                borderBottomLeftRadius: bottomRadius,
+                borderBottomRightRadius: bottomRadius,
+              },
+            ]}
+          >
+
+            <Text style={styles.title}>{list.name}</Text>
+            {/* <Image style={styles.image} source={require(pic)} /> */}
+            <Image style={styles.image} source={require(sunPic)} />
+            <Switch
+              style={{ alignItems: "center" }}
+              value={list.isDone}
+              onValueChange={toggleSwitch}
+            />
+            <Chevron {...{ transition }} />
+          </Animated.View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.items, { height }]}>
+          {list.items.map((item, key) => (
+            <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+          ))}
         </Animated.View>
-      </TouchableWithoutFeedback>
-      <Animated.View style={[styles.items, { height }]}>
-        {list.items.map((item, key) => (
-          <Item {...{ item, key }} isLast={key === list.items.length - 1} />
-        ))}
-      </Animated.View>
-    </>
-  );
+      </>
+    );
+  }
+  const returnGames = () => {
+    return  (
+      <>
+        <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+          <Animated.View
+            style={[
+              styles.container,
+              {
+                borderBottomLeftRadius: bottomRadius,
+                borderBottomRightRadius: bottomRadius,
+              },
+            ]}
+          >
+
+            <Text style={styles.title}>{list.name}</Text>
+            {/* <Image style={styles.image} source={require(pic)} /> */}
+            <Image style={styles.image} source={require(gamesPic)} />
+            <Switch
+              style={{ alignItems: "center" }}
+              value={list.isDone}
+              onValueChange={toggleSwitch}
+            />
+            <Chevron {...{ transition }} />
+          </Animated.View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.items, { height }]}>
+          {list.items.map((item, key) => (
+            <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+          ))}
+        </Animated.View>
+      </>
+    );
+  }
+  const returnLunch = () => {
+    return (
+      <>
+        <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+          <Animated.View
+            style={[
+              styles.container,
+              {
+                borderBottomLeftRadius: bottomRadius,
+                borderBottomRightRadius: bottomRadius,
+              },
+            ]}
+          >
+
+            <Text style={styles.title}>{list.name}</Text>
+            {/* <Image style={styles.image} source={require(pic)} /> */}
+            <Image style={styles.image} source={require(lunchPic)} />
+            <Switch
+              style={{ alignItems: "center" }}
+              value={list.isDone}
+              onValueChange={toggleSwitch}
+            />
+            <Chevron {...{ transition }} />
+          </Animated.View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.items, { height }]}>
+          {list.items.map((item, key) => (
+            <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+          ))}
+        </Animated.View>
+      </>
+    );
+  }
+  const returnMoon = () => {
+    return (
+      <>
+        <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+          <Animated.View
+            style={[
+              styles.container,
+              {
+                borderBottomLeftRadius: bottomRadius,
+                borderBottomRightRadius: bottomRadius,
+              },
+            ]}
+          >
+
+            <Text style={styles.title}>{list.name}</Text>
+            {/* <Image style={styles.image} source={require(pic)} /> */}
+            <Image style={styles.image} source={require(moonPic)} />
+            <Switch
+              style={{ alignItems: "center" }}
+              value={list.isDone}
+              onValueChange={toggleSwitch}
+            />
+            <Chevron {...{ transition }} />
+          </Animated.View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.items, { height }]}>
+          {list.items.map((item, key) => (
+            <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+          ))}
+        </Animated.View>
+      </>
+    );
+  }
+  const returnCustom = () => {
+    return (
+      <>
+        <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+          <Animated.View
+            style={[
+              styles.container,
+              {
+                borderBottomLeftRadius: bottomRadius,
+                borderBottomRightRadius: bottomRadius,
+              },
+            ]}
+          >
+
+            <Text style={styles.title}>{list.name}</Text>
+            {/* <Image style={styles.image} source={require(pic)} /> */}
+            <Image style={styles.image} source={require(customPic)} />
+            <Switch
+              style={{ alignItems: "center" }}
+              value={list.isDone}
+              onValueChange={toggleSwitch}
+            />
+            <Chevron {...{ transition }} />
+          </Animated.View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.items, { height }]}>
+          {list.items.map((item, key) => (
+            <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+          ))}
+        </Animated.View>
+      </>
+    );
+  }
+  console.log("list,picture:",list.picture)
+  if (list.picture == 'sun') {
+    return returnSun()
+  }
+  else if (list.picture == 'moon') {
+    return returnMoon()
+  }
+  else if (list.picture == 'games') {
+    return returnGames()
+  }
+  else if (list.picture == 'lunch') {
+    return returnLunch()
+  }
+  else if (list.picture == 'custom') {
+    return returnCustom()
+  }
+  else{
+    console.log('null null null: ',list.picture)
+  }
+  return null
+
+  // return (
+  //   <>
+  //     <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
+  //       <Animated.View
+  //         style={[
+  //           styles.container,
+  //           {
+  //             borderBottomLeftRadius: bottomRadius,
+  //             borderBottomRightRadius: bottomRadius,
+  //           },
+  //         ]}
+  //       >
+
+  //         <Text style={styles.title}>{list.name}</Text>
+  //         {/* <Image style={styles.image} source={require(pic)} /> */}
+  //         <Image style={styles.image} source={require(pic2)} />
+  //         <Switch
+  //           style={{ alignItems: "center" }}
+  //           value={list.isDone}
+  //           onValueChange={toggleSwitch}
+  //         />
+  //         <Chevron {...{ transition }} />
+  //       </Animated.View>
+  //     </TouchableWithoutFeedback>
+  //     <Animated.View style={[styles.items, { height }]}>
+  //       {list.items.map((item, key) => (
+  //         <Item {...{ item, key }} isLast={key === list.items.length - 1} />
+  //       ))}
+  //     </Animated.View>
+  //   </>
+  // );
 };
