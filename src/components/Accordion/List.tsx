@@ -72,8 +72,8 @@ const images2 = {
 
 export default ({ list }: ListProps) => {
   const [isEnabled, setIsEnabled] = useState(list.isDone);
-  const toggleSwitch = (x) => {
-    setIsEnabled((prev) => !prev);
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
     console.log('list: ',list)
     list.markMission(list.taskId)
   };

@@ -12,7 +12,6 @@ const WatchFamilies = ({ navigation }) => {
 
   const [modalLoading, setModalLoading] = useState(false);
   const [familyObj, setFamilyObj] = useState({});
-
   const [parentDetails, setParentDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isParentModalVisible, setIsParentModalVisible] = useState(false);
@@ -90,7 +89,7 @@ const WatchFamilies = ({ navigation }) => {
     const currentDate = moment(selectedDate) || birthDate;
     setShow(Platform.OS === 'ios');
     setBirthDate(currentDate);
-    console.log(birthDate);
+    
   };
 
 
@@ -98,6 +97,12 @@ const WatchFamilies = ({ navigation }) => {
     getFamily();
     console.log("getFamily()");
   }, []);
+
+
+  useEffect(() => {
+    console.log(birthDate);
+  }, [birthDate]);
+  
 
   useEffect(() => {
     console.log('effect familyObj', familyObj['parents']);
@@ -130,11 +135,14 @@ const WatchFamilies = ({ navigation }) => {
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
-                re
-                initialValues={{ firstName: '', lastName: '', id: '', gender: '', birthDate: birthDate, phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
+                
+                initialValues={{ firstName: '', lastName: '', id: '', gender: '', birthDate: birthDate.toDate(), phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
                 //validationSchema={}
                 onSubmit={(values, actions) => {
                   //actions.resetForm();
+                  
+                  actions.setValues({...values,birthDate:birthDate.toDate() })
+
                   console.log('values', values);
                   var createUser = firebase.functions().httpsCallable('createUser');
                   createUser(values)
@@ -192,7 +200,7 @@ const WatchFamilies = ({ navigation }) => {
 
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ alignSelf: 'center' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.format('DD/MM/YYYY').toString()}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.format('DD/MM/YYYY').toString()}</Text>
                     </View>
 
                     <View style={styles.birtDateBox}>
@@ -204,11 +212,13 @@ const WatchFamilies = ({ navigation }) => {
                         {show && <DateTimePicker
                           display='spinner'
                           style={{ position: 'absolute' }}
-                          value={props.values.birthDate.toDate()}
-                          
+                          value={birthDate.toDate()}
                           onChange={(event, selectedDate) => {
-                            props.handleChange('birthDate');
                             onChange(event, selectedDate);
+                            //props.setFieldValue('birthDate', birthDate.toDate());
+                            props.handleChange('birthDate')
+                            console.log('formik birthDate ', props.values.birthDate);
+                            
                           }}
                         />
                         }
