@@ -23,6 +23,10 @@ import Accordion from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
 import AwesomeAlert from "react-native-awesome-alerts";
+import * as Permissions from 'expo-permissions';
+import {Notifications } from 'expo';
+// import {Notifications} from 'expo-permissions';
+import * as firebasePush from 'firebase'; 
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -51,6 +55,32 @@ export default class ParentsMainPage extends React.Component {
     await this.getCustomTasks();
   }
 
+  componentDidMount() {
+    this.registerForPushNotification()
+  }
+  registerForPushNotification = async () => {
+
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = status;
+    console.log('finalStatus ', finalStatus)
+
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    console.log('123123123: ', token)
+    const user = firebase.auth().currentUser.uid;
+ 
+    var userDoc = firebase.firestore().collection('users').doc(user)
+    var addTokenToUser = userDoc.set({  
+      pushNotificationToken:token
+    },{merge:true});
+
+  }
   getCustomTasks = async () => {
     var user = firebase.auth().currentUser.uid;
     var currentDate = moment(new Date()).format("DD/MM/YYYY");

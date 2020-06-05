@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -70,12 +70,13 @@ const images2 = {
   },
 };
 
+
 export default ({ list }: ListProps) => {
   const [isEnabled, setIsEnabled] = useState(list.isDone);
   const toggleSwitch = (x) => {
     setIsEnabled((prev) => !prev);
-    console.log('list: ', list)
     list.markMission(list.taskId)
+    list.isDone = !x
   };
   const [open, setOpen] = useState(false);
   // console.log('list: ',list)
@@ -122,7 +123,7 @@ export default ({ list }: ListProps) => {
             <Image style={styles.image} source={require(sunPic)} />
             <Switch
               style={{ alignItems: "center" }}
-              value={list.isDone}
+              value={isEnabled}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
@@ -137,7 +138,8 @@ export default ({ list }: ListProps) => {
     );
   }
   const returnGames = () => {
-    return  (
+
+    return (
       <>
         <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
           <Animated.View
@@ -155,7 +157,8 @@ export default ({ list }: ListProps) => {
             <Image style={styles.image} source={require(gamesPic)} />
             <Switch
               style={{ alignItems: "center" }}
-              value={list.isDone}
+              value={isEnabled}
+              // value={list.isDone}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
@@ -188,7 +191,7 @@ export default ({ list }: ListProps) => {
             <Image style={styles.image} source={require(lunchPic)} />
             <Switch
               style={{ alignItems: "center" }}
-              value={list.isDone}
+              value={isEnabled}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
@@ -202,7 +205,7 @@ export default ({ list }: ListProps) => {
       </>
     );
   }
-  const returnMoon = () => {
+  const returnMoon = () => {  
     return (
       <>
         <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
@@ -221,7 +224,7 @@ export default ({ list }: ListProps) => {
             <Image style={styles.image} source={require(moonPic)} />
             <Switch
               style={{ alignItems: "center" }}
-              value={list.isDone}
+              value={isEnabled}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
@@ -254,7 +257,7 @@ export default ({ list }: ListProps) => {
             <Image style={styles.image} source={require(customPic)} />
             <Switch
               style={{ alignItems: "center" }}
-              value={list.isDone}
+              value={isEnabled}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
@@ -268,7 +271,6 @@ export default ({ list }: ListProps) => {
       </>
     );
   }
-  console.log("list,picture:",list.picture)
   if (list.picture == 'sun') {
     return returnSun()
   }
@@ -284,40 +286,8 @@ export default ({ list }: ListProps) => {
   else if (list.picture == 'custom') {
     return returnCustom()
   }
-  else{
-    console.log('null null null: ',list.picture)
+  else {
+    console.log('null null null: ', list.picture)
   }
   return null
-
-  // return (
-  //   <>
-  //     <TouchableWithoutFeedback onPress={() => setOpen((prev) => !prev)}>
-  //       <Animated.View
-  //         style={[
-  //           styles.container,
-  //           {
-  //             borderBottomLeftRadius: bottomRadius,
-  //             borderBottomRightRadius: bottomRadius,
-  //           },
-  //         ]}
-  //       >
-
-  //         <Text style={styles.title}>{list.name}</Text>
-  //         {/* <Image style={styles.image} source={require(pic)} /> */}
-  //         <Image style={styles.image} source={require(pic2)} />
-  //         <Switch
-  //           style={{ alignItems: "center" }}
-  //           value={list.isDone}
-  //           onValueChange={toggleSwitch}
-  //         />
-  //         <Chevron {...{ transition }} />
-  //       </Animated.View>
-  //     </TouchableWithoutFeedback>
-  //     <Animated.View style={[styles.items, { height }]}>
-  //       {list.items.map((item, key) => (
-  //         <Item {...{ item, key }} isLast={key === list.items.length - 1} />
-  //       ))}
-  //     </Animated.View>
-  //   </>
-  // );
 };
