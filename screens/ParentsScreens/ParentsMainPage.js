@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,14 +19,14 @@ import {
   Button,
   ButtonGroup,
 } from "react-native-elements";
-import Accordion from "../../src/components/Accordion";
+import Accordion2 from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
 import AwesomeAlert from "react-native-awesome-alerts";
 import * as Permissions from 'expo-permissions';
-import {Notifications } from 'expo';
+import { Notifications } from 'expo';
 // import {Notifications} from 'expo-permissions';
-import * as firebasePush from 'firebase'; 
+import * as firebasePush from 'firebase';
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -42,21 +42,27 @@ export default class ParentsMainPage extends React.Component {
       numberOftasks: 1,
       numberOftasksDone: 1,
       showAlert: false,
+      loadingTasks: true
     };
     this.updateIndex = this.updateIndex.bind(this);
+
+
   }
 
   updateIndex(selectedIndex) {
     this.setState({ selectedIndex });
   }
 
+  
+
   async UNSAFE_componentWillMount() {
     // await this.getTasks();
-    await this.getCustomTasks();
+    //await this.getCustomTasks();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.registerForPushNotification()
+    await this.getCustomTasks();
   }
   registerForPushNotification = async () => {
 
@@ -74,11 +80,11 @@ export default class ParentsMainPage extends React.Component {
     let token = await Notifications.getExpoPushTokenAsync();
     console.log('123123123: ', token)
     const user = firebase.auth().currentUser.uid;
- 
+
     var userDoc = firebase.firestore().collection('users').doc(user)
-    var addTokenToUser = userDoc.set({  
-      pushNotificationToken:token
-    },{merge:true});
+    var addTokenToUser = userDoc.set({
+      pushNotificationToken: token
+    }, { merge: true });
 
   }
   getCustomTasks = async () => {
@@ -188,6 +194,7 @@ export default class ParentsMainPage extends React.Component {
             console.log("not same");
           }
         });
+        
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
@@ -203,6 +210,7 @@ export default class ParentsMainPage extends React.Component {
       customTasks: customTasks,
       numberOftasks: numberOftasks,
       numberOftasksDone: numberOftasksDone,
+      loadingTasks: false
     });
   };
   showAlert = () => {
@@ -230,7 +238,9 @@ export default class ParentsMainPage extends React.Component {
         var data = doc.data();
         isDone = data.isDone;
       })
-      .catch((error) => { });
+      .catch((error) => {
+        console.log('GETTING TASKS ERROR ', error);
+      });
     if (isDone) {
       console.log(
         "this.state.numberOftasksDone+1: ",
@@ -268,21 +278,28 @@ export default class ParentsMainPage extends React.Component {
       .update({
         isDone: !isDone,
       });
+  
+      
+
   }
   render() {
+
+
     const { showAlert } = this.state;
 
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={styles.container}>
+          {this.state.loadingTasks
+            ? <ActivityIndicator/>
+            : <View style={styles.container}>
             {/* <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
             /> */}
-            <Accordion
+            <Accordion2
               allTasks={this.state.allTasks}
               morningTasks={this.state.morningTasks}
               noonTasks={this.state.noonTasks}
@@ -310,7 +327,7 @@ export default class ParentsMainPage extends React.Component {
                 this.hideAlert();
               }}
             />
-          </View>
+          </View>}
         </ScrollView>
       </View>
     );
