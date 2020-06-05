@@ -5,6 +5,7 @@ import List, { List as ListModel } from "./List";
 import { Suspense } from "react";
 import { Accordion } from "native-base";
 import { images } from "../ImagesClass";
+import moment from "moment";
 
 const Accordion2 = (props) => {
   var tasks = [];
@@ -97,7 +98,7 @@ const Accordion2 = (props) => {
   var list: ListModel = {
     name: "משימות מותאמות",
     items: props.customTasks[0] ? props.customTasks[0].tasks.slice() : [],
-    picture: "moon",
+    picture: "custom",
     test: "test",
     markMission: props.markMission,
     taskId: props.customTasks[0] ? props.customTasks[0].taskId : "",
@@ -105,25 +106,8 @@ const Accordion2 = (props) => {
 
   };
   tasks.push(<List /* key={5} */ {...{ list }} />);
-  // for (let i = 0; i < allTasks.length; i++) {
-  //   // console.log('test');
-  //   const list: ListModel = {
-  //     name: allTasks[i]["title"],
-  //     items: morningItems.slice(),
-  //     picture: "sun",
-  //     test: "test",
-  //   };
 
-  //   tasks.push(<List key={allTasks[i]["id"]} {...{ list }} />);
-  //   let picPath = "../icons/" + "sun.jpg";
-  // }
-
-  let date = new Date();
-  let currentDate = date.getDate();
-  let currentMonth = date.getMonth() + 1;
-  let currentYear = date.getFullYear();
-  let fullDate = currentDate + "." + currentMonth + "." + currentYear;
-  // console.log("props: ", props);
+  let fullDate = moment(new Date()).format('DD/MM/YYYY');
 
   return (
     <View style={styles.container}>

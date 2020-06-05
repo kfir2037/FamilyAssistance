@@ -23,6 +23,10 @@ import Accordion from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
 import AwesomeAlert from "react-native-awesome-alerts";
+import * as Permissions from 'expo-permissions';
+import {Notifications } from 'expo';
+// import {Notifications} from 'expo-permissions';
+import * as firebasePush from 'firebase'; 
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -51,6 +55,32 @@ export default class ParentsMainPage extends React.Component {
     await this.getCustomTasks();
   }
 
+  componentDidMount() {
+    this.registerForPushNotification()
+  }
+  registerForPushNotification = async () => {
+
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = status;
+    console.log('finalStatus ', finalStatus)
+
+    if (status !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      return;
+    }
+    let token = await Notifications.getExpoPushTokenAsync();
+    console.log('123123123: ', token)
+    const user = firebase.auth().currentUser.uid;
+ 
+    var userDoc = firebase.firestore().collection('users').doc(user)
+    var addTokenToUser = userDoc.set({  
+      pushNotificationToken:token
+    },{merge:true});
+
+  }
   getCustomTasks = async () => {
     var user = firebase.auth().currentUser.uid;
     var currentDate = moment(new Date()).format("DD/MM/YYYY");
@@ -200,24 +230,30 @@ export default class ParentsMainPage extends React.Component {
         var data = doc.data();
         isDone = data.isDone;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     if (isDone) {
       console.log(
         "this.state.numberOftasksDone+1: ",
         this.state.numberOftasksDone + 1
       );
       console.log("this.state.numberOftasks: ", this.state.numberOftasks);
-      if (
-        (this.state.numberOftasksDone + 1) / this.state.numberOftasks >=
-        0.6
-      ) {
+      if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks >= 0.6 && (this.state.numberOftasksDone + 1) / this.state.numberOftasks != 1) {
         console.log("111");
         this.setState({
           numberOftasksDone: this.state.numberOftasksDone + 1,
           textForAlert: "אתה בדרך הנכונה, כל הכבוד!",
         });
         this.showAlert();
-      } else {
+      } else if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks == 1) {
+        console.log("2222");
+        this.setState({
+          numberOftasksDone: this.state.numberOftasksDone + 1,
+          textForAlert: "סיימת את המשימות להיום, כל הכבוד!",
+        });
+        this.showAlert();
+      }
+
+      else {
         this.setState({ numberOftasksDone: this.state.numberOftasksDone + 1 });
       }
       console.log("count+1");
@@ -240,12 +276,12 @@ export default class ParentsMainPage extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.container}>
-            <ProgressBarAndroid
+            {/* <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
-            />
+            /> */}
             <Accordion
               allTasks={this.state.allTasks}
               morningTasks={this.state.morningTasks}
