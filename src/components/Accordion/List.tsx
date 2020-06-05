@@ -77,7 +77,7 @@ export default ({ list }: ListProps) => {
     setIsEnabled(!isEnabled);
     console.log('list: ',list)
     list.markMission(list.taskId)
-    list.isDone = !x
+    //list.isDone = !x
   };
   const [open, setOpen] = useState(false);
   // console.log('list: ',list)
