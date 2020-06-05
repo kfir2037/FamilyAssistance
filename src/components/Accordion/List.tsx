@@ -1,4 +1,4 @@
-import React, { useState, Component } from "react";
+import React, { useState,useEffect, Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -74,12 +74,21 @@ const images2 = {
 export default ({ list }: ListProps) => {
   const [isEnabled, setIsEnabled] = useState(list.isDone);
   const toggleSwitch = () => {
+    list.isDone = !isEnabled
     setIsEnabled(!isEnabled);
+    
     console.log('list: ',list)
+    
     list.markMission(list.taskId)
-    //list.isDone = !x
+    
   };
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    //getFamily();
+    console.log('list.isDone ', list.isDone);
+  }, [isEnabled]);
+
   // console.log('list: ',list)
   const transition = useTransition(
     open,
@@ -159,7 +168,6 @@ export default ({ list }: ListProps) => {
             <Switch
               style={{ alignItems: "center" }}
               value={isEnabled}
-              // value={list.isDone}
               onValueChange={toggleSwitch}
             />
             <Chevron {...{ transition }} />
