@@ -22,7 +22,7 @@ const SwDrawerNavigator = createDrawerNavigator({
   AddNewFamily: {
     screen: SwAddNewFamilyStackNavigator,
     navigationOptions: {
-      drawerLabel: 'הוסף משפחה'
+      drawerLabel: 'הוספת משפחה'
     }
   },
   WatchFamilies: {

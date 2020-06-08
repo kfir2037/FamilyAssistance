@@ -6,6 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from 'formik';
+import ParentDetails from '../../src/components/ParentDetails';
 import * as yup from 'yup';
 
 const WatchFamilies = ({ navigation }) => {
@@ -13,6 +14,9 @@ const WatchFamilies = ({ navigation }) => {
   const [modalLoading, setModalLoading] = useState(false);
   const [familyObj, setFamilyObj] = useState({});
   const [parentDetails, setParentDetails] = useState([]);
+  const [kidsDetails, setKidsDetails] = useState([]);
+  const [parentDetailsLoading, setParentDetailsLoading] = useState(true);
+  const [kidsDetailsLoading, setKidsDetailsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isParentModalVisible, setIsParentModalVisible] = useState(false);
   const [isKidModalVisible, setIsKidModalVisible] = useState(false);
@@ -29,54 +33,77 @@ const WatchFamilies = ({ navigation }) => {
     setIsKidModalVisible(!isKidModalVisible);
   }
 
-  const parentListItem = async (item) => {
-    //let parentDetails = {};
-    await firebase.firestore().collection('users').doc(item).get()
+  // ParentListItem = async (item) => {
+  //   // let parentDetails = {};
+  //   // await firebase.firestore().collection('users').doc(item).get()
 
-      .then(doc => {
-        //console.log(doc.data().firstName);
-        setParentDetails = ({
-          firstName: doc.data().firstName,
-          birthDate: doc.data().birthDate,
-          gender: doc.data().gender
-        })
-        console.log(parentDetails['firstName']);
-      })
-      .catch(error => {
+  //   //   .then(doc => {
+  //   //     //console.log(doc.data().firstName);
+  //   //     parentDetails = ({
+  //   //       firstName: doc.data().firstName,
+  //   //       birthDate: doc.data().birthDate,
+  //   //       gender: doc.data().gender
+  //   //     })
+  //   //     console.log(parentDetails['firstName']);
+  //   //   })
+  //   //   .catch(error => {
 
-      });
+  //   //   });
 
 
-    return <Text>{parentDetails['firstName']}</Text>
+  //   return <Text>HI</Text>
 
-  }
+  // }
+
 
   const getFamily = async () => {
     const familyId = navigation.getParam('familyId');
     console.log(familyId);
     await firebase.firestore().collection('families').doc(familyId).get()
-      .then(doc => {
+      .then(async (doc) => {
         setFamilyObj(doc.data());
         setIsLoading(false);
-        doc.data().parents.forEach(parentID => {
-          firebase.firestore().collection('users').doc(parentID).get()
-            .then(doc => {
-              parentDetails.push({
-                firstName: doc.data().firstName,
-                birthDate: doc.data().birthDate,
-                gender: doc.data().gender
+        if (parentDetails.length == 0) {
+          await doc.data().parents.forEach(async (parentID) => {
+            await firebase.firestore().collection('users').doc(parentID).get()
+              .then((doc) => {
+
+                parentDetails.push({
+                  key: doc.id,
+                  firstName: doc.data().firstName,
+                  birthDate: doc.data().birthDate,
+                  gender: doc.data().gender
+                })
+
+                setParentDetailsLoading(false);
               })
-            }
+          })
+          if (doc.data().parents.length == 0) {
+            setParentDetailsLoading(false);
+          }
+          await doc.data().kids.forEach(async (kidID) => {
+            await firebase.firestore().collection('users').doc(kidID).get()
+              .then((doc) => {
 
-            )
-        })
+                kidsDetails.push({
+                  key: doc.id,
+                  firstName: doc.data().firstName,
+                  birthDate: doc.data().birthDate,
+                  gender: doc.data().gender
+                })
+
+                setKidsDetailsLoading(false);
+              })
+              .catch((err) => { console.log(err) })
+          })
+          if (doc.data().kids.length == 0) {
+            setKidsDetailsLoading(false);
+          }
+        }
         console.log('familyObj', familyObj);
-        //firebase.firestore().collection('users').doc()
       })
-
-
+      .catch((error) => console.log(error))
     //firebase.firestore().collection('users').doc(familyObj['parents'][0])
-
   }
 
   const showDatePicker = () => {
@@ -85,11 +112,11 @@ const WatchFamilies = ({ navigation }) => {
 
   const onChange = (event, selectedDate) => {
     console.log("event ", event);
-    
+
     const currentDate = moment(selectedDate) || birthDate;
     setShow(Platform.OS === 'ios');
     setBirthDate(currentDate);
-    
+
   };
 
 
@@ -100,13 +127,18 @@ const WatchFamilies = ({ navigation }) => {
 
 
   useEffect(() => {
-    console.log(birthDate);
+    console.log('effect birthDate', birthDate);
   }, [birthDate]);
-  
+
 
   useEffect(() => {
     console.log('effect familyObj', familyObj['parents']);
+    //setParentDetailsLoading(false);
   }, [familyObj]);
+
+  useEffect(() => {
+    console.log('effect parentDetails ', parentDetails);
+  }, [parentDetails]);
 
   useEffect(() => {
     console.log(isParentModalVisible);
@@ -135,24 +167,26 @@ const WatchFamilies = ({ navigation }) => {
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
-                
-                initialValues={{ firstName: '', lastName: '', id: '', gender: '', birthDate: birthDate.toDate(), phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
-                //validationSchema={}
-                onSubmit={(values, actions) => {
-                  //actions.resetForm();
-                  
-                  actions.setValues({...values,birthDate:birthDate.toDate() })
 
-                  console.log('values', values);
+                initialValues={{ firstName: '', lastName: '', id: '', gender: '', phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
+                //validationSchema={}
+                onSubmit={async (values, actions) => {
+                  //actions.resetForm();
+
+                  //actions.setValues({ ...values, birthDate: birthDate.format('DD/MM/YYYY') })
+                  await actions.setValues({ birthDate: birthDate })
+                  //console.log('values', values);
                   var createUser = firebase.functions().httpsCallable('createUser');
-                  createUser(values)
+                  await createUser(values)
                     .then(function (resp) {
                       //Display success
+                      console.log('values', values);
                       console.log(resp.data.result);
                       setModalLoading(false);
                       setMessage('הוספת הורה הצליחה');
                     })
                     .catch(function (error) {
+                      console.log('values', values);
                       var code = error.code;
                       var message = error.message;
                       //Display error
@@ -160,8 +194,6 @@ const WatchFamilies = ({ navigation }) => {
                       setModalLoading(false);
                       setMessage('הוספת הורה נכשלה');
                     });
-
-
                 }}
               >{(props) => (
                 <>
@@ -216,9 +248,11 @@ const WatchFamilies = ({ navigation }) => {
                           onChange={(event, selectedDate) => {
                             onChange(event, selectedDate);
                             //props.setFieldValue('birthDate', birthDate.toDate());
-                            props.handleChange('birthDate')
-                            console.log('formik birthDate ', props.values.birthDate);
-                            
+                            //props.handleChange('birthDate')
+                            //console.log('formik birthDate ', props.values.birthDate);
+                            console.log('state birthDate ', birthDate);
+
+
                           }}
                         />
                         }
@@ -362,7 +396,7 @@ const WatchFamilies = ({ navigation }) => {
 
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ alignSelf: 'center' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{props.values.birthDate.toLocaleDateString()}</Text>
+                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.format('DD/MM/YYYY').toString()}</Text>
                     </View>
 
                     <View style={styles.birtDateBox}>
@@ -375,11 +409,32 @@ const WatchFamilies = ({ navigation }) => {
                           display='spinner'
                           style={{ position: 'absolute' }}
                           value={props.values.birthDate}
-                          onChange={onChange}
+                          onChange={(event, selectedDate) => {
+                            onChange(event, selectedDate);
+                            //props.setFieldValue('birthDate', birthDate.toDate());
+                            props.handleChange('birthDate')
+                            console.log('formik birthDate ', props.values.birthDate);
+                            console.log('state birthDate ', birthDate);
+
+
+                          }}
                         />
                         }
                       </View>
                     </View>
+                  </View>
+                  <View style={{ flexDirection: 'row-reverse', margin: 10 }}>
+                    <Text style={{ fontSize: 18 }}>מין</Text>
+                    <Picker
+                      mode='dropdown'
+                      selectedValue={props.values.gender}
+                      style={{ height: 30, width: 110 }}
+                      onValueChange={props.handleChange('gender')}
+                    >
+                      <Picker.Item label='בחר/י' value='' />
+                      <Picker.Item label='זכר' value='male' />
+                      <Picker.Item label='נקבה' value='female' />
+                    </Picker>
                   </View>
                   <Input
                     value={props.values.phone}
@@ -430,18 +485,52 @@ const WatchFamilies = ({ navigation }) => {
         <ScrollView style={styles.scrollView} >
           <View style={styles.detailsContainer}>
             <Text style={styles.headlineText}>פרטי משפחה: </Text>
-            <Text style={styles.detailsText}>מצב משפחתי: </Text>
+            <Text style={styles.detailsText}>מצב משפחתי: {familyObj.isSingleParent ? 'גרושים' : 'נשואים'} </Text>
             <Text style={styles.detailsText}>מספר נפשות: {familyObj.numOfPersons}</Text>
             <Text style={styles.detailsText}>סטטוס פעילות: {familyObj.status ? <Text style={{ color: 'green' }}>פעילה</Text> : <Text style={{ color: 'crimson' }}>לא פעילה</Text>}</Text>
             <View style={styles.parentsDetails}>
               <Text style={styles.headlineText}>הורים:</Text>
               <View>
-                <FlatList
-                  //style={{ backgroundColor: 'white' }}
-                  data={familyObj['parents']}
-                  renderItem={({ item }) => { }}
-                  keyExtractor={item => item}
-                />
+                {parentDetailsLoading
+                  ? <ActivityIndicator size={20} color='#767ead' />
+                  : <FlatList
+                    //style={{ backgroundColor: 'white' }}
+                    ListEmptyComponent={() => {
+                      return (
+                        <View>
+                          <Text></Text>
+                        </View>
+                      );
+                    }}
+                    ListHeaderComponent={() => {
+                      return (
+                        <View style={styles.listHeaderStyle}>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>שם</Text>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>מין</Text>
+                        </View>
+                      );
+                    }}
+                    ItemSeparatorComponent={(props) => {
+                      //console.log('props', props);
+                      return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                    }}
+                    data={parentDetails}
+                    renderItem={({ item, separators }) => {
+                      return (
+                        <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
+                          <View style={{ flexDirection: 'row-reverse' }}>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1975 </Text>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
+                          </View>
+                        </TouchableHighlight>
+                      );
+                    }}
+                    keyExtractor={item => item['key']}
+                  />
+
+                }
                 <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
                   <AntDesign name='adduser' size={25} />
                 }
@@ -452,7 +541,46 @@ const WatchFamilies = ({ navigation }) => {
             <View style={styles.childsDetails}>
               <Text style={styles.headlineText}>ילדים:</Text>
               <View>
-                {/* TODO: here should be a flatlist */}
+                {kidsDetailsLoading
+                  ? <ActivityIndicator size={40} color='#767ead' />
+                  : <FlatList
+                    //style={{ backgroundColor: 'white' }}
+                    ListEmptyComponent={() => {
+                      return (
+                        <View>
+                          <Text></Text>
+                        </View>
+                      );
+                    }}
+                    ListHeaderComponent={() => {
+                      return (
+                        <View style={styles.listHeaderStyle}>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>שם</Text>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
+                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>מין</Text>
+                        </View>
+                      );
+                    }}
+                    ItemSeparatorComponent={(props) => {
+                      console.log('props', props);
+                      return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                    }}
+                    data={kidsDetails}
+                    renderItem={({ item, separators }) => {
+                      return (
+                        <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
+                          <View style={{ flexDirection: 'row-reverse' }}>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1998</Text>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
+                          </View>
+                        </TouchableHighlight>
+                      );
+                    }}
+                    keyExtractor={item => item['key']}
+                  />
+
+                }
                 <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
                   <AntDesign name='adduser' size={25} />
                 }
@@ -525,7 +653,8 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     alignItems: 'center',
-    margin: 5
+    margin: 5,
+    marginTop: 15
   },
   modalView: {
     margin: 20,
@@ -570,6 +699,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 10
+  },
+  listHeaderStyle: {
+    flexDirection: 'row-reverse',
+    //alignItems:'center',
+    margin: 10,
+    // borderWidth: 1,
+    // borderColor: 'black'
+
   }
 
 

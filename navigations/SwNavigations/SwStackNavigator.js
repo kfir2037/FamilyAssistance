@@ -23,19 +23,18 @@ const SwStackNavigator = createStackNavigator({
     
     defaultNavigationOptions: ({ navigation }) => {
       return {
-        headerLeft: (
+        headerRight: (
           <Icon style={{ padding: 10 }}
             onPress={() => navigation.openDrawer()}
             name="md-menu"
             size={30} />
         ),
-        headerRight: (
+        headerLeft: (
           <Icon style={{ padding: 10 }}
             name="md-exit"
             onPress={() => {
               firebase.auth().signOut();
               navigation.navigate('Welcome');
-
             }
             }
             size={30} />

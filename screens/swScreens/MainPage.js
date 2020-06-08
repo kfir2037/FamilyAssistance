@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, YellowBox, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet,  YellowBox, FlatList, ActivityIndicator } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
+import {Button} from 'react-native-elements';
 // import { Button } from 'native-base';
 import firebase from '../../config/config';
 import { FontAwesome } from '@expo/vector-icons';
@@ -131,14 +132,25 @@ export default class MainPage extends Component {
               </View>}
             <View style={{ flexDirection: 'column' }}>
               <View style={styles.twoFirstButtons}>
-                <View style={styles.buttons}>
+                {/* <View style={styles.buttons}>
                   <Button
                     title="הסרת משפחה"
+                    color='#767ead'
+                  />
+                </View> */}
+                <View style={styles.buttons}>
+                  <Button
+                    buttonStyle={styles.button}
+                    title="פרטי המשפחה"
+                    onPress={() => this.props.navigation.navigate('WatchFamilies', {
+                      familyId: this.state.familySelectedUid
+                    })}
                     color='#767ead'
                   />
                 </View>
                 <View style={styles.buttons}>
                   <Button
+                    buttonStyle={styles.button}
                     onPress={() => this.props.navigation.navigate('Tasks2', {
                       familyId: this.state.familySelectedUid
                     })}
@@ -150,25 +162,16 @@ export default class MainPage extends Component {
               <View style={styles.twoFirstButtons}>
                 <View style={styles.buttons}>
                   <Button
-                    title="צפייה בפרטי המשפחה"
-                    onPress={() => this.props.navigation.navigate('WatchFamilies', {
-                      familyId: this.state.familySelectedUid
-                    })}
-                    color='#767ead'
-                  />
-                </View>
-                <View style={styles.buttons}>
-                  <Button
+                    buttonStyle={styles.button}
                     onPress={() => this.props.navigation.navigate('AddNewFamily')}
-                    title="הוספת משפחה חדשה"
+                    title="הוספת משפחה"
                     color='#767ead'
                   />
                 </View>
-              </View>
-              <View style={styles.twoFirstButtons}>
                 <View style={styles.buttons}>
                   <Button
-                    title="הוספת משימה חדשה"
+                    buttonStyle={styles.button}
+                    title="משימה חדשה"
                     onPress={() => this.props.navigation.navigate('AddNewTask', {
                       familyId: this.state.familySelectedUid
                     })}
@@ -176,6 +179,9 @@ export default class MainPage extends Component {
                   />
                 </View>
               </View>
+              {/* <View style={styles.twoFirstButtons}>
+                
+              </View> */}
             </View>
           </View>
         </>
@@ -219,10 +225,8 @@ const styles = StyleSheet.create({
     margin: 25
   },
   button: {
-    width: 350,
-
-    margin: 20,
-    alignItems: 'center'
+    borderRadius:20,
+    backgroundColor:'#767ead'
     // alignContent:'center'
   }
 

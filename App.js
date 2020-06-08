@@ -166,7 +166,9 @@ let getDoc4 = eveningTasks
           }
         }
       });
-    });
+    })
+    .catch((err)=>{console.log('tasks ',err)})
+    
 
 
   // const allTasks = await firebase.firestore().collection('tasks').get()
