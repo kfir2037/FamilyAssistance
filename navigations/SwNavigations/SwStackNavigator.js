@@ -13,21 +13,21 @@ import AddNewTask from '../../screens/swScreens/AddNewTask';
 
 const SwStackNavigator = createStackNavigator({
   Main: Main,
-  AddNewTask:AddNewTask,
-  AddNewFamily:AddNewFamily,
-  Tasks2:Tasks2,
-  WatchFamilies:WatchFamilies,
-  Reports:Reports
+  AddNewTask: AddNewTask,
+  AddNewFamily: AddNewFamily,
+  Tasks2: Tasks2,
+  WatchFamilies: WatchFamilies,
+  Reports: Reports
 },
   {
-    
     defaultNavigationOptions: ({ navigation }) => {
       return {
         headerRight: (
           <Icon style={{ padding: 10 }}
             onPress={() => navigation.openDrawer()}
             name="md-menu"
-            size={30} />
+            size={30}
+            color='white' />
         ),
         headerLeft: (
           <Icon style={{ padding: 10 }}
@@ -37,11 +37,16 @@ const SwStackNavigator = createStackNavigator({
               navigation.navigate('Welcome');
             }
             }
-            size={30} />
-        )
+            size={30} 
+            color='white'/>
+        ),
+        headerStyle:{
+          backgroundColor:'#767ead'
+        }
       }
     }
-  }
+  },
+  
 )
 
 export default SwStackNavigator;

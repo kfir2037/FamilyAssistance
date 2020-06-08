@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,  YellowBox, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, YellowBox, FlatList, ActivityIndicator } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
-import {Button} from 'react-native-elements';
+import { Button } from 'react-native-elements';
 // import { Button } from 'native-base';
 import firebase from '../../config/config';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-navigation';
 
 export default class MainPage extends Component {
@@ -96,10 +96,14 @@ export default class MainPage extends Component {
           justifyContent: 'center',
           paddingVertical: 20,
           paddingHorizontal: 10,
-          borderColor: '#767ead'
+          borderColor: '#767ead',
+          borderBottomWidth:0.5,
+          borderBottomColor:'#767ead',
+          borderBottomRightRadius:35
+
         }}
       >
-        <Text>{item.data().lastName}</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 20,color:'#656d9c' }}>{item.data().lastName}</Text>
 
       </View>
     );
@@ -111,7 +115,7 @@ export default class MainPage extends Component {
         <>
           <View style={styles.container}>
             <View style={styles.header}>
-              <Text style={styles.titleText}>משפחות שרשומות לתוכנית</Text>
+              <Text style={styles.titleText}>משפחות</Text>
             </View>
             {this.state.loading
               ? <ActivityIndicator size={50} color='#767ead' />
@@ -130,7 +134,7 @@ export default class MainPage extends Component {
                   />
                 </SafeAreaView>
               </View>}
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: 'column', alignItems: 'center',marginTop:10 }}>
               <View style={styles.twoFirstButtons}>
                 {/* <View style={styles.buttons}>
                   <Button
@@ -146,6 +150,14 @@ export default class MainPage extends Component {
                       familyId: this.state.familySelectedUid
                     })}
                     color='#767ead'
+                    icon={<MaterialCommunityIcons
+                      name="account-details"
+                      size={26}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 5 }}
+                    iconRight
                   />
                 </View>
                 <View style={styles.buttons}>
@@ -156,6 +168,14 @@ export default class MainPage extends Component {
                     })}
                     title="משימות"
                     color='#767ead'
+                    icon={<FontAwesome
+                      name="calendar"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 10 }}
+                    iconRight
                   />
                 </View>
               </View>
@@ -166,6 +186,14 @@ export default class MainPage extends Component {
                     onPress={() => this.props.navigation.navigate('AddNewFamily')}
                     title="הוספת משפחה"
                     color='#767ead'
+                    icon={<AntDesign
+                      name="addusergroup"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 5 }}
+                    iconRight
                   />
                 </View>
                 <View style={styles.buttons}>
@@ -176,6 +204,14 @@ export default class MainPage extends Component {
                       familyId: this.state.familySelectedUid
                     })}
                     color='#767ead'
+                    icon={<FontAwesome5
+                      name="plus"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 10 }}
+                    iconRight
                   />
                 </View>
               </View>
@@ -195,7 +231,7 @@ export default class MainPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 20,
     backgroundColor: '#b5bef5',
     height: '100%',
     width: '100%'
@@ -211,7 +247,8 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingBottom: 20
+    paddingBottom: 10,
+    color:'#656d9c'
   },
   header: {
     alignItems: 'center'
@@ -221,12 +258,12 @@ const styles = StyleSheet.create({
     //flex: 1
   },
   buttons: {
-    width: 150,
-    margin: 25
+    flex: 1,
+    margin: 10
   },
   button: {
-    borderRadius:20,
-    backgroundColor:'#767ead'
+    borderRadius: 20,
+    backgroundColor: '#767ead'
     // alignContent:'center'
   }
 
