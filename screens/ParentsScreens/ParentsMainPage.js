@@ -5,7 +5,7 @@ import {
   ScrollView,
   Text,
   Image,
-
+  ActivityIndicator
 } from "react-native";
 import Accordion from "../../src/components/Accordion";
 import {
@@ -50,7 +50,7 @@ export default class ParentsMainPage extends React.Component {
     this.setState({ selectedIndex });
   }
 
-  
+
 
   async UNSAFE_componentWillMount() {
     // await this.getTasks();
@@ -191,7 +191,7 @@ export default class ParentsMainPage extends React.Component {
             console.log("not same");
           }
         });
-        
+
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
@@ -275,8 +275,8 @@ export default class ParentsMainPage extends React.Component {
       .update({
         isDone: !isDone,
       });
-  
-      
+
+
 
   }
   render() {
@@ -286,50 +286,50 @@ export default class ParentsMainPage extends React.Component {
 
     return (
       <View style={styles.container}>
-        
-        <ScrollView>
-        <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
 
-        {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
+        <ScrollView>
+          <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
+
+          {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
           <View style={styles.container}>
-           {/* <ProgressBarAndroid
-          {this.state.loadingTasks
-            ? <ActivityIndicator/>
-            : <View style={styles.container}>
-            { <ProgressBarAndroid
+            {this.state.loadingTasks
+              ? <ActivityIndicator />
+              : <View style={styles.container}>
+                {/* { <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
-            /> */}
-            <Accordion2
-              allTasks={this.state.allTasks}
-              morningTasks={this.state.morningTasks}
-              noonTasks={this.state.noonTasks}
-              afternoonTasks={this.state.afternoonTasks}
-              eveningTasks={this.state.eveningTasks}
-              customTasks={this.state.customTasks}
-              markMission={this.markMission.bind(this)}
-            />
-            <AwesomeAlert
-              show={showAlert}
-              showProgress={false}
-              title="כל הכבוד"
-              message="אתה בדרך הנכונה!"
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showCancelButton={false}
-              showConfirmButton={true}
-              cancelText="No, cancel"
-              confirmText="סגור"
-              confirmButtonColor="#DD6B55"
-              onCancelPressed={() => {
-                this.hideAlert();
-              }}
-              onConfirmPressed={() => {
-                this.hideAlert();
-              }}
-            />
+            />  */}
+                <Accordion2
+                  allTasks={this.state.allTasks}
+                  morningTasks={this.state.morningTasks}
+                  noonTasks={this.state.noonTasks}
+                  afternoonTasks={this.state.afternoonTasks}
+                  eveningTasks={this.state.eveningTasks}
+                  customTasks={this.state.customTasks}
+                  markMission={this.markMission.bind(this)}
+                />
+                <AwesomeAlert
+                  show={showAlert}
+                  showProgress={false}
+                  title="כל הכבוד"
+                  message="אתה בדרך הנכונה!"
+                  closeOnTouchOutside={true}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={false}
+                  showConfirmButton={true}
+                  cancelText="No, cancel"
+                  confirmText="סגור"
+                  confirmButtonColor="#DD6B55"
+                  onCancelPressed={() => {
+                    this.hideAlert();
+                  }}
+                  onConfirmPressed={() => {
+                    this.hideAlert();
+                  }}
+                />
+              </View>}
           </View>
         </ScrollView>
       </View>
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   image: {
-    width: 400,
+    width: '100%',
     height: 260,
   },
 });

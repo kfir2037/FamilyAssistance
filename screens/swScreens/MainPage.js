@@ -104,7 +104,6 @@ export default class MainPage extends Component {
         }}
       >
         <Text style={{ fontWeight: 'bold', fontSize: 20,color:'#656d9c' }}>{item.data().lastName}</Text>
-
       </View>
     );
   }

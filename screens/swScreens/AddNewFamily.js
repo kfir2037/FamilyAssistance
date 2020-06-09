@@ -1,5 +1,6 @@
 import React from 'react';
 import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
+import {Input} from 'react-native-elements';
 import firebase from '../../config/config';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -52,19 +53,22 @@ const AddNewFamily = () => {
           {(props) => (
             <View>
               <Text style={styles.headlines}> פרטי משפחה:</Text>
-              <View style={{ backgroundColor: '#8b96d9' }}>
+              <View style={styles.inputsContainer}>
                 <View style={styles.names}>
-                  <View style={styles.fields}>
+                  {/* <View style={styles.fields}>
                     <Text style={styles.text} >שם משפחה</Text>
-                  </View>
+                  </View> */}
                   <View style={styles.fields}>
-                    <TextInput
+                    <Input
+                      //label='שם משפחה'
+                      //labelStyle={{color:'#767ead'}}
                       onChangeText={props.handleChange('lastName')}
                       value={props.values.lastName}
                       placeholder='שם משפחה'
                       textAlign='right'
-                      placeholderTextColor='#b5bef5'
+                      placeholderTextColor='white'
                       onBlur={props.handleBlur('lastName')}
+                      inputContainerStyle={{borderBottomColor:'white'}}
                     />
                   </View>
                 </View>
@@ -79,8 +83,8 @@ const AddNewFamily = () => {
                       style={{ height: 30, width: 110 }}
                       onValueChange={props.handleChange('numOfPersons')}
                     >
-                      <Picker.Item label='בחר/י' value='0' />
-                      <Picker.Item label='2' value='2' />
+                      <Picker.Item color='white' label='בחר/י' value='0' />
+                      <Picker.Item color='white' label='2' value='2' />
                       <Picker.Item label='3' value='3' />
                       <Picker.Item label='4' value='4' />
                       <Picker.Item label='5' value='5' />
@@ -108,7 +112,7 @@ const AddNewFamily = () => {
               </View>
 
               <Text style={styles.headlines}>פרטי קשר:</Text>
-              <View style={{ backgroundColor: '#8b96d9' }}>
+              <View style={styles.inputsContainer}>
                 <View style={styles.names}>
                   <View style={styles.fields}>
                     <Text style={styles.text}>אימייל</Text>
@@ -171,18 +175,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     marginVertical: 10,
     marginHorizontal: 10,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#d6d7da',
+    // borderRadius: 4,
+    // borderWidth: 1,
+    // borderColor: '#d6d7da',
   },
   headlines: {
-    fontSize: 15,
+    color:'#767ead',
+    fontSize: 20,
     fontWeight: 'bold',
     paddingTop: 20,
     paddingBottom: 7,
     marginRight: 10,
   },
   text: {
+    color:'white',
     fontSize: 15,
     marginVertical: 7,
     marginHorizontal: 5
@@ -195,9 +201,9 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     height: 50,
-    borderWidth: 1,
-    borderColor: '#d6d7da',
-    backgroundColor: '#8b96d9',
+    // borderWidth: 1,
+    // borderColor: '#d6d7da',
+    backgroundColor:'#767ead',
     borderRadius: 25,
     marginVertical: 10,
     justifyContent: 'center',
@@ -206,7 +212,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '500',
-    color: 'black',
+    color: 'white',
     textAlign: 'center'
   },
   heading: {
@@ -222,7 +228,13 @@ const styles = StyleSheet.create({
     color: 'crimson',
     fontSize: 15,
     fontWeight:'bold',
-    marginBottom: 5
+    marginBottom: 5,
+    marginRight:20
+  },
+  inputsContainer:{ 
+    backgroundColor: '#767ead',
+    marginHorizontal:10,
+    borderRadius:20 
   }
 
 });
