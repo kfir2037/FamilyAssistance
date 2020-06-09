@@ -59,9 +59,10 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.morningTasks[0] ? props.morningTasks[0].taskId : "",
-    isDone: props.morningTasks[0] ? props.morningTasks[0].isDone : "",
+    //isDone: props.morningTasks[0].isDone
+    isDone: props.morningTasks[0] ? props.morningTasks[0].isDone : false,
   };
-  tasks.push(<List /* key={1} */ {...{ list }} />);
+  tasks.push(<List key={1} {...{ list }} />);
   var list: ListModel = {
     name: "משימות צהריים",
     items: props.noonTasks[0] ? props.noonTasks[0].tasks.slice() : [],
@@ -70,9 +71,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.noonTasks[0] ? props.noonTasks[0].taskId : "",
-    isDone: props.noonTasks[0] ? props.noonTasks[0].isDone : "",
+    isDone: props.noonTasks[0] ? props.noonTasks[0].isDone : false,
   };
-  tasks.push(<List /* key={2} */ {...{ list }} />);
+  tasks.push(<List key={2} {...{ list }} />);
   var list: ListModel = {
     name: "משימות אחר הצהריים",
     items: props.afternoonTasks[0] ? props.afternoonTasks[0].tasks.slice() : [],
@@ -81,9 +82,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.afternoonTasks[0] ? props.afternoonTasks[0].taskId : "",
-    isDone: props.afternoonTasks[0] ? props.afternoonTasks[0].isDone : "",
+    isDone: props.afternoonTasks[0] ? props.afternoonTasks[0].isDone : false,
   };
-  tasks.push(<List /* key={3} */ {...{ list }} />);
+  tasks.push(<List key={3} {...{ list }} />);
   var list: ListModel = {
     name: "משימות ערב",
     items: props.eveningTasks[0] ? props.eveningTasks[0].tasks.slice() : [],
@@ -92,9 +93,9 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.eveningTasks[0] ? props.eveningTasks[0].taskId : "",
-    isDone: props.eveningTasks[0] ? props.eveningTasks[0].isDone : "",
+    isDone: props.eveningTasks[0] ? props.eveningTasks[0].isDone : false,
   };
-  tasks.push(<List /* key={4} */ {...{ list }} />);
+  tasks.push(<List key={4} {...{ list }} />);
   var list: ListModel = {
     name: "משימות מותאמות",
     items: props.customTasks[0] ? props.customTasks[0].tasks.slice() : [],
@@ -102,10 +103,10 @@ const Accordion2 = (props) => {
     test: "test",
     markMission: props.markMission,
     taskId: props.customTasks[0] ? props.customTasks[0].taskId : "",
-    isDone: props.customTasks[0] ? props.customTasks[0].isDone : "",
+    isDone: props.customTasks[0] ? props.customTasks[0].isDone : false,
 
   };
-  tasks.push(<List /* key={5} */ {...{ list }} />);
+  tasks.push(<List key={5} {...{ list }} />);
 
   let fullDate = moment(new Date()).format('DD/MM/YYYY');
 

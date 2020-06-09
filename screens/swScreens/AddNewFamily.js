@@ -95,7 +95,7 @@ const AddNewFamily = () => {
                 {props.errors.numOfPersons && props.touched.numOfPersons ? <Text style={styles.errorMsg}>{props.errors.numOfPersons}</Text> : null}
                 <View style={styles.names}>
                   <View style={styles.fields}>
-                    <Text style={styles.text}>חד הורית</Text>
+                    <Text style={styles.text}>גרושים</Text>
                   </View>
                   <View style={{ alignSelf: 'center' }}>
                     <Switch

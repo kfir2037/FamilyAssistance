@@ -9,14 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
   Modal,
-
+  FlatList,
   TouchableHighlight,
   TextInput,
 } from "react-native";
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
 import { CheckBox, Button } from "react-native-elements";
-import { FlatList } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 
@@ -703,7 +702,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#767ead',
-    width: 110,
+    width: 120,
     height: 40,
     borderRadius: 15,
     borderWidth: 1,

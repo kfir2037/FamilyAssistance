@@ -49,6 +49,7 @@ export default class Form extends Component {
                 that.props.navigation.navigate('Welcome');
               }
             })
+            .catch((err)=>{console.log('Form ', err)})
         } else {
           that.props.navigation.navigate('Welcome');
         }

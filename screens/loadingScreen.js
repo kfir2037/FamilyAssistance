@@ -47,6 +47,7 @@ export default class Login extends Component {
                 that.props.navigation.navigate('Welcome');
               }
             })
+            .catch((err)=>{console.log('loading', err)})
         } else {
           that.props.navigation.navigate('Welcome');
         }
