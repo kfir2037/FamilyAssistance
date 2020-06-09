@@ -330,7 +330,7 @@ export default class ParentsMainPage extends React.Component {
                 this.hideAlert();
               }}
             />
-          </View>}
+          </View>
         </ScrollView>
       </View>
     );
