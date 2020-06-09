@@ -1,24 +1,12 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
-  TextInput,
-  Alert,
-  Switch,
-  ProgressBarAndroid,
-  TouchableOpacity,
-  ActivityIndicator,
+  Text,
+  Image,
+
 } from "react-native";
-import {
-  FormLabel,
-  FormInput,
-  FormValidationMessage,
-  Header,
-  Button,
-  ButtonGroup,
-} from "react-native-elements";
 import Accordion from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
@@ -26,7 +14,6 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import * as Permissions from 'expo-permissions';
 import {Notifications } from 'expo';
 // import {Notifications} from 'expo-permissions';
-import * as firebasePush from 'firebase'; 
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -274,9 +261,13 @@ export default class ParentsMainPage extends React.Component {
 
     return (
       <View style={styles.container}>
+        
         <ScrollView>
+        <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
+
+        <Text href='https://www.freepik.com/free-photos-vectors/baby'>Baby vector created by macrovector - www.freepik.com</Text>
           <View style={styles.container}>
-            {/* <ProgressBarAndroid
+           {/* <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
@@ -368,5 +359,9 @@ const styles = StyleSheet.create({
   temp: {
     flex: 1,
     textAlign: "left",
+  },
+  image: {
+    width: 400,
+    height: 260,
   },
 });

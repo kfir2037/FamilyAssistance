@@ -130,9 +130,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row-reverse",
+
+    justifyContent: 'center'
+  },
+  headerTitle: {
+
   },
   title: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
+ 
   },
 });

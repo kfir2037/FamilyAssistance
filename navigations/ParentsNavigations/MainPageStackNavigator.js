@@ -15,6 +15,7 @@ const WatchTasksStackNavigator = createStackNavigator({
 }, {
   defaultNavigationOptions: ({ navigation }) => {
     return {
+      // title:'משימות לתאריך:',
       headerLeft: (
         <Icon style={{ padding: 10 }}
           onPress={() => {
