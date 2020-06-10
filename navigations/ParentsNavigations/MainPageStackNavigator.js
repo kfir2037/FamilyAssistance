@@ -16,16 +16,15 @@ const WatchTasksStackNavigator = createStackNavigator({
   defaultNavigationOptions: ({ navigation }) => {
     return {
       // title:'משימות לתאריך:',
-      headerLeft: (
-        <Icon style={{ padding: 10 }}
-          onPress={() => {
-            navigation.openDrawer();
-          }
-          }
-          name="md-menu"
-          size={30} />
-      ),
       headerRight: (
+        <Icon style={{ padding: 10 }}
+          onPress={() => navigation.openDrawer()}
+          name="md-menu"
+          size={30}
+          color='white'
+        />
+      ),
+      headerLeft: (
         <Icon style={{ padding: 10 }}
           name="md-exit"
           onPress={() => {
@@ -36,8 +35,13 @@ const WatchTasksStackNavigator = createStackNavigator({
               console.log(error);
             }
           }}
-          size={30} />
-      )
+          size={30}
+          color='white'
+        />
+      ),
+      headerStyle: {
+        backgroundColor: '#767ead'
+      }
     }
   }
 }

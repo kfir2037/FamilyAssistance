@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Text, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import Main from '../../screens/swScreens/MainPage';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -29,24 +29,27 @@ const SwStackNavigator = createStackNavigator({
             size={30}
             color='white' />
         ),
-        headerLeft: (
-          <Icon style={{ padding: 10 }}
-            name="md-exit"
-            onPress={() => {
-              firebase.auth().signOut();
-              navigation.navigate('Welcome');
-            }
-            }
-            size={30} 
-            color='white'/>
-        ),
-        headerStyle:{
-          backgroundColor:'#767ead'
+        headerTintColor:'white',
+        // headerLeft: (
+        //   <Icon style={{ padding: 10 }}
+        //     name="md-exit"
+        //     onPress={() => {
+        //       firebase.auth().signOut();
+        //       navigation.navigate('Welcome');
+        //     }
+        //     }
+        //     size={30}
+        //     color='white' />
+        // ),
+        headerStyle: {
+          backgroundColor: '#767ead'
         }
       }
     }
   },
-  
+  {
+    headerLayoutPreset:'center'
+  }
 )
 
 export default SwStackNavigator;
