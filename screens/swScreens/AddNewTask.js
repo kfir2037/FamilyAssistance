@@ -16,7 +16,7 @@ import {
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
 import { CheckBox, Button } from "react-native-elements";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import {DateTimePicker} from "@react-native-community/datetimepicker";
 import moment from "moment";
 
 function Item({ id, title, selected, onSelect }) {
@@ -290,7 +290,7 @@ const AddNewTask = (familyId) => {
           var split = morningTime.split(":");
           var taskDate = moment(daysString).toDate();
           //var taskDate2 = taskDate.split(":")
-          
+
           console.log('taskDate', taskDate);
 
           // var year = taskDate2[0]
@@ -483,6 +483,7 @@ const AddNewTask = (familyId) => {
         <View style={styles.chooseType}>
           <Text style={styles.title}>בחר אשכול:</Text>
           <Picker
+            accessibilityLabel={'time'}
             mode={"dropdown"}
             itemStyle={{ fontWeight: "bold" }}
             selectedValue={time}
@@ -588,6 +589,7 @@ const AddNewTask = (familyId) => {
             </View>
             {show && (
               <DateTimePicker
+                accessibilityLabel={'date'}
                 testID="dateTimePicker"
                 timeZoneOffsetInMinutes={0}
                 value={date}
@@ -624,6 +626,7 @@ const AddNewTask = (familyId) => {
             </View>
             {showDestination && (
               <DateTimePicker
+                accessibilityLabel={'hour'}
                 testID="dateTimePicker"
                 timeZoneOffsetInMinutes={0}
                 value={dateDestination}

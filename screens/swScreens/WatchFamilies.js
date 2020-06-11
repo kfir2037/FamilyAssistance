@@ -4,7 +4,7 @@ import firebase from '../../config/config';
 import { Button, Input, ListItem } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { DateTimePicker as DatePick2 } from '@react-native-community/datetimepicker';
 import { Formik } from 'formik';
 import ParentDetails from '../../src/components/ParentDetails';
 import * as yup from 'yup';
@@ -262,6 +262,7 @@ const WatchFamilies = ({ navigation }) => {
                   <View style={{ flexDirection: 'row-reverse', margin: 10 }}>
                     <Text style={{ fontSize: 18 }}>מין</Text>
                     <Picker
+                      accessibilityLabel={'gender'}
                       mode='dropdown'
                       selectedValue={props.values.gender}
                       style={{ height: 30, width: 110 }}

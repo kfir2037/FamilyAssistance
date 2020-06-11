@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
- 
- const Dropdown = () => {
+
+const Dropdown = () => {
 
     const pickerStyle = {
         inputIOS: {
@@ -12,7 +12,7 @@ import RNPickerSelect from 'react-native-picker-select';
         },
         inputAndroid: {
             color: 'brown',
-            fontsize:20,
+            fontsize: 20,
             borderRadius: 8,
             borderWidth: 0.5,
             borderColor: 'purple',
@@ -37,6 +37,7 @@ import RNPickerSelect from 'react-native-picker-select';
     };
     return (
         <RNPickerSelect
+
             onValueChange={(value) => console.log(value)}
             items={[
                 { label: 'משפחת כהן', value: 'kfir' },
@@ -45,7 +46,7 @@ import RNPickerSelect from 'react-native-picker-select';
             ]}
             InputAccessoryView={() => null}
             style={pickerStyle}
-            // value={this.state.favSport2}
+        // value={this.state.favSport2}
         />
     );
 };

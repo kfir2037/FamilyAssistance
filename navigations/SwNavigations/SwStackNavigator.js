@@ -17,7 +17,7 @@ const SwStackNavigator = createStackNavigator({
   AddNewFamily: AddNewFamily,
   Tasks2: Tasks2,
   WatchFamilies: WatchFamilies,
-  Reports: Reports
+  //Reports: Reports
 },
   {
     defaultNavigationOptions: ({ navigation }) => {
