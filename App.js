@@ -155,39 +155,54 @@ setTimeout(async function () {
         } else {
           let allData = doc.data();
           if (allData.category == 'morning') {
-            console.log('allData.date.seconds: ', allData.date.seconds * 1000)
+            // console.log('allData.date.seconds: ', allData.date.seconds * 1000)
 
-            const taskDate = moment(allData.date.seconds * 1000).format('DD/M/YYYY HH:mm');
-            const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/M/YYYY');
-            const taskDateOnlyTime = moment(allData.date.seconds * 1000).format('HH:mm');
-            const currentDateOnlyDate = moment(new Date()).format('DD/M/YYYY');
-            const currentDateOnlyTime = moment(new Date()).format('HH:mm');
-            const test = new Date();
+            const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
+            const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
+            // const taskDateOnlyTime = moment(allData.date.seconds * 1000).format('HH:mm');
+            const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
+            // const currentDateOnlyTime = moment(new Date()).format('HH:mm');
 
-
+            // console.log('taskDate123: ', taskDate)
+            // console.log('taskDateOnlyDate: ', taskDateOnlyDate)
+            // console.log('currentDateOnlyDate: ', currentDateOnlyDate)
             if (taskDateOnlyDate == currentDateOnlyDate) {
               console.log('same date')
               // const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').add(2, 'hours').format('HH:mm')
-              const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').format('HH:mm')
-              const timeOfAlert2 = moment(currentDate).add(morningFirstAlert, 'minutes').format('HH:mm')
-              console.log('currentDateOnlyDate: ',currentDateOnlyDate)
-              console.log('currentDateOnlyTime: ',currentDateOnlyTime)
-              console.log('taskDate: ', taskDate)
-              console.log('taskDateOnlyTime: ', taskDateOnlyTime)
-              console.log('timeOfAlert: ', timeOfAlert)
-              console.log('timeOfAlert2: ', timeOfAlert2)
-              console.log('morningFirstAlert: ', morningFirstAlert)
+              const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
+              const timeOfAlert2 = moment(currentDate).add(morningFirstAlert, 'minutes').format('MM/DD/YYYY HH:mm')
+              // console.log('timeOfAlert11111111: ', timeOfAlert)
+              // console.log('timeOfAlert22222222: ', timeOfAlert2)
+              // console.log('currentDateOnlyDate: ', currentDateOnlyDate)
+              // console.log('currentDateOnlyTime: ', currentDateOnlyTime)
+              // console.log('taskDate: ', taskDate)
+              // console.log('taskDateOnlyTime: ', taskDateOnlyTime)
+              // console.log('timeOfAlert: ', timeOfAlert)
+              // console.log('timeOfAlert2: ', timeOfAlert2)
+              // console.log('morningFirstAlert: ', morningFirstAlert)
+              // var testDate = '2009-12-31'
+              // var testTime = ' 09:57'
+              // var test123 = testDate + testTime
+              // console.log('test123: ', test123)
 
-              if (taskDateOnlyTime >= timeOfAlert2 && taskDateOnlyTime <= timeOfAlert) {
-                console.log('asdf')
+              // if (moment(test123).isAfter('2009-12-31 09:58')) {
+              //   console.log('kfir kfirrrr')
+              // }
+              // console.log('taskDate:::::::: ', taskDate)
+              // console.log('timeOfAlert2::::::: ', timeOfAlert2)
+              // console.log('timeOfAlert:::::::: ', timeOfAlert)
+              
+             
+              if (moment(taskDate).isAfter(timeOfAlert2)  && moment(taskDate).isBefore(timeOfAlert)) {
+                console.log('needs to send push notification')
               }
             }
           }
         }
       });
     })
-    .catch((err)=>{console.log('tasks ',err)})
-    
+    .catch((err) => { console.log('tasks ', err) })
+
 
 
   // const allTasks = await firebase.firestore().collection('tasks').get()

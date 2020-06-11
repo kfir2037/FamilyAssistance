@@ -207,8 +207,36 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
 })
 
 
+function sendPushNotification(){
+    console.log('/////////////////////////////////////////')
+    var messages = []
+
+    messages.push({
+        "to": 'V9Tum4EXGyriFFECBJ5iYO',
+        "sound": "default",
+        "body": "New Note Added"
+    });
+    fetch('https://exp.host/--/api/v2/push/send', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messages)
+
+            });
 
 
+}
+
+// setInterval(()=>{
+//     console.log('test test test')
+//     sendPushNotification()
+// },500)
+setTimeout(()=>{
+    console.log('1234556789')
+    sendPushNotification()
+},2000)
 
 
 
