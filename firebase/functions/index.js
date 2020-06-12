@@ -59,6 +59,33 @@ exports.deleteTask2 = functions.https.onCall(async (data, context) => {
         tasks: FieldValue.arrayRemove(data.taskToDelete)
     })
 });
+exports.addRoutineTasks = functions.https.onCall(async (data, context) => {
+    console.log('addRoutineTasks')
+    let routineTasksDoc = admin.firestore().collection('RoutineTasks').doc(data.docName);
+    if (data.newMorningTask) {
+        var arrUnion = routineTasksDoc.update({
+            tasks: admin.firestore.FieldValue.arrayUnion(data.newMorningTask)
+        });
+    }
+    if (data.newNoonTasks) {
+        var arrUnion = routineTasksDoc.update({
+            tasks: admin.firestore.FieldValue.arrayUnion(data.newNoonTasks)
+        });
+    }
+    if (data.newAfternoonTask) {
+        var arrUnion = routineTasksDoc.update({
+            tasks: admin.firestore.FieldValue.arrayUnion(data.newAfternoonTask)
+        });
+    }
+    if (data.newEveningTask) {
+        var arrUnion = routineTasksDoc.update({
+            tasks: admin.firestore.FieldValue.arrayUnion(data.newEveningTask)
+        });
+    }
+    // routineTasksDoc.update({
+    //     tasks: FieldValue.arrayRemove(data.taskToDelete)
+    // })
+});
 
 exports.createUser = functions.https.onCall(async (data, context) => {
     try {
