@@ -1,10 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const FieldValue = require('firebase-admin').firestore.FieldValue;
+var fetch = require('node-fetch')
+var moment = require('moment');
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    databaseURL: "https://family-assistance-f5ebb.firebaseio.com"
+    databaseURL: "https://family-assistance-f5ebb.firebaseio.com",
 });
 
 class UnauthenticatedError extends Error {
@@ -12,6 +14,7 @@ class UnauthenticatedError extends Error {
         super(message);
         this.message = message;
         this.type = 'UnauthenticatedError';
+
     }
 }
 
@@ -207,24 +210,226 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
 })
 
 
-function sendPushNotification(){
-    console.log('/////////////////////////////////////////')
-    var messages = []
+sendPushNotification = async () => {
+    console.log('sendPushNotification is running')
+    var morningFirstAlert = 1
+    var morningSecondsAlert = 1
+    var noonFirstAlert = 1
+    var noonSecondsAlert = 1
+    var afternoonFirstAlert = 1
+    var afternoonSecondsAlert = 1
+    var eveningFirstAlert = 1
+    var eveningSecondsAlert = 1
 
-    messages.push({
-        "to": 'V9Tum4EXGyriFFECBJ5iYO',
-        "sound": "default",
-        "body": "New Note Added"
-    });
-    fetch('https://exp.host/--/api/v2/push/send', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(messages)
+    var currentDate2 = new Date();
 
+    let morningTasks = admin
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("morning");
+
+    let getDoc = morningTasks
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log("No such document!");
+            } else {
+                let allData = doc.data();
+                morningFirstAlert = allData.beforeAlertTime
+                morningSecondsAlert = allData.afterAlertTime
+
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document", err);
+        });
+
+
+    let noonTasks2 = admin
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("noon");
+
+    let getDoc22 = noonTasks2
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log("No such document!");
+            } else {
+                let allData = doc.data();
+                noonFirstAlert = allData.beforeAlertTime
+                noonSecondsAlert = allData.afterAlertTime
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document", err);
+        });
+
+
+
+
+    let afternoonTasks = admin
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("afterNoon");
+
+    let getDoc3 = afternoonTasks
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log("No such document!");
+            } else {
+                let allData = doc.data();
+                afternoonFirstAlert = allData.beforeAlertTime
+                afternoonSecondsAlert = allData.afterAlertTime
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document", err);
+        });
+
+
+    let eveningTasks = admin
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("evening");
+
+    let getDoc4 = eveningTasks
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log("No such document!");
+            } else {
+                let allData = doc.data();
+                eveningFirstAlert = allData.beforeAlertTime
+                eveningSecondsAlert = allData.afterAlertTime
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document", err);
+        });
+
+
+
+
+
+    const currentDate = moment(new Date()).format('DD/MM/YYYY HH:mm')
+    var add30Minutes = moment(new Date()).add(30, "minutes")
+    add30Minutes = moment(add30Minutes).format('DD/MM/YYYY HH:mm A')
+
+    const allTasks = await admin
+        .firestore()
+        .collection("tasks")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach(async (doc) => {
+                if (!doc.exists) {
+                    console.log("No such document!!!!!!");
+                } else {
+                    let allData = doc.data();
+                    // console.log('category: ', allData.category)
+                    if (allData.category == 'morning') {
+
+                        const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
+                        const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
+                        const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
+                        // console.log('taskDateOnlyDate ', taskDateOnlyDate)
+                        // console.log('currentDateOnlyDate', currentDateOnlyDate)
+                        if (taskDateOnlyDate == currentDateOnlyDate) {
+                            console.log('same date')
+                            const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
+                            const timeOfAlert2 = moment(currentDate).add(morningFirstAlert, 'minutes').format('MM/DD/YYYY HH:mm')
+                            const timeOfAlert3 = moment(currentDate).add(morningSecondsAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
+                            const timeOfAlert4 = moment(currentDate).add(morningSecondsAlert, 'minutes').format('MM/DD/YYYY HH:mm')
+
+
+                            if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
+                                console.log('needs to send push notification - alert number 1')
+                                const message = {
+                                    to: 'ExponentPushToken[V9Tum4EXGyriFFECBJ5iYO]',
+                                    sound: 'default',
+                                    title: 'משימה מתקרבת',
+                                    body: 'התראה מספר 1',
+                                    data: { data: 'goes here' },
+                                    _displayInForeground: true,
+                                };
+                                await fetch('https://exp.host/--/api/v2/push/send', {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Accept-encoding': 'gzip, deflate',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(message)
+
+                                }).then(res => {
+                                    console.log('res: ', res)
+                                });
+                            }
+                            else if (moment(taskDate).isAfter(timeOfAlert4) && moment(taskDate).isBefore(timeOfAlert3)) {
+                                console.log('needs to send push notification - alert number 2')
+                                const message = {
+                                    to: 'ExponentPushToken[V9Tum4EXGyriFFECBJ5iYO]',
+                                    sound: 'default',
+                                    title: 'משימה ממש קרובה',
+                                    body: 'התראה מספר 2',
+                                    data: { data: 'goes here' },
+                                    _displayInForeground: true,
+                                };
+                                await fetch('https://exp.host/--/api/v2/push/send', {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Accept-encoding': 'gzip, deflate',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(message)
+
+                                }).then(res => {
+                                    console.log('res: ', res)
+                                });
+                            }
+                        }
+                    }
+                }
             });
+        })
+        .catch((err) => { console.log('tasks ', err) })
+
+
+
+    const allTasks2 = await admin.firestore().collection('tasks').get()
+    allTasks2.docs.map(doc => doc.data())
+    const allUsers = admin.firestore().collection('users').get()
+    // console.log('alltasks: ', allTasks)
+    // console.log('allUsers: ', allUsers)
+    // console.log('two seconds')
+
+
+
+
+
+
+    // const message = {
+    //     to: 'ExponentPushToken[V9Tum4EXGyriFFECBJ5iYO]',
+    //     sound: 'default',
+    //     title: 'Original Title',
+    //     body: 'And here is the body!',
+    //     data: { data: 'goes here' },
+    //     _displayInForeground: true,
+    //   };
+    //  await fetch('https://exp.host/--/api/v2/push/send', {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Accept-encoding': 'gzip, deflate',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(message)
+
+    //         }).then(res=>{
+    //             console.log('res: ',res)
+    //         });
 
 
 }
@@ -233,10 +438,10 @@ function sendPushNotification(){
 //     console.log('test test test')
 //     sendPushNotification()
 // },500)
-setTimeout(()=>{
-    console.log('1234556789')
-    sendPushNotification()
-},2000)
+
+
+sendPushNotification()
+
 
 
 
