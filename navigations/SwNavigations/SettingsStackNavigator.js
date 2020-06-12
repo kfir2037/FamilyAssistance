@@ -25,21 +25,7 @@ const SettingsStackNavigator = createStackNavigator({
             color='white'
           />
         ),
-        headerLeft: (
-          <Icon style={{ padding: 10 }}
-            name="md-exit"
-            onPress={() => {
-              try {
-                firebase.auth().signOut();
-                navigation.navigate('Welcome');
-              } catch (error) {
-                console.log(error);
-              }
-            }}
-            size={30}
-            color='white'
-          />
-        ),
+        headerTintColor:'white',
         headerStyle: {
           backgroundColor: '#767ead'
         }

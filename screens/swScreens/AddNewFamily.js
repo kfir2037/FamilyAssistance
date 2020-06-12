@@ -1,6 +1,7 @@
 import React from 'react';
 import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
-import {Input} from 'react-native-elements';
+//import {Picker as Select} from '@react-native-community/picker';
+import { Input } from 'react-native-elements';
 import firebase from '../../config/config';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -9,7 +10,7 @@ import * as yup from 'yup';
 const FamilySchema = yup.object({
   lastName: yup.string()
     .required('שדה חובה')
-    .min(2,'שם המשפחה חייב להכיל לפחות 2 אותיות'),
+    .min(2, 'שם המשפחה חייב להכיל לפחות 2 אותיות'),
   numOfPersons: yup.string()
     .required('שדה חובה')
     .test('is-between-2-10', 'מספר הנפשות חייב להיות לפחות 2 ולכל היותר 10', (val) => {
@@ -20,7 +21,7 @@ const FamilySchema = yup.object({
     .email('כתובת הדוא"ל אינה תקינה'),
   phone: yup.string()
     .required('שדה חובה')
-    .length(10,'מספר טלפון נייד לא תקין')
+    .length(10, 'מספר טלפון נייד לא תקין')
 
 })
 
@@ -62,13 +63,16 @@ const AddNewFamily = () => {
                     <Input
                       //label='שם משפחה'
                       //labelStyle={{color:'#767ead'}}
+                      maxLength={15}
+                      inputStyle={{ color: 'white' }}
+                      selectionColor={'white'}
                       onChangeText={props.handleChange('lastName')}
                       value={props.values.lastName}
                       placeholder='שם משפחה'
                       textAlign='right'
                       placeholderTextColor='white'
                       onBlur={props.handleBlur('lastName')}
-                      inputContainerStyle={{borderBottomColor:'white'}}
+                      inputContainerStyle={{ borderBottomColor: 'white' }}
                     />
                   </View>
                 </View>
@@ -79,12 +83,14 @@ const AddNewFamily = () => {
                   </View>
                   <View style={styles.fields}>
                     <Picker
+                      mode='dropdown'
+                      accessibilityLabel='numOfPersons'
                       selectedValue={props.values.numOfPersons}
-                      style={{ height: 30, width: 110 }}
+                      style={{ justifyContent: 'flex-end' }}
                       onValueChange={props.handleChange('numOfPersons')}
                     >
                       <Picker.Item color='white' label='בחר/י' value='0' />
-                      <Picker.Item color='white' label='2' value='2' />
+                      <Picker.Item label='2' value='2' />
                       <Picker.Item label='3' value='3' />
                       <Picker.Item label='4' value='4' />
                       <Picker.Item label='5' value='5' />
@@ -101,9 +107,11 @@ const AddNewFamily = () => {
                   <View style={styles.fields}>
                     <Text style={styles.text}>גרושים</Text>
                   </View>
-                  <View style={{ alignSelf: 'center' }}>
+                  <View style={{ justifyContent: 'space-evenly', flex:1}}>
                     <Switch
-                      style={{ alignItems: 'center' }}
+                      trackColor='black'
+                      thumbColor='#b5bef5'
+                      style={{}}
                       value={props.values.isSingleParent}
                       onValueChange={value => props.setFieldValue('isSingleParent', value)}
                     />
@@ -114,33 +122,40 @@ const AddNewFamily = () => {
               <Text style={styles.headlines}>פרטי קשר:</Text>
               <View style={styles.inputsContainer}>
                 <View style={styles.names}>
-                  <View style={styles.fields}>
+                  {/* <View style={styles.fields}>
                     <Text style={styles.text}>אימייל</Text>
-                  </View>
+                  </View> */}
                   <View style={styles.fields}>
-                    <TextInput
+                    <Input
+                      keyboardType='email-address'
+                      maxLength={40}
+                      inputStyle={{ color: 'white' }}
+                      selectionColor={'white'}
                       onChangeText={props.handleChange('email')}
                       value={props.values.email}
-                      placeholder='name@domain.com'
-                      placeholderTextColor='#b5bef5'
+                      placeholder='דוא"ל'
+                      placeholderTextColor='white'
                       onBlur={props.handleBlur('email')}
+                      inputContainerStyle={{ borderBottomColor: 'white' }}
                     />
                   </View>
                 </View>
                 {props.errors.email && props.touched.email ? <Text style={styles.errorMsg}>{props.errors.email}</Text> : null}
 
                 <View style={styles.names}>
-                  <View style={styles.fields}>
+                  {/* <View style={styles.fields}>
                     <Text style={styles.text}>טלפון </Text>
-                  </View>
+                  </View> */}
                   <View style={styles.fields}>
-                    <TextInput
-                      keyboardType='numeric'
+                    <Input
+                      //keyboardType='phone-pad'
                       onChangeText={props.handleChange('phone')}
                       value={props.values.phone}
-                      placeholder='052-1234567'
-                      placeholderTextColor='#b5bef5'
+                      placeholder='טלפון'
+                      placeholderTextColor='white'
                       onBlur={props.handleBlur('phone')}
+                      inputContainerStyle={{ borderBottomColor: 'white' }}
+                      textAlign='right'
                     />
                   </View>
                 </View>
@@ -180,7 +195,7 @@ const styles = StyleSheet.create({
     // borderColor: '#d6d7da',
   },
   headlines: {
-    color:'#767ead',
+    color: '#767ead',
     fontSize: 20,
     fontWeight: 'bold',
     paddingTop: 20,
@@ -188,23 +203,24 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   text: {
-    color:'white',
-    fontSize: 15,
+    color: 'white',
+    fontSize: 18,
     marginVertical: 7,
     marginHorizontal: 5
   },
   fields: {
-    flex: 2,
+    flex: 1,
     textAlign: 'right',
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    justifyContent: 'space-evenly'
   },
   button: {
     width: 150,
     height: 50,
     // borderWidth: 1,
     // borderColor: '#d6d7da',
-    backgroundColor:'#767ead',
-    borderRadius: 25,
+    backgroundColor: '#767ead',
+    borderRadius: 20,
     marginVertical: 10,
     justifyContent: 'center',
     alignSelf: 'center'
@@ -227,14 +243,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 7,
     color: 'crimson',
     fontSize: 15,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginBottom: 5,
-    marginRight:20
+    marginRight: 20
   },
-  inputsContainer:{ 
+  inputsContainer: {
     backgroundColor: '#767ead',
-    marginHorizontal:10,
-    borderRadius:20 
+    marginHorizontal: 10,
+    borderRadius: 20
   }
 
 });

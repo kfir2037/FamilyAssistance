@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
+import { Card } from 'react-native-elements';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTime from "react-native-customize-selected-date";
 import _ from "lodash";
@@ -18,6 +19,7 @@ import moment from "moment";
 import { trackEvent } from "appcenter-analytics";
 import { Row } from "native-base";
 import { color } from "react-native-reanimated";
+import { FontAwesom, FontAwesome } from '@expo/vector-icons';
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -37,13 +39,16 @@ export default class App extends Component {
       afternoonTasks: [],
       eveningTasks: [],
       customTasks: [],
+      selected: '',
+      loadingTasks: false
+
     };
 
     LocaleConfig.locales['heb'] = {
-      monthNames: ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'],
-      monthNamesShort: ["'ינו'","פבר","מרץ","אפר'",'מאי',"יונ'","יול'","אוג,","ספט'","אוק'","נוב'","דצמ'"],
-      dayNames: ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'],
-      dayNamesShort: ['א','ב','ג','ד','ה','ו','ש'],
+      monthNames: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+      monthNamesShort: ["'ינו'", "פבר", "מרץ", "אפר'", 'מאי', "יונ'", "יול'", "אוג,", "ספט'", "אוק'", "נוב'", "דצמ'"],
+      dayNames: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+      dayNamesShort: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'],
       today: 'היום\'hui'
     };
     LocaleConfig.defaultLocale = 'heb';
@@ -64,6 +69,9 @@ export default class App extends Component {
 
   getTasks = async (date) => {
     YellowBox.ignoreWarnings(["Setting a timer"]);
+    this.setState({
+      loadingTasks: true
+    })
     const familyId = this.props.navigation.state.params.familyId;
     var morningTasks = [];
     var noonTasks = [];
@@ -148,9 +156,13 @@ export default class App extends Component {
             }
           }
         });
+
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
+        this.setState({
+          loadingTasks: false
+        })
       });
 
     this.setState({
@@ -159,11 +171,15 @@ export default class App extends Component {
       afternoonTasks: afternoonTasks,
       eveningTasks: eveningTasks,
       customTasks: customTasks,
+      loadingTasks: false
     });
     return familyId;
   };
   async onChangeDate(date) {
     console.log('dateChanged: ', date);
+    this.setState({
+      selected: date
+    })
     this.getTasks(date)
 
   }
@@ -189,23 +205,43 @@ export default class App extends Component {
     }
   }
   returnMorningTasks() {
-    return this.state.morningTasks.map((obj, i) => {
-      return (
-        <View style={{ flexDirection: 'row-reverse' }} key={i}>
-
-          <Text style={{ fontWeight: 'bold' }}> {obj.time} </Text>
-          <Text> {obj.name} </Text>
-          <Text> {obj.isDone} </Text>
-          <Text> {obj.tasks} </Text>
-        </View>
-      );
-    });
+    return (
+      <Card containerStyle={{ width: '90%' }} title="משימות בוקר">
+        {
+          this.state.morningTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <Text style={styles.taskHour}>  {obj.time}</Text>
+                <Text style={styles.taskName}> {obj.tasks}   </Text>
+                {obj.isDone
+                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+    // return this.state.morningTasks.map((obj, i) => {
+    //   return (
+    //     <View style={{ flexDirection: 'row-reverse' }} key={i}>
+    //       <Text style={styles.taskHour}> {obj.time} </Text>
+    //       <Text style={styles.memberName}> {obj.name} </Text>
+    //       <Text style={styles.taskIsDone}> {obj.isDone} </Text>
+    //       <Text style={styles.taskName}> {obj.tasks} </Text>
+    //     </View>
+    //   );
+    // });
   }
   returnNoonTasks() {
     return this.state.noonTasks.map((obj, i) => {
       return (
         <View key={i}>
-          <Text>{obj.name}</Text>
+          <Text style={styles.taskName}>{obj.name}</Text>
           <Text>{obj.time}</Text>
           <Text>{obj.isDone}</Text>
           <Text>{obj.tasks}</Text>
@@ -269,64 +305,95 @@ export default class App extends Component {
     });
   }
 
+
+
   render() {
 
     return (
       <SafeAreaView style={styles.container}>
 
-        <View >
-          {/* <Calendar
-            onDayPress={(day)=> this.onChangeDate(day)}
+        <View style={{ marginVertical: 30, borderRadius: 40 }}>
+          <Calendar
+            markedDates={{
+              '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }
+            }}
+            //markingType={'custom'}
+            onDayPress={(day) => this.onChangeDate(day.dateString)}
             monthFormat={'MMM yyyy'}
             displayLoadingIndicator
+            markedDates={{
+              [this.state.selected]: {
+                selected: true,
+                disableTouchEvent: true,
+                selectedColor: 'orange',
+                selectedTextColor: 'red'
+              }
+            }}
             //markedDates={{'2020-05-29':{selected:true}}}
             //style={{borderWidth:1, borderColor:'gray'}}
             theme={{
-              backgroundColor:'#5b6de3',
-              arrowColor:'#b5bef5',
-              calendarBackground:'#767ead',
-              todayTextColor:'black',
-              selectedDayBackgroundColor: '#00adf5',
-              textSectionTitleColor: 'black',
-              dayTextColor: 'lightgray',
+              arrowColor: '#767ead',
+              calendarBackground: 'white',
+              todayTextColor: 'crimson',
+              todayTextBackground: '#b5bef5',
+              selectedDayBackgroundColor: '#767ead',
+              selectedDayTextColor: 'white',
+              textSectionTitleColor: 'gray',
+              textDayFontWeight: 'bold',
+              textDayHeaderFontWeight: 'bold',
+              textMonthFontWeight: 'bold',
+              dayTextColor: '#767ead',
               textDisabledColor: '#b5bef5',
-              monthTextColor:'black'
+              monthTextColor: '#767ead'
 
 
             }}
-          /> */}
-          <DateTime
+          />
+          {/* <DateTime
             customWeekdays={['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש']}
             warpRowControlMonthYear={{ color: 'white' }}
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format="YYYY-MM-DD"
             renderChildDay={(day) => this.renderChildDay(day)}
-          />
+          /> */}
         </View>
         <ScrollView>
-          <View >
-            <View style={styles.tasksGroup}>
-              <Text style={styles.tasksTitle}>משימות בוקר</Text>
-              <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
-            </View>
-            <View style={styles.tasksGroup}>
-              <Text style={styles.tasksTitle}>משימות צהריים</Text>
-              <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
-            </View>
-            <View style={styles.tasksGroup}>
-              <Text style={styles.tasksTitle}>משימות אחר הצהריים</Text>
-              <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
-            </View>
-            <View style={styles.tasksGroup}>
-              <Text style={styles.tasksTitle}>משימות ערב</Text>
-              <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
-            </View>
-            <View style={styles.tasksGroup}>
-              <Text style={styles.tasksTitle}>משימות מותאמות</Text>
-              <View style={styles.tasksList}>{this.returnCustomTasks()}</View>
-            </View>
-          </View>
+          {this.state.loadingTasks
+            ? <ActivityIndicator color='#767ead' size={25} />
+            :
+            <View >
+              {this.state.morningTasks.length == 0
+                ? null
+                : <View style={styles.tasksGroup}>
+                  <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
+                </View>
+              }
+              {this.state.noonTasks.length == 0
+                ? null
+                : <View style={styles.tasksGroup}>
+                  <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
+                </View>
+              }
+              {this.state.afternoonTasks.length == 0
+                ? null
+                : <View style={styles.tasksGroup}>
+                  <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
+                </View>
+              }
+              {this.state.eveningTasks.length == 0
+                ? null
+                : <View style={styles.tasksGroup}>
+                  <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
+                </View>
+              }
+              {this.state.customTasks.length == 0
+                ? null
+                : <View style={styles.tasksGroup}>
+                  <View style={styles.tasksList}>{this.returnCustomTasks()}</View>
+                </View>
+              }
+            </View>}
         </ScrollView>
       </SafeAreaView>
     );
@@ -358,7 +425,7 @@ const styles = StyleSheet.create({
   },
   tasksTitle: {
     fontSize: 20,
-    color: "black",
+    color: "#767ead",
     fontWeight: "bold",
   },
   tasksList: {
@@ -366,6 +433,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   tasksGroup: {
+
     marginRight: 10,
   },
   icLockRed: {
@@ -375,4 +443,5 @@ const styles = StyleSheet.create({
     top: 2,
     left: 1,
   },
+
 });
