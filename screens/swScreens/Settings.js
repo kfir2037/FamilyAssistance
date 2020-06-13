@@ -49,6 +49,10 @@ export default class Settings extends Component {
       alertAfterAfternoon: "",
       alertAfterEvening: "",
       isReady: false,
+      newMorningTask: '',
+      newNoonTask: '',
+      newAfternoonTask: '',
+      newEveningTask: '',
     };
   }
 
@@ -212,6 +216,7 @@ export default class Settings extends Component {
       this.setState({ taskDeleteSelected: selectedItem[0] });
     }
   };
+
   saveAlerts = () => {
     const swFamilies = firebase
       .firestore()
@@ -246,6 +251,20 @@ export default class Settings extends Component {
         afterAlertTime: this.state.alertAfterEvening,
       });
   };
+  saveNewTasks = () => {
+    console.log('44444444')
+    let addTasks = firebase.functions().httpsCallable("addRoutineTasks");
+    console.log('55555555555')
+    let data = {
+      newMorningTask : this.state.newMorningTask,
+      newNoonTask : this.state.newNoonTask,
+      newAfternoonTask : this.state.newAfternoonTask,
+      newEveningsTask : this.state.newEveningsTask,
+    };
+    console.log('saveNewTasks')
+    addTasks(data);
+  }
+
   deleteTask = () => {
     console.log("task to delete: ", this.state.taskDeleteSelected);
     //deleteTask2(this.state.taskDeleteSelected)
@@ -526,13 +545,13 @@ export default class Settings extends Component {
               </View>
             </View>
 
-   
+
           </View>
           <Button
-              onPress={this.saveAlerts}
-              icon={<Icon name="trash" size={20} color="white" />}
-              title="  שמור  "
-            />
+            onPress={this.saveAlerts}
+            icon={<Icon name="trash" size={20} color="white" />}
+            title="  שמור  "
+          />
           <View style={styles.lineStyle} />
           <View style={styles.container2}>
             <Tabs
@@ -620,8 +639,9 @@ export default class Settings extends Component {
               <View style={styles.addTaskInputContainer}>
                 <TextInput
                   style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState({ taskToAdd: text })}
-                  // value={this.state.text}
+                  // onChangeText={(text) => this.setState({ taskToAdd: text })}
+                  onChangeText={(text) => this.setState({ newMorningTask: text })}
+                // value={this.state.text}
                 />
               </View>
             </View>
@@ -636,11 +656,11 @@ export default class Settings extends Component {
                     title="הוספת משימה  "
                 ></Button> */}
             <View style={{ marginTop: 30, alignContent: "center" }}>
-              <Button
+              {/* <Button
                 title="הוספת משימה"
                 add
                 // color="#0000ff"
-              />
+              /> */}
             </View>
           </View>
           <View>
@@ -649,8 +669,8 @@ export default class Settings extends Component {
               <View style={styles.addTaskInputContainer}>
                 <TextInput
                   style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState()}
-                  // value={this.state.text}
+                  onChangeText={(text) => this.setState({ newNoonTask: text })}
+                // value={this.state.text}
                 />
               </View>
             </View>
@@ -665,11 +685,11 @@ export default class Settings extends Component {
                     title="הוספת משימה  "
                 ></Button> */}
             <View style={{ marginTop: 30, alignContent: "center" }}>
-              <Button
+              {/* <Button
                 title="הוספת משימה"
 
                 // color="#0000ff"
-              />
+              /> */}
             </View>
           </View>
           <View>
@@ -678,8 +698,8 @@ export default class Settings extends Component {
               <View style={styles.addTaskInputContainer}>
                 <TextInput
                   style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState()}
-                  // value={this.state.text}
+                  onChangeText={(text) => this.setState({ newAfternoonTask: text })}
+                // value={this.state.text}
                 />
               </View>
             </View>
@@ -694,10 +714,10 @@ export default class Settings extends Component {
                     title="הוספת משימה  "
                 ></Button> */}
             <View style={{ marginTop: 30, alignContent: "center" }}>
-              <Button
+              {/* <Button
                 title="הוספת משימה"
                 // color="#0000ff"
-              />
+              /> */}
             </View>
           </View>
           <View>
@@ -706,8 +726,8 @@ export default class Settings extends Component {
               <View style={styles.addTaskInputContainer}>
                 <TextInput
                   style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState()}
-                  // value={this.state.text}
+                  onChangeText={(text) => this.setState({ newEveningTask: text })}
+                // value={this.state.text}
                 />
               </View>
             </View>
@@ -723,8 +743,9 @@ export default class Settings extends Component {
                 ></Button> */}
             <View style={{ marginTop: 30, alignContent: "center" }}>
               <Button
-                title="הוספת משימה"
-                // color="#0000ff"
+                title="הוספת משימות"
+                onPress={this.saveNewTasks}
+              // color="#0000ff"
               />
             </View>
           </View>
