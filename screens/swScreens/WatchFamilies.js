@@ -4,7 +4,7 @@ import firebase from '../../config/config';
 import { Button, Input, ListItem } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
-import { DateTimePicker as DatePick2 } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from 'formik';
 import ParentDetails from '../../src/components/ParentDetails';
 import * as yup from 'yup';

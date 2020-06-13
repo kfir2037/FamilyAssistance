@@ -16,7 +16,7 @@ import {
 import firebase from "../../config/config";
 //import {Picker} from '@react-native-community/picker';
 import { CheckBox, Button } from "react-native-elements";
-import {DateTimePicker} from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 
 function Item({ id, title, selected, onSelect }) {
@@ -82,7 +82,9 @@ const AddNewTask = (familyId) => {
   // -----------------------from date--------------------
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
+
     setShow(Platform.OS === "ios");
+    console.log(currentDate);
     setDate(currentDate);
   };
 
@@ -326,22 +328,22 @@ const AddNewTask = (familyId) => {
         }
         if (tempNoonTasks.length > 0) {
           var split = noonTime.split(":");
-          var taskDate = moment(daysString).format('YYYY:MM:DD')
-          var taskDate2 = taskDate.split(":")
+          var taskDate = moment(daysString).toDate();
+          // var taskDate2 = taskDate.split(":")
 
-          var year = taskDate2[0]
-          var month = taskDate2[1]
-          var day = taskDate2[2]
-          var hour = split[0]
-          var minute = split[1]
+          // var year = taskDate2[0]
+          // var month = taskDate2[1]
+          // var day = taskDate2[2]
+          // var hour = split[0]
+          // var minute = split[1]
 
-          d = new Date(year, month, day, hour, minute)
+          // d = new Date(year, month, day, hour, minute)
           //   moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
           let addDoc2 = firebase
             .firestore()
             .collection("tasks")
             .add({
-              date: d,
+              date: taskDate,
               familyId: familyId2,
               userId: member,
               time: noonTime,
@@ -355,17 +357,17 @@ const AddNewTask = (familyId) => {
         }
         if (tempAfternoonTasks.length > 0) {
           var split = afternoonTime.split(":");
-          var taskDate = moment(daysString).format('YYYY:MM:DD')
-          var taskDate2 = taskDate.split(":")
+          var taskDate = moment(daysString).toDate();
+          // var taskDate2 = taskDate.split(":")
 
-          var year = taskDate2[0]
-          var month = taskDate2[1]
-          var day = taskDate2[2]
-          var hour = split[0]
-          var minute = split[1]
+          // var year = taskDate2[0]
+          // var month = taskDate2[1]
+          // var day = taskDate2[2]
+          // var hour = split[0]
+          // var minute = split[1]
 
-          d = new Date(year, month, day, hour, minute)
-          console.log('d: ', d)
+          // d = new Date(year, month, day, hour, minute)
+          // console.log('d: ', d)
           // d =
           //   moment(new Date(daysString)).format("DD/MM/YYYY") +
           //   " " +
@@ -375,7 +377,7 @@ const AddNewTask = (familyId) => {
             .firestore()
             .collection("tasks")
             .add({
-              date: d,
+              date: taskDate,
               familyId: familyId2,
               userId: member,
               time: afternoonTime,
@@ -389,17 +391,17 @@ const AddNewTask = (familyId) => {
         }
         if (tempEveningTasks.length > 0) {
           var split = eveningTime.split(":");
-          var taskDate = moment(daysString).format('YYYY:MM:DD')
-          var taskDate2 = taskDate.split(":")
+          var taskDate = moment(daysString).toDate();
+          // var taskDate2 = taskDate.split(":")
 
-          var year = taskDate2[0]
-          var month = taskDate2[1]
-          var day = taskDate2[2]
-          var hour = split[0]
-          var minute = split[1]
+          // var year = taskDate2[0]
+          // var month = taskDate2[1]
+          // var day = taskDate2[2]
+          // var hour = split[0]
+          // var minute = split[1]
 
-          d = new Date(year, month, day, hour, minute)
-          console.log('d: ', d)
+          // d = new Date(year, month, day, hour, minute)
+          // console.log('d: ', d)
           // d =
           //   moment(new Date(daysString)).format("DD/MM/YYYY") +
           //   " " +
@@ -409,7 +411,7 @@ const AddNewTask = (familyId) => {
             .firestore()
             .collection("tasks")
             .add({
-              date: d,
+              date: taskDate,
               familyId: familyId2,
               userId: member,
               time: eveningTime,
