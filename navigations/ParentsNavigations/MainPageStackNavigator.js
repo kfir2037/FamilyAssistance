@@ -8,43 +8,51 @@ import Icon from '@expo/vector-icons/Ionicons';
 import DashboardTabNavigator from './DashboardTabNavigator';
 // import WatchTasks from '../../screens/swScreens/WatchTasks';
 import MainPage from '../../screens/ParentsScreens/ParentsMainPage';
+import WatchTasks from '../../screens/ParentsScreens/WatchTasks'
 import firebase from '../../config/config'
 
-const WatchTasksStackNavigator = createStackNavigator({
+const MainPageStackNavigator = createStackNavigator({
   Main: MainPage,
-}, {
-  defaultNavigationOptions: ({ navigation }) => {
-    return {
-      // title:'משימות לתאריך:',
-      headerRight: (
-        <Icon style={{ padding: 10 }}
-          onPress={() => navigation.openDrawer()}
-          name="md-menu"
-          size={30}
-          color='white'
-        />
-      ),
-      headerLeft: (
-        <Icon style={{ padding: 10 }}
-          name="md-exit"
-          onPress={() => {
-            try {
-              firebase.auth().signOut();
-              navigation.navigate('Welcome');
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-          size={30}
-          color='white'
-        />
-      ),
-      headerStyle: {
-        backgroundColor: '#767ead'
+  //Tasks:WatchTasks
+},
+  {
+    defaultNavigationOptions: ({ navigation }) => {
+      return {
+        // title:'משימות לתאריך:',
+        headerRight: (
+          <Icon style={{ padding: 10 }}
+            onPress={() => navigation.openDrawer()}
+            name="md-menu"
+            size={30}
+            color='white'
+          />
+        ),
+        headerTintColor: 'white',
+
+        // headerLeft: (
+        //   <Icon style={{ padding: 10 }}
+        //     name="md-exit"
+        //     onPress={() => {
+        //       try {
+        //         firebase.auth().signOut();
+        //         navigation.navigate('Welcome');
+        //       } catch (error) {
+        //         console.log(error);
+        //       }
+        //     }}
+        //     size={30}
+        //     color='white'
+        //   />
+        // ),
+        headerStyle: {
+          backgroundColor: '#767ead'
+        }
       }
     }
+  },
+  {
+    headerLayoutPreset: 'cenetr'
   }
-}
 )
 
-export default WatchTasksStackNavigator;
+export default MainPageStackNavigator;
