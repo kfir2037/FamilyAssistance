@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Image,
   TouchableHighlightBase
 } from 'react-native';
 import firebase from '../../config/config';
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 40,
     backgroundColor: 'rgba(255, 255,255,0.2)',
-    borderRadius: 22,
+    borderRadius: 20,
     paddingHorizontal: 16,
     fontSize: 20,
     color: '#ffffff',
@@ -184,10 +185,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
-    backgroundColor: '#1c313a',
-    borderRadius: 25,
+    height:40,
+    backgroundColor: '#767ead',
+    borderRadius: 20,
     marginVertical: 10,
-    paddingVertical: 13
+    paddingVertical: 13,
+    justifyContent:'center'
   },
   buttonText: {
     fontSize: 20,
