@@ -59,26 +59,27 @@ exports.deleteTask2 = functions.https.onCall(async (data, context) => {
         tasks: FieldValue.arrayRemove(data.taskToDelete)
     })
 });
+
 exports.addRoutineTasks = functions.https.onCall(async (data, context) => {
     console.log('addRoutineTasks')
-    let routineTasksDoc = admin.firestore().collection('RoutineTasks').doc(data.docName);
+    let routineTasksColl = admin.firestore().collection('RoutineTasks');
     if (data.newMorningTask) {
-        var arrUnion = routineTasksDoc.update({
+        var arrUnion = routineTasksColl.doc('morning').update({
             tasks: admin.firestore.FieldValue.arrayUnion(data.newMorningTask)
         });
     }
     if (data.newNoonTasks) {
-        var arrUnion = routineTasksDoc.update({
+        var arrUnion = routineTasksColl.doc('noon').update({
             tasks: admin.firestore.FieldValue.arrayUnion(data.newNoonTasks)
         });
     }
     if (data.newAfternoonTask) {
-        var arrUnion = routineTasksDoc.update({
+        var arrUnion = routineTasksColl.doc('afternoon').update({
             tasks: admin.firestore.FieldValue.arrayUnion(data.newAfternoonTask)
         });
     }
     if (data.newEveningTask) {
-        var arrUnion = routineTasksDoc.update({
+        var arrUnion = routineTasksColl.doc('evening').update({
             tasks: admin.firestore.FieldValue.arrayUnion(data.newEveningTask)
         });
     }
@@ -177,7 +178,6 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
 });
 
-
 exports.createFamily = functions.https.onCall(async (data, context) => {
     try {
 
@@ -235,7 +235,6 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
         }
     }
 })
-
 
 sendPushNotification = async () => {
     console.log('sendPushNotification is running')
@@ -465,7 +464,6 @@ sendPushNotification = async () => {
 //     console.log('test test test')
 //     sendPushNotification()
 // },500)
-
 
 sendPushNotification()
 

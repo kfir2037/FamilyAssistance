@@ -83,6 +83,7 @@ const AddNewFamily = () => {
                   </View>
                   <View style={styles.fields}>
                     <Picker
+                      
                       mode='dropdown'
                       accessibilityLabel='numOfPersons'
                       selectedValue={props.values.numOfPersons}
