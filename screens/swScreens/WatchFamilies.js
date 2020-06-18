@@ -174,25 +174,25 @@ const WatchFamilies = ({ navigation }) => {
                   //actions.resetForm();
 
                   //actions.setValues({ ...values, birthDate: birthDate.format('DD/MM/YYYY') })
-                  await actions.setValues({ birthDate: birthDate })
                   //console.log('values', values);
+                  values = { ...values, birthDate: birthDate.format('DD/MM/YYYY').toString() }
                   var createUser = firebase.functions().httpsCallable('createUser');
                   await createUser(values)
-                    .then(function (resp) {
+                    .then((resp) => {
                       //Display success
                       console.log('values', values);
                       console.log(resp.data.result);
                       setModalLoading(false);
-                      setMessage('הוספת הורה הצליחה');
+                      setMessage('הוספת הורה בוצעה בהצלחה');
                     })
-                    .catch(function (error) {
+                    .catch((error) => {
                       console.log('values', values);
                       var code = error.code;
                       var message = error.message;
                       //Display error
                       console.log(code + ' ' + message);
                       setModalLoading(false);
-                      setMessage('הוספת הורה נכשלה');
+                      setMessage(error.message);
                     });
                 }}
               >{(props) => (
@@ -336,18 +336,19 @@ const WatchFamilies = ({ navigation }) => {
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
-                initialValues={{ firstName: '', lastName: '', id: '', birthDate: birthDate, phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'kid' }}
+                initialValues={{ firstName: '', lastName: '', id: '', birthDate: birthDate.toDate(), phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'kid' }}
                 //validationSchema={}
                 onSubmit={(values, actions) => {
-                  actions.resetForm();
+                  //actions.resetForm();
                   console.log('values', values);
+                  values = { ...values, birthDate: birthDate.format('DD/MM/YYYY').toString() }
                   var createUser = firebase.functions().httpsCallable('createUser');
                   createUser(values)
                     .then(function (resp) {
                       //Display success
                       console.log(resp.data.result);
                       setModalLoading(false);
-                      setMessage('הוספת ילד הצליחה');
+                      setMessage('הוספת ילד בוצעה בהצלחה');
                     })
                     .catch(function (error) {
                       var code = error.code;
@@ -355,7 +356,7 @@ const WatchFamilies = ({ navigation }) => {
                       //Display error
                       console.log(code + ' ' + message);
                       setModalLoading(false);
-                      setMessage('הוספת ילד נכשלה');
+                      setMessage(error.message);
                     });
 
 
@@ -477,7 +478,6 @@ const WatchFamilies = ({ navigation }) => {
                 </>
               )}
               </Formik>
-
             </ScrollView>
           </View>
         </Modal>
@@ -522,7 +522,7 @@ const WatchFamilies = ({ navigation }) => {
                         <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
                           <View style={{ flexDirection: 'row-reverse' }}>
                             <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1975 </Text>
+                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['birthDate']} </Text>
                             <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
                           </View>
                         </TouchableHighlight>

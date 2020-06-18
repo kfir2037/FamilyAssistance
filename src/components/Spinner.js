@@ -5,7 +5,7 @@ export default class Spinner extends Component {
     render() {
         return (
             <View style={styles.spinnerStyle}>
-                <ActivityIndicator size='large' />
+                <ActivityIndicator color='#767ead' size='large' />
             </View>
         );
     }

@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 var fetch = require('node-fetch')
 var moment = require('moment');
+//const { doc } = require('prettier');
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
@@ -34,8 +35,16 @@ class InvalidRoleError extends Error {
     }
 }
 
+class IDAlreadyInUseError extends Error {
+    constructor(message) {
+        super(message);
+        this.message = message;
+        this.type = 'InvalidIDError';
+    }
+}
+
 function roleIsValid(role) {
-    const validRoles = ['editor', 'parent', 'sw', 'kid ']; //To be adapted with your own list of roles
+    const validRoles = ['editor', 'parent', 'sw', 'kid']; //To be adapted with your own list of roles
     return validRoles.includes(role);
 }
 
@@ -94,6 +103,35 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         if (!context.auth) {
             throw new UnauthenticatedError('The user is not authenticated. Only authenticated Admin users can create new users.');
         }
+
+        // let userID = data.id;
+        // let userEmail = {
+        //     email: data.email
+        // };
+
+        // await admin.firestore().collection('usersIDs').doc(userID).set(userEmail);
+
+        await admin.firestore().collection('usersIDs').doc(data.id).get()
+            .then(async (doc) => {
+                if (!doc.exists) {
+                    await admin.firestore().collection('usersIDs').doc(data.id).set({
+                        email: data.email
+                    })
+                        .then(() => {
+                            console.log('id-email doc added successfuly');
+                        })
+                        .catch((err) => {
+                            console.log('id-email doc writing Error: ', err);
+                        })
+                } else {
+                    throw new IDAlreadyInUseError('This ID number already signed');
+                }
+            })
+            .catch((err) => {
+                console.log('error adding ID number - email document: ', err );
+                throw err;
+            })
+
 
         //Checking that the user calling the Cloud Function is an Admin user
         const callerUid = context.auth.uid;  //uid of the user calling the Cloud Function
@@ -157,6 +195,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
                 })
         }
 
+
         await admin.firestore().collection("users").doc(userId).set(data);
 
         await userCreationRequestRef.update({ status: 'Treated' });
@@ -168,7 +207,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         if (error.type === 'UnauthenticatedError') {
             throw new functions.https.HttpsError('unauthenticated', error.message);
-        } else if (error.type === 'NotAnAdminError' || error.type === 'InvalidRoleError') {
+        } else if (error.type === 'NotAnAdminError' || error.type === 'InvalidRoleError' || error.type === 'InvalidIDError') {
             throw new functions.https.HttpsError('failed-precondition', error.message);
         } else {
             throw new functions.https.HttpsError('internal', error.message);
@@ -234,6 +273,43 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
             throw new functions.https.HttpsError('internal', error.message);
         }
     }
+})
+
+exports.signinUserEmail = functions.https.onCall(async (data, context) => {
+    //admin.firestore().collection('users').where('id')
+    const userEmail = await admin.firestore().collection('usersIDs').doc(data).get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log('Wrong ID!');
+                throw new functions.https.HttpsError('internal', 'ID Does Not Exist!');
+            } else {
+                console.log('doc.data.email ', doc.data().email)
+                return doc.data().email;
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document ", err);
+            if (err.message === 'ID Does Not Exist!') {
+                throw err;
+            }
+
+
+        })
+
+    return userEmail;
+
+
+
+
+    // admin.auth().createCustomToken(data.idNumber)
+    //     .then(function (customToken) {
+    //         // Send token back to client
+    //     })
+    //     .catch(function (error) {
+    //         console.log('Error creating custom token:', error);
+    //         throw new functions.https.HttpsError('internal', error.message);
+    //     });
+
 })
 
 sendPushNotification = async () => {

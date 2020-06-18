@@ -50,7 +50,7 @@ export default class Form extends Component {
                 that.props.navigation.navigate('Welcome');
               }
             })
-            .catch((err)=>{console.log('Form ', err)})
+            .catch((err) => { console.log('Form ', err) })
         } else {
           that.props.navigation.navigate('Welcome');
         }
@@ -73,8 +73,26 @@ export default class Form extends Component {
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
 
-    firebase.auth().signInWithEmailAndPassword(id, password)
-      .catch(this.onLoginFail.bind(this));
+    const userEmail = firebase.functions().httpsCallable('signinUserEmail');
+
+    //const data = { idNummber: id };
+
+    //console.log('data',data);
+    userEmail(id)
+      .then((resp) => {
+        console.log(resp);
+        firebase.auth().signInWithEmailAndPassword(resp.data, password)
+          .catch((err) => {
+            console.log('86');
+            this.onLoginFail();
+          });
+      })
+      .catch((err) => {
+        console.log('userEmail Error ', err);
+        this.onLoginFail();
+      })
+
+
 
     // var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
     // users.get().then(function (doc) {
@@ -112,16 +130,22 @@ export default class Form extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput onChangeText={(id) => this.setState({ id })} value={this.state.id} style={styles.inputBox}
+        <TextInput
+          onChangeText={(id) => this.setState({ id })}
+          value={this.state.id}
+          style={styles.inputBox}
           underlineColorAndroid='rgba(0,0,0,0)'
           placeholder="תעודת זהות"
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
-          keyboardType="email-address"
+          keyboardType='phone-pad'
           onSubmitEditing={() => this.password.focus()}
         />
 
-        <TextInput onChangeText={(password) => this.setState({ password })} value={this.state.password} style={styles.inputBox}
+        <TextInput
+          onChangeText={(password) => this.setState({ password })}
+          value={this.state.password}
+          style={styles.inputBox}
           underlineColorAndroid='rgba(0,0,0,0)'
           placeholder='סיסמה'
           selectionColor="#fff"
@@ -185,12 +209,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 200,
-    height:40,
+    height: 40,
     backgroundColor: '#767ead',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 13,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   buttonText: {
     fontSize: 20,

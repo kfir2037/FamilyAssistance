@@ -5,7 +5,7 @@ import {
   ScrollView,
   Text,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import Accordion from "../../src/components/Accordion";
 import {
@@ -39,7 +39,7 @@ export default class ParentsMainPage extends React.Component {
       numberOftasks: 1,
       numberOftasksDone: 1,
       showAlert: false,
-      loadingTasks: true
+      loadingTasks: true,
     };
     this.updateIndex = this.updateIndex.bind(this);
 
@@ -222,6 +222,8 @@ export default class ParentsMainPage extends React.Component {
     });
   };
 
+
+
   async markMission(task) {
     // this.showAlert()
 
@@ -279,6 +281,8 @@ export default class ParentsMainPage extends React.Component {
 
 
   }
+
+
   render() {
 
 
@@ -288,50 +292,52 @@ export default class ParentsMainPage extends React.Component {
       <View style={styles.container}>
 
         <ScrollView>
-          <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
+            <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
 
-          {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
-          <View style={styles.container}>
-            {this.state.loadingTasks
-              ? <ActivityIndicator />
-              : <View style={styles.container}>
-                {/* { <ProgressBarAndroid
+            {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
+            <View style={styles.container}>
+              {this.state.loadingTasks
+                ? <ActivityIndicator />
+                : <View style={styles.container}>
+                  {/* { <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
             />  */}
-                <Accordion2
-                  allTasks={this.state.allTasks}
-                  morningTasks={this.state.morningTasks}
-                  noonTasks={this.state.noonTasks}
-                  afternoonTasks={this.state.afternoonTasks}
-                  eveningTasks={this.state.eveningTasks}
-                  customTasks={this.state.customTasks}
-                  markMission={this.markMission.bind(this)}
-                />
-                <AwesomeAlert
-                  show={showAlert}
-                  showProgress={false}
-                  title="כל הכבוד"
-                  message="אתה בדרך הנכונה!"
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={false}
-                  showConfirmButton={true}
-                  cancelText="No, cancel"
-                  confirmText="סגור"
-                  confirmButtonColor="#DD6B55"
-                  onCancelPressed={() => {
-                    this.hideAlert();
-                  }}
-                  onConfirmPressed={() => {
-                    this.hideAlert();
-                  }}
-                />
-              </View>}
-          </View>
+                  <Accordion2
+                    allTasks={this.state.allTasks}
+                    morningTasks={this.state.morningTasks}
+                    noonTasks={this.state.noonTasks}
+                    afternoonTasks={this.state.afternoonTasks}
+                    eveningTasks={this.state.eveningTasks}
+                    customTasks={this.state.customTasks}
+                    markMission={this.markMission.bind(this)}
+                  />
+                  <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title="כל הכבוד"
+                    message="אתה בדרך הנכונה!"
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    cancelText="No, cancel"
+                    confirmText="סגור"
+                    confirmButtonColor="#DD6B55"
+                    onCancelPressed={() => {
+                      this.hideAlert();
+                    }}
+                    onConfirmPressed={() => {
+                      this.hideAlert();
+                    }}
+                  />
+                </View>}
+            </View>
+          
         </ScrollView>
+
       </View>
     );
   }
