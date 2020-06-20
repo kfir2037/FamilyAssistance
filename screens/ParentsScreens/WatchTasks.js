@@ -116,7 +116,7 @@
 //     let day = new Date().getDate(); //Current day
 //     var month = new Date().getMonth() + 1; //Current Month
 //     var year = new Date().getFullYear(); //Current Year
- 
+
 
 //     if(day<10){
 //       day="0"+day
@@ -147,8 +147,10 @@
 // }
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image } from 'react-native';
+import { SafeAreaView, Platform, StyleSheet, Text, View, Image } from 'react-native';
 import DateTime from 'react-native-customize-selected-date'
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+import moment from 'moment';
 import _ from 'lodash'
 
 export default class App extends Component {
@@ -156,17 +158,27 @@ export default class App extends Component {
     super(props)
     this.state = {
       time: '',
-      test:[]
-    }
+      test: []
+    };
+
+    LocaleConfig.locales['heb'] = {
+      monthNames: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+      monthNamesShort: ["'ינו'", "פבר", "מרץ", "אפר'", 'מאי', "יונ'", "יול'", "אוג,", "ספט'", "אוק'", "נוב'", "דצמ'"],
+      dayNames: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+      dayNamesShort: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'],
+      today: 'היום\'hui'
+    };
+    LocaleConfig.defaultLocale = 'heb';
+
   }
 
   onChangeDate(date) {
-    let arr=[]
-    for(let i=0;i<10;i++){
+    let arr = []
+    for (let i = 0; i < 10; i++) {
       arr.push(date)
     }
-    this.setState({test:arr})
-    
+    this.setState({ test: arr })
+
     alert(date)
 
   }
@@ -182,39 +194,78 @@ export default class App extends Component {
 
   render() {
     return (
-      <View>
-        <View style={styles.container}>
-          <DateTime
+      <SafeAreaView style={styles.container}>
+        <Text style={{marginVertical:10,alignSelf:'center', fontWeight:'bold', color:'#767ead',fontSize:22}}>משימות חודשיות</Text>
+        <View style={{ marginVertical: 5 }}>
+          <Calendar
+            markedDates={{
+              '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }
+            }}
+            //markingType={'custom'}
+            onDayPress={(day) => this.onChangeDate(day.dateString)}
+            monthFormat={'MMM yyyy'}
+            displayLoadingIndicator
+            markedDates={{
+              [this.state.selected]: {
+                selected: true,
+                disableTouchEvent: true,
+                selectedColor: 'crimson',
+                selectedTextColor: 'red'
+              }
+            }}
+            style={{ borderRadius: 20, marginVertical: 10, marginHorizontal: 10, paddingBottom: 10 }}
+            //markedDates={{'2020-05-29':{selected:true}}}
+            //style={{borderWidth:1, borderColor:'gray'}}
+            theme={{
+              arrowColor: '#767ead',
+              calendarBackground: 'white',
+              todayTextColor: 'crimson',
+              todayTextBackground: '#b5bef5',
+              selectedDayBackgroundColor: '#767ead',
+              selectedDayTextColor: 'white',
+              textSectionTitleColor: 'gray',
+              textDayFontWeight: 'bold',
+              textDayHeaderFontWeight: 'bold',
+              textMonthFontWeight: 'bold',
+              dayTextColor: '#767ead',
+              textDisabledColor: '#b5bef5',
+              monthTextColor: '#767ead'
+
+
+            }}
+          />
+
+          {/* <DateTime
             date={this.state.time}
             changeDate={(date) => this.onChangeDate(date)}
             format='YYYY-MM-DD'
             renderChildDay={(day) => this.renderChildDay(day)}
-          />
+          /> */}
+          <View style={styles.tasks}>
+            <Text>{this.state.test}</Text>
+          </View>
         </View>
-        <View style={styles.tasks}>          
-         <Text>{this.state.test}</Text>
-        </View>
-        
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
+    backgroundColor: '#b5bef5',
+    height: '100%',
+    width: '100%',
   },
-  tasks:{
-    alignItems:"center",
-    color:'green',
-    width: 400,
-    height:250,
-    alignSelf:'center',
+  tasks: {
+    alignItems: "center",
+    color: 'green',
+    width: '90%',
+    //height: 250,
+    alignSelf: 'center',
     borderWidth: 3,
-    bottom:-400,
-    flex:3,
 
-    
+
   },
   icLockRed: {
     width: 13 / 2,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Picker, Platform, StyleSheet, View, Text, ActivityIndicator, ScrollView, SafeAreaView, Modal, TouchableHighlight } from 'react-native';
+import {RefreshControl, FlatList, Picker, Platform, StyleSheet, View, Text, ActivityIndicator, ScrollView, SafeAreaView, Modal, TouchableHighlight, ImageBackground } from 'react-native';
 import firebase from '../../config/config';
-import { Button, Input, ListItem } from 'react-native-elements';
+import { Card, Button, Input, ListItem } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -23,6 +23,7 @@ const WatchFamilies = ({ navigation }) => {
   const [birthDate, setBirthDate] = useState(moment(new Date()));
   const [message, setMessage] = useState('');
   const [show, setShow] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
 
   const AddParentPress = () => {
@@ -76,10 +77,12 @@ const WatchFamilies = ({ navigation }) => {
                 })
 
                 setParentDetailsLoading(false);
+                setRefreshing(false);
               })
           })
           if (doc.data().parents.length == 0) {
             setParentDetailsLoading(false);
+            setRefreshing(false);
           }
           await doc.data().kids.forEach(async (kidID) => {
             await firebase.firestore().collection('users').doc(kidID).get()
@@ -93,16 +96,20 @@ const WatchFamilies = ({ navigation }) => {
                 })
 
                 setKidsDetailsLoading(false);
+                setRefreshing(false);
               })
               .catch((err) => { console.log(err) })
           })
           if (doc.data().kids.length == 0) {
             setKidsDetailsLoading(false);
+            setRefreshing(false);
           }
         }
         console.log('familyObj', familyObj);
       })
       .catch((error) => console.log(error))
+
+      setRefreshing(false);
     //firebase.firestore().collection('users').doc(familyObj['parents'][0])
   }
 
@@ -118,6 +125,12 @@ const WatchFamilies = ({ navigation }) => {
     setBirthDate(currentDate);
 
   };
+
+  const _onRefresh = async () => {
+    setRefreshing(true);
+    getFamily;
+    setRefreshing(false);
+  }
 
 
   useEffect(() => {
@@ -483,114 +496,126 @@ const WatchFamilies = ({ navigation }) => {
         </Modal>
 
         <Text style={styles.familyName}>משפחת {familyObj.lastName}</Text>
-        <ScrollView style={styles.scrollView} >
-          <View style={styles.detailsContainer}>
-            <Text style={styles.headlineText}>פרטי משפחה: </Text>
-            <Text style={styles.detailsText}>מצב משפחתי: {familyObj.isSingleParent ? 'גרושים' : 'נשואים'} </Text>
-            <Text style={styles.detailsText}>מספר נפשות: {familyObj.numOfPersons}</Text>
-            <Text style={styles.detailsText}>סטטוס פעילות: {familyObj.status ? <Text style={{ color: 'green' }}>פעילה</Text> : <Text style={{ color: 'crimson' }}>לא פעילה</Text>}</Text>
-            <View style={styles.parentsDetails}>
-              <Text style={styles.headlineText}>הורים:</Text>
-              <View>
-                {parentDetailsLoading
-                  ? <ActivityIndicator size={20} color='#767ead' />
-                  : <FlatList
-                    //style={{ backgroundColor: 'white' }}
-                    ListEmptyComponent={() => {
-                      return (
-                        <View>
-                          <Text></Text>
-                        </View>
-                      );
-                    }}
-                    ListHeaderComponent={() => {
-                      return (
-                        <View style={styles.listHeaderStyle}>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>שם</Text>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>מין</Text>
-                        </View>
-                      );
-                    }}
-                    ItemSeparatorComponent={(props) => {
-                      //console.log('props', props);
-                      return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
-                    }}
-                    data={parentDetails}
-                    renderItem={({ item, separators }) => {
-                      return (
-                        <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
-                          <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['birthDate']} </Text>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
-                          </View>
-                        </TouchableHighlight>
-                      );
-                    }}
-                    keyExtractor={item => item['key']}
-                  />
+        <ScrollView refreshControl={
+          <RefreshControl
+            resfreshing={refreshing}
+            onRefresh={_onRefresh}
+            enabled
+            colors={['#767ead']}
+          />
+        } style={styles.scrollView} >
+          <ImageBackground style={{ height: '100%', justifyContent: 'center', width: '100%', flex: 1 }} imageStyle={{ opacity: 0.1 }} source={require('../../assets/family.png')}>
+            <View style={styles.detailsContainer}>
+              <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='פרטי משפחה:'>
+                <Text style={styles.detailsText}>מצב משפחתי: {familyObj.isSingleParent ? 'גרושים' : 'נשואים'} </Text>
+                <Text style={styles.detailsText}>מספר נפשות: {familyObj.numOfPersons}</Text>
+                <Text style={styles.detailsText}>סטטוס פעילות: {familyObj.status ? <Text style={{ color: 'green' }}>פעילה</Text> : <Text style={{ color: 'crimson' }}>לא פעילה</Text>}</Text>
+              </Card>
+              <View style={styles.parentsDetails}>
+                <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הורים:'>
+                  <View>
+                    {parentDetailsLoading
+                      ? <ActivityIndicator size={40} color='#767ead' />
+                      : <FlatList
+                        //style={{ backgroundColor: 'white' }}
+                        ListEmptyComponent={() => {
+                          return (
+                            <View>
+                              <Text></Text>
+                            </View>
+                          );
+                        }}
+                        ListHeaderComponent={() => {
+                          return (
+                            <View style={styles.listHeaderStyle}>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>שם</Text>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>מין</Text>
+                            </View>
+                          );
+                        }}
+                        ItemSeparatorComponent={(props) => {
+                          //console.log('props', props);
+                          return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                        }}
+                        data={parentDetails}
+                        renderItem={({ item, separators }) => {
+                          return (
+                            <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
+                              <View style={{ flexDirection: 'row-reverse' }}>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['birthDate']} </Text>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
+                              </View>
+                            </TouchableHighlight>
+                          );
+                        }}
+                        keyExtractor={item => item['key']}
+                      />
 
-                }
-                <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
-                  <AntDesign name='adduser' size={25} />
-                }
-                  onPress={() => { AddParentPress() }}
-                />
+                    }
+                    <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
+                      <AntDesign name='adduser' size={25} />
+                    }
+                      onPress={() => { AddParentPress() }}
+                    />
+                  </View>
+                </Card>
               </View>
-            </View>
-            <View style={styles.childsDetails}>
-              <Text style={styles.headlineText}>ילדים:</Text>
-              <View>
-                {kidsDetailsLoading
-                  ? <ActivityIndicator size={40} color='#767ead' />
-                  : <FlatList
-                    //style={{ backgroundColor: 'white' }}
-                    ListEmptyComponent={() => {
-                      return (
-                        <View>
-                          <Text></Text>
-                        </View>
-                      );
-                    }}
-                    ListHeaderComponent={() => {
-                      return (
-                        <View style={styles.listHeaderStyle}>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>שם</Text>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
-                          <Text style={{ textAlign: 'center', fontSize: 20, flex: 1, fontWeight: 'bold' }}>מין</Text>
-                        </View>
-                      );
-                    }}
-                    ItemSeparatorComponent={(props) => {
-                      console.log('props', props);
-                      return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
-                    }}
-                    data={kidsDetails}
-                    renderItem={({ item, separators }) => {
-                      return (
-                        <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
-                          <View style={{ flexDirection: 'row-reverse' }}>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1998</Text>
-                            <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
-                          </View>
-                        </TouchableHighlight>
-                      );
-                    }}
-                    keyExtractor={item => item['key']}
-                  />
+              <View style={styles.childsDetails}>
+                <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='ילדים:'>
+                  <View>
+                    {kidsDetailsLoading
+                      ? <ActivityIndicator size={40} color='#767ead' />
+                      : <FlatList
+                        //style={{ backgroundColor: 'white' }}
+                        ListEmptyComponent={() => {
+                          return (
+                            <View>
+                              <Text></Text>
+                            </View>
+                          );
+                        }}
+                        ListHeaderComponent={() => {
+                          return (
+                            <View style={styles.listHeaderStyle}>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>שם</Text>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>תאריך לידה</Text>
+                              <Text style={{ textAlign: 'center', fontSize: 18, flex: 1, fontWeight: 'bold' }}>מין</Text>
+                            </View>
+                          );
+                        }}
+                        ItemSeparatorComponent={(props) => {
+                          console.log('props', props);
+                          return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                        }}
+                        data={kidsDetails}
+                        renderItem={({ item, separators }) => {
+                          return (
+                            <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
+                              <View style={{ flexDirection: 'row-reverse' }}>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1998</Text>
+                                <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
+                              </View>
+                            </TouchableHighlight>
+                          );
+                        }}
+                        keyExtractor={item => item['key']}
+                      />
 
-                }
-                <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
-                  <AntDesign name='adduser' size={25} />
-                }
-                  onPress={() => { AddKidPress() }}
-                />
+                    }
+                    <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף " icon={
+                      <AntDesign name='adduser' size={25} />
+                    }
+                      onPress={() => { AddKidPress() }}
+                    />
+                  </View>
+                </Card>
               </View>
+              <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' />
             </View>
-            <Text style={styles.headlineText}>הערות:</Text>
-          </View>
+          </ImageBackground>
         </ScrollView>
       </SafeAreaView>
     );
@@ -615,7 +640,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     marginTop: 10,
-    marginBottom: 10
+    //marginBottom: 5
     // borderWidth: 1,
     // borderColor: 'black'
   },
@@ -629,8 +654,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    backgroundColor: '#8b96d9',
-    borderRadius: 10
+    //backgroundColor: '#8b96d9',
+    borderRadius: 10,
+    marginBottom: 10
+
   },
   detailsText: {
     fontSize: 20,
