@@ -7,12 +7,13 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Button,
   ActivityIndicator,
 } from "react-native";
-// import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import Icon from "react-native-vector-icons/FontAwesome";
 import NumericInput from "react-native-numeric-input";
+import { Card } from 'react-native-elements';
+// import { Tabs, Tab } from 'native-base';
 import Tabs from "react-native-tabs";
 import Task from "./Task";
 import firebase from "../../config/config";
@@ -31,7 +32,7 @@ export default class Settings extends Component {
       .doc("morning");
 
     this.state = {
-      page: "",
+      page: "בוקר",
       tasks: [],
       morningTasks: [],
       noonTasks: [],
@@ -48,18 +49,24 @@ export default class Settings extends Component {
       alertAfterNoon: "",
       alertAfterAfternoon: "",
       alertAfterEvening: "",
-      isReady: false,
+      isReady: true,
       newMorningTask: '',
       newNoonTask: '',
       newAfternoonTask: '',
       newEveningTask: '',
+      isDeleted: false,
+      deleteMsg: ''
     };
   }
 
-  componentDidMount() {
-    console.log("1");
-    let tasks = this.getTasks();
-    this.setState({ isReady: true });
+
+  async componentDidMount() {
+    console.log('isReady ', this.state.isReady);
+
+    let tasks = await this.getTasks();
+    this.changeTasksToCategory(<Text name='בוקר' />)
+    console.log('isReady ', this.state.isReady)
+    //this.setState({ isReady: true });
     // const socialWorkerUid = firebase.auth().currentUser['uid'];
     // console.log('socialWorkerId ' + socialWorkerUid);
     // let familyObj = {}
@@ -91,7 +98,7 @@ export default class Settings extends Component {
       .collection("RoutineTasks")
       .doc("morning");
 
-    let getDoc = morningTasks
+    let getDoc = await morningTasks
       .get()
       .then((doc) => {
         if (!doc.exists) {
@@ -107,6 +114,8 @@ export default class Settings extends Component {
             morningTasks: allData.tasks,
             alertBeforeMorning: allData.beforeAlertTime,
             alertAfterMorning: allData.afterAlertTime,
+            isReady: false
+
           });
           console.log("statetpeof: ", typeof this.state.alertBeforeMorning);
           // console.log('Document data:', this.state.morningTasks);
@@ -131,6 +140,8 @@ export default class Settings extends Component {
             noonTasks: allData.tasks,
             alertBeforeNoon: allData.beforeAlertTime,
             alertAfterNoon: allData.afterAlertTime,
+            isReady: false
+
           });
           // console.log('Document data:', this.state.noonTasks);
         }
@@ -154,6 +165,8 @@ export default class Settings extends Component {
             afternoonTasks: allData.tasks,
             alertBeforeAfternoon: allData.beforeAlertTime,
             alertAfterAfternoon: allData.afterAlertTime,
+            isReady: false
+
           });
           // console.log('Document data:', this.state.afternoonTasks);
         }
@@ -177,6 +190,7 @@ export default class Settings extends Component {
             eveningTasks: allData.tasks,
             alertBeforeEvening: allData.beforeAlertTime,
             alertAfterEvening: allData.afterAlertTime,
+            isReady: false
           });
           // console.log('Document data:', this.state.eveningTasks);
         }
@@ -256,17 +270,27 @@ export default class Settings extends Component {
     let addTasks = firebase.functions().httpsCallable("addRoutineTasks");
     console.log('55555555555')
     let data = {
-      newMorningTask : this.state.newMorningTask,
-      newNoonTask : this.state.newNoonTask,
-      newAfternoonTask : this.state.newAfternoonTask,
-      newEveningsTask : this.state.newEveningsTask,
+      newMorningTask: this.state.newMorningTask,
+      newNoonTask: this.state.newNoonTask,
+      newAfternoonTask: this.state.newAfternoonTask,
+      newEveningsTask: this.state.newEveningsTask,
     };
     console.log('saveNewTasks')
-    addTasks(data);
+    addTasks(data)
+    .then(()=>{
+      console.log('task added');
+    })
+    .catch(()=>{
+      console.log('task didnt added');
+
+    })
   }
 
   deleteTask = () => {
     console.log("task to delete: ", this.state.taskDeleteSelected);
+    this.setState({
+      isDeleted: true
+    })
     //deleteTask2(this.state.taskDeleteSelected)
     let deleteTask = firebase.functions().httpsCallable("deleteTask2");
     if (this.state.page == "בוקר") {
@@ -274,7 +298,21 @@ export default class Settings extends Component {
         taskToDelete: this.state.taskDeleteSelected,
         docName: "morning",
       };
-      deleteTask(data);
+      deleteTask(data)
+        .then(() => {
+          //console.log(resp.data.result)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'משימה נמחקה'
+          })
+        })
+        .catch((err) => {
+          //console.log(err.message)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'אירעה שגיאה'
+          })
+        })
       // doc.update({"tasks":FieldValue.arrayRemove(this.state.taskDeleteSelected)});
       // firebase.functions().httpsCallable()("deleteTask2")(
       //   this.state.taskDeleteSelected
@@ -285,19 +323,61 @@ export default class Settings extends Component {
         taskToDelete: this.state.taskDeleteSelected,
         docName: "noon",
       };
-      deleteTask(data);
+      deleteTask(data)
+        .then(() => {
+          //console.log(resp.data.result)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'משימה נמחקה'
+          })
+        })
+        .catch((err) => {
+          //console.log(err.message)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'אירעה שגיאה'
+          })
+        })
     } else if (this.state.page == "אחר הצהריים") {
       let data = {
         taskToDelete: this.state.taskDeleteSelected,
         docName: "afterNoon",
       };
-      deleteTask(data);
+      deleteTask(data)
+        .then(() => {
+          //console.log(resp.data.result)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'משימה נמחקה'
+          })
+        })
+        .catch((err) => {
+          //console.log(err.message)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'אירעה שגיאה'
+          })
+        })
     } else if (this.state.page == "ערב") {
       let data = {
         taskToDelete: this.state.taskDeleteSelected,
         docName: "evening",
       };
-      deleteTask(data);
+      deleteTask(data)
+        .then(() => {
+          //console.log(resp.data.result)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'משימה נמחקה'
+          })
+        })
+        .catch((err) => {
+          //console.log(err.message)
+          this.setState({
+            isDeleted: false,
+            deleteMsg: 'אירעה שגיאה'
+          })
+        })
     }
   };
 
@@ -315,13 +395,15 @@ export default class Settings extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#b5bef5",
+          //backgroundColor: "white",
           //borderWidth: 1,
-          alignItems: "flex-end",
+          marginHorizontal: 5,
+          borderRadius: 20,
+          //alignItems: 'flex-end',
           justifyContent: "center",
-          paddingVertical: 20,
-          paddingHorizontal: 10,
-          borderColor: "#767ead",
+          // paddingVertical: 20,
+          // paddingHorizontal: 10,
+          //borderColor: "#767ead",
         }}
       >
         {/* <Text>HI</Text> */}
@@ -339,9 +421,14 @@ export default class Settings extends Component {
       this.state.alertAfterMorning == "" ||
       this.state.alertAfterNoon == "" ||
       this.state.alertAfterAfternoon == "" ||
-      this.state.alertAfterEvening == ""
+      this.state.alertAfterEvening == "" &&
+      this.state.isReady
     ) {
-      return <ActivityIndicator />;
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#b5bef5', height: '100%' }}>
+          <ActivityIndicator color='#767ead' size={60} />
+        </View>
+      );
     }
     // var x
     // console.log('alertBeforeMorning ',this.state.alertBeforeMorning)
@@ -349,233 +436,242 @@ export default class Settings extends Component {
     //     x=22;
     // }
     return (
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: '#b5bef5' }}>
         <View style={styles.container}>
           <View>
-            <Text>הגדרות</Text>
+            <Text style={{ marginRight: 5, color: '#767ead', fontSize: 27, fontWeight: 'bold' }}>הגדרות</Text>
           </View>
-          <View>
-            <Text>כמה דקות לפני יקבלו התרעה</Text>
-          </View>
-          <View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>בוקר</Text>
-              <View style={styles.numbers}>
-                {/* <NumericInput2
-                                type='decimal'
-                                // decimalPlaces={5}
-                                value={this.state.alertBeforeMorning}
-                                onUpdate={(value) => setValue(value)}
-                                /> */}
-                <NumericInput
-                  value={this.state.alertBeforeMorning}
-                  onChange={(value) =>
-                    this.setState({ alertBeforeMorning: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>צהריים</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertBeforeNoon}
-                  onChange={(value) =>
-                    this.setState({ alertBeforeNoon: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  maxValue={60}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>אחר הצהריים</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertBeforeAfternoon}
-                  onChange={(value) =>
-                    this.setState({ alertBeforeAfternoon: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>ערב</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertBeforeEvening}
-                  onChange={(value) =>
-                    this.setState({ alertBeforeEvening: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-          </View>
-          <View>
-            <Text>כמה דקות לפני יקבלו הודעת תזכורת</Text>
-          </View>
-          <View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>בוקר</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertAfterMorning}
-                  onChange={(value) =>
-                    this.setState({ alertAfterMorning: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>צהריים</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertAfterNoon}
-                  onChange={(value) => this.setState({ alertAfterNoon: value })}
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>אחר הצהריים</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertAfterAfternoon}
-                  onChange={(value) =>
-                    this.setState({ alertAfterAfternoon: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
-            <View style={styles.fields}>
-              <Text style={styles.text}>ערב</Text>
-              <View style={styles.numbers}>
-                <NumericInput
-                  value={this.state.alertAfterEvening}
-                  onChange={(value) =>
-                    this.setState({ alertAfterEvening: value })
-                  }
-                  // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
-                  totalWidth={140}
-                  totalHeight={35}
-                  iconSize={25}
-                  step={1}
-                  valueType="real"
-                  rounded
-                  textColor="#B0228C"
-                  iconStyle={{ color: "white" }}
-                  rightButtonBackgroundColor="#EA3788"
-                  leftButtonBackgroundColor="#E56B70"
-                />
-              </View>
-            </View>
 
+          <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 17, textAlign: 'right' }} title='דקות לפני קבלת התראה' >
+            <View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>בוקר</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertBeforeMorning}
+                    onChange={(value) =>
+                      this.setState({ alertBeforeMorning: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
 
-          </View>
+                    totalHeight={35}
+                    iconSize={25}
+
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>צהריים</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertBeforeNoon}
+                    onChange={(value) =>
+                      this.setState({ alertBeforeNoon: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>אחר הצהריים</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertBeforeAfternoon}
+                    onChange={(value) =>
+                      this.setState({ alertBeforeAfternoon: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    containerStyle={{}}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>ערב</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertBeforeEvening}
+                    onChange={(value) =>
+                      this.setState({ alertBeforeEvening: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+            </View>
+          </Card>
+
+          <Card titleStyle={{ fontSize: 17, textAlign: 'right' }} title='דקות לפני קבלת תזכורת' containerStyle={{ marginBottom: 10, borderRadius: 20 }}>
+            <View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>בוקר</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertAfterMorning}
+                    onChange={(value) =>
+                      this.setState({ alertAfterMorning: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>צהריים</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertAfterNoon}
+                    onChange={(value) => this.setState({ alertAfterNoon: value })}
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>אחר הצהריים</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertAfterAfternoon}
+                    onChange={(value) =>
+                      this.setState({ alertAfterAfternoon: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+              <View style={styles.fields}>
+                <Text style={styles.text}>ערב</Text>
+                <View style={styles.numbers}>
+                  <NumericInput
+                    value={this.state.alertAfterEvening}
+                    onChange={(value) =>
+                      this.setState({ alertAfterEvening: value })
+                    }
+                    // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                    totalWidth={140}
+                    totalHeight={35}
+                    iconSize={25}
+                    step={1}
+                    valueType="real"
+                    rounded
+                    inputStyle={{ fontWeight: 'bold' }}
+                    borderColor="#767ead"
+                    textColor="#767ead"
+                    iconStyle={{ color: "white", fontSize: 20 }}
+                    rightButtonBackgroundColor="#767ead"
+                    leftButtonBackgroundColor="#767ead"
+                  />
+                </View>
+              </View>
+            </View>
+          </Card>
+
           <Button
             onPress={this.saveAlerts}
-            icon={<Icon name="trash" size={20} color="white" />}
-            title="  שמור  "
+            buttonStyle={styles.button}
+            containerStyle={{ alignSelf: 'center', marginBottom: 10, width: '30%' }}
+            //icon={<Icon name="trash" size={20} color="white" />}
+            title="שמור"
+            titleStyle={{ justifyContent: 'center' }}
+            color='#767ead'
           />
+
           <View style={styles.lineStyle} />
+
+          <Text style={styles.welcome}>הוספה והסרה של משימות</Text>
+
           <View style={styles.container2}>
             <Tabs
               selected={this.state.page}
-              style={{ backgroundColor: "white" }}
-              // selectedStyle={{color:'red'}} onSelect={el=>this.setState({page:el.props.name,tasks:el.props.name})}>
-              selectedStyle={{ color: "red" }}
+              style={{ alignContent: "center", justifyContent: 'center', backgroundColor: "white", borderRadius: 20, marginHorizontal: 18, marginVertical: 10 }}
+              selectedStyle={{ color: '#767ead' }}
               onSelect={(el) => this.changeTasksToCategory(el)}
             >
-              <Text name="בוקר">בוקר</Text>
-              <Text
-                name="צהריים"
-                selectedIconStyle={{ borderTopWidth: 2, borderTopColor: "red" }}
-              >
-                צהריים
-              </Text>
-              {/* <Text name="tasks2" >צהריים</Text> */}
+              <Text name="ערב" >ערב</Text>
               <Text name="אחר הצהריים">אחר הצהריים</Text>
-              <Text name="ערב" selectedStyle={{ color: "green" }}>
-                ערב
-              </Text>
-              {/* <Text name="tasks4" >ערב</Text> */}
+              <Text name="צהריים">צהריים</Text>
+              <Text name="בוקר">בוקר</Text>
             </Tabs>
-            <Text style={styles.welcome}>הוספה והסרה של משימות</Text>
+
           </View>
           {/* <Select onSelect={(selectedItem) => this.itemsSelected(selectedItem)}>
                         <Option value={1} 
@@ -583,8 +679,10 @@ export default class Settings extends Component {
                         <Option value={2}>List item 2</Option>
                         <Option value={3}>List item 3</Option>
                     </Select> */}
-          <View style={styles.familiesList}>
+          <ScrollView style={styles.familiesList}>
+
             <SelectableFlatlist
+
               data={this.state.tasks}
               state={STATE.EDIT}
               multiSelect={false}
@@ -597,162 +695,96 @@ export default class Settings extends Component {
               uncheckIcon={() => (
                 <FontAwesome name="circle-o" size={25} color="#767ead" />
               )}
-              touchStyles={{ backgroundColor: "#b5bef5" }}
+              touchStyles={{
+                borderRadius: 20,
+                backgroundColor: "white",
+                //borderWidth: 1,
+                width: '99%'
+              }}
+            //checkUncheckContainerStyle={{borderWidth:1, borderColor:'red', backgroundColor:'white'}}
             />
-          </View>
-          <View style={{ margin: 20 }}>
+          </ScrollView>
+
+          {this.state.isDeleted
+            ? <ActivityIndicator style={{ marginVertical: 10 }} color='#767ead' size={25} />
+            :
             <Button
               onPress={this.deleteTask}
               icon={<Icon name="trash" size={20} color="white" />}
               title="  הסרת משימה  "
+              iconRight
+              titleStyle={{ justifyContent: 'center' }}
+              containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
+              buttonStyle={{ ...styles.button, }}
             />
-          </View>
-          {/* <View>
-                        <View style={{ height: 200, backgroundColor: 'lightblue' }}>
-                            <Text style={styles.instructions}>
-                                משימות שנבחרו: {this.state.page}
-                            </Text>
-                            <View>
-                                {this.state.tasks.map(task => {
-                                    console.log("map task: ",{task})
-                                    return <Task task={task}></Task>
-                                })}
-                            </View>
-                        </View>
-                        <View style={{ margin: 20 }}>
-                            <Button
-                                icon={
-                                    <Icon
-                                        name="trash"
-                                        size={20}
-                                        color="white"
-                                    />
-                                }
-                                title="  הסרת משימה  "
-                            />
-                        </View>
-                    </View> */}
-          <View style={styles.lineStyle} />
-          <View>
-            <View style={styles.addTask}>
-              <Text>בוקר</Text>
-              <View style={styles.addTaskInputContainer}>
-                <TextInput
-                  style={styles.addTaskInput}
-                  // onChangeText={(text) => this.setState({ taskToAdd: text })}
-                  onChangeText={(text) => this.setState({ newMorningTask: text })}
-                // value={this.state.text}
-                />
-              </View>
-            </View>
-            {/* <Button style={styles.addButton}
-                    // icon={
-                    //     <Icon
-                    //     name="trash"
-                    //     size={20}
-                    //     color="white"
-                    //     />
-                    // }
-                    title="הוספת משימה  "
-                ></Button> */}
-            <View style={{ marginTop: 30, alignContent: "center" }}>
-              {/* <Button
-                title="הוספת משימה"
-                add
-                // color="#0000ff"
-              /> */}
-            </View>
-          </View>
-          <View>
-            <View style={styles.addTask}>
-              <Text>צהריים</Text>
-              <View style={styles.addTaskInputContainer}>
-                <TextInput
-                  style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState({ newNoonTask: text })}
-                // value={this.state.text}
-                />
-              </View>
-            </View>
-            {/* <Button style={styles.addButton}
-                    // icon={
-                    //     <Icon
-                    //     name="trash"
-                    //     size={20}
-                    //     color="white"
-                    //     />
-                    // }
-                    title="הוספת משימה  "
-                ></Button> */}
-            <View style={{ marginTop: 30, alignContent: "center" }}>
-              {/* <Button
-                title="הוספת משימה"
+          }
+          {this.state.deleteMsg == 'משימה נמחקה'
+            ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }}>משימה נמחקה</Text>
+            : this.state.deleteMsg == 'אירעה שגיאה'
+              ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>אירעה שגיאה</Text>
+              : null
+          }
 
-                // color="#0000ff"
-              /> */}
-            </View>
-          </View>
+          <View style={styles.lineStyle} />
+
           <View>
-            <View style={styles.addTask}>
-              <Text>אחר הצהריים</Text>
-              <View style={styles.addTaskInputContainer}>
-                <TextInput
-                  style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState({ newAfternoonTask: text })}
-                // value={this.state.text}
-                />
-              </View>
+            <View style={{ borderWidth: 1, borderColor: '#767ead', backgroundColor: 'white', borderRadius: 20, justifyContent: 'center', width: '90%', alignSelf: 'center', alignItems: 'flex-end', paddingVertical: 20 }}>
+
+              <Input
+                containerStyle={styles.addTaskInputContainer}
+                onChangeText={(text) => this.setState({ newMorningTask: text })}
+                value={this.state.newMorningTask}
+                placeholder='בוקר'
+                placeholderTextColor='black'
+                textAlign='right'
+              // value={this.state.text}
+              />
+
+              <Input
+                containerStyle={styles.addTaskInputContainer}
+                onChangeText={(text) => this.setState({ newNoonTask: text })}
+                value={this.state.newNoonTask}
+                placeholder='צהריים'
+                placeholderTextColor='black'
+                textAlign='right'
+              // value={this.state.text}
+              />
+
+              <Input
+                containerStyle={styles.addTaskInputContainer}
+                placeholder='אחר הצהריים'
+                placeholderTextColor='black'
+                onChangeText={(text) => this.setState({ newAfternoonTask: text })}
+                textAlign='right'
+                value={this.state.newAfternoonTask}
+              />
+
+              <Input
+                containerStyle={styles.addTaskInputContainer}
+                placeholder='ערב'
+                placeholderTextColor='black'
+                onChangeText={(text) => this.setState({ newEveningTask: text })}
+                value={this.state.newEveningTask}
+                placeholderTextColor='black'
+              />
+
+
             </View>
-            {/* <Button style={styles.addButton}
-                    // icon={
-                    //     <Icon
-                    //     name="trash"
-                    //     size={20}
-                    //     color="white"
-                    //     />
-                    // }
-                    title="הוספת משימה  "
-                ></Button> */}
-            <View style={{ marginTop: 30, alignContent: "center" }}>
-              {/* <Button
-                title="הוספת משימה"
-                // color="#0000ff"
-              /> */}
-            </View>
-          </View>
-          <View>
-            <View style={styles.addTask}>
-              <Text>ערב</Text>
-              <View style={styles.addTaskInputContainer}>
-                <TextInput
-                  style={styles.addTaskInput}
-                  onChangeText={(text) => this.setState({ newEveningTask: text })}
-                // value={this.state.text}
-                />
-              </View>
-            </View>
-            {/* <Button style={styles.addButton}
-                    // icon={
-                    //     <Icon
-                    //     name="trash"
-                    //     size={20}
-                    //     color="white"
-                    //     />
-                    // }
-                    title="הוספה  "
-                ></Button> */}
-            <View style={{ marginTop: 30, alignContent: "center" }}>
+
+            <View style={{ alignContent: "center" }}>
               <Button
-                title="הוספת משימות"
+                title="  הוספת משימות"
                 onPress={this.saveNewTasks}
-              // color="#0000ff"
+                icon={<Icon name="plus" size={20} color="white" />}
+                iconRight
+                titleStyle={{ justifyContent: 'center' }}
+                containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
+                buttonStyle={styles.button}
               />
             </View>
           </View>
         </View>
-
-        <View style={{ height: 60 }}></View>
-      </ScrollView>
+      </ScrollView >
     );
   }
 }
@@ -761,7 +793,8 @@ const styles = StyleSheet.create({
   container: {
     // flex:2,
     // flexGrow: 1,
-    // alignItems: 'stretch',
+    alignItems: 'stretch',
+
   },
   fields: {
     flexDirection: "row-reverse",
@@ -771,8 +804,8 @@ const styles = StyleSheet.create({
   text: {
     flex: 3,
     textAlign: "right",
-    marginRight: 50,
-    fontSize: 20,
+    // marginRight: 50,
+    fontSize: 15
   },
   numbers: {
     flex: 3,
@@ -781,16 +814,21 @@ const styles = StyleSheet.create({
   },
 
   container2: {
-    flex: 1,
+    //width:'95%',
+    // flex: 1,
+    // borderRadius: 20,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    alignContent: "center",
+    //backgroundColor: "#F5FCFF",
   },
   welcome: {
     fontSize: 20,
-    textAlign: "center",
-    marginTop: 20,
-    marginBottom: 50,
+    fontWeight: 'bold',
+    textAlign: 'right',
+    color: '#767ead',
+    marginRight: 10
+    // marginTop: 20,
+    //marginBottom: 50,
   },
   instructions: {
     textAlign: "center",
@@ -799,10 +837,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   familiesList: {
-    borderRadius: 2,
+    //justifyContent: 'center',
+    alignSelf: 'center',
+    width: '90%',
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: "#767ead",
-    height: 400,
+    //height: 400,
+    backgroundColor: 'white'
   },
 
   addTask: {
@@ -811,6 +853,7 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
   },
   addTaskInput: {
+
     // flex:3,
     // backgroundColor:'red',
     // width:200,
@@ -819,16 +862,32 @@ const styles = StyleSheet.create({
   },
   addTaskInputContainer: {
     // flex:1,
-    width: 300,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#d6d7da",
-    textAlign: "left",
+    //flexDirection: "row-reverse",
+    // alignItems: 'stretch',
+    width:'90%',
+    marginTop: 10,
+    marginRight:10,
+    // borderRadius: 4,
+    // borderWidth: 1,
+    // borderColor: "#d6d7da",
   },
   addButton: {
     margin: 20,
     backgroundColor: "black",
   },
+  button: {
+    borderRadius: 20,
+    backgroundColor: '#767ead',
+    //width:'30%',
+    // alignContent:'center'
+  },
+  lineStyle: {
+
+    borderWidth: 1,
+    borderColor: 'whitesmoke',
+    marginHorizontal: 10,
+    marginBottom: 10
+  }
 });
 
 AppRegistry.registerComponent("Settings", () => Settings);

@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     flexDirection: "row",
     alignItems: "center",
+    flexDirection:'row-reverse',
     justifyContent: "space-between",
   },
   title: {

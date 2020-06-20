@@ -238,42 +238,73 @@ export default class App extends Component {
     // });
   }
   returnNoonTasks() {
-    return this.state.noonTasks.map((obj, i) => {
-      return (
-        <View key={i}>
-          <Text style={styles.taskName}>{obj.name}</Text>
-          <Text>{obj.time}</Text>
-          <Text>{obj.isDone}</Text>
-          <Text>{obj.tasks}</Text>
-        </View>
-      );
-    });
+    return (
+      <Card containerStyle={{ width: '90%' }} title="משימות צהריים">
+        {
+          this.state.noonTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <Text style={styles.taskHour}>  {obj.time}</Text>
+                <Text style={styles.taskName}> {obj.tasks}   </Text>
+                {obj.isDone
+                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
   }
   returnAfternoonTasks() {
-    return this.state.afternoonTasks.map((obj, i) => {
-      return (
-        <View key={i} style={styles.task}>
-          <Text>{obj.name}</Text>
-          <Text>{obj.tasks}</Text>
-          <Text>{obj.time}</Text>
-          <Text>{obj.isDone}</Text>
-        </View>
-      );
-    });
+    return (
+      <Card containerStyle={{ width: '90%' }} title="משימות אחר הצהריים">
+        {
+          this.state.afternoonTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <Text style={styles.taskHour}>  {obj.time}</Text>
+                <Text style={styles.taskName}> {obj.tasks}   </Text>
+                {obj.isDone
+                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
   }
   returnEveningTasks() {
-    return this.state.eveningTasks.map((obj, i) => {
-      return (
-        <View key={i}>
-          <Text>{obj.name}</Text>
-          <Text>{obj.time}</Text>
-          <Text>{obj.isDone}</Text>
-          <View style={styles.courses}>
-            <Text>{obj.tasks}</Text>
-          </View>
-        </View>
-      );
-    });
+    return (
+      <Card containerStyle={{ width: '90%' }} title="משימות ערב">
+        {
+          this.state.eveningTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <Text style={styles.taskHour}>  {obj.time}</Text>
+                <Text style={styles.taskName}> {obj.tasks}   </Text>
+                {obj.isDone
+                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
   }
   // returnCustomTasks() {
   //   return this.state.customTasks.map((obj, i) => {
@@ -290,19 +321,27 @@ export default class App extends Component {
   //   });
   // }
   returnCustomTasks() {
-    console.log('kfir kfir,', this.state.customTasks)
-    return this.state.customTasks.map((obj, i) => {
-      return (
-        <View key={i}>
-          <Text>{obj.name}</Text>
-          <Text>{obj.time}</Text>
-          <Text>{obj.isDone}</Text>
-          <View style={styles.courses}>
-            <Text>{obj.tasks}</Text>
-          </View>
-        </View>
-      );
-    });
+    return (
+      <Card containerStyle={{ width: '90%' }} title="משימות">
+        {
+          this.state.customTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <Text style={styles.taskHour}>  {obj.time}</Text>
+                <Text style={styles.taskName}> {obj.tasks}   </Text>
+                {obj.isDone
+                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
   }
 
 
@@ -430,7 +469,8 @@ const styles = StyleSheet.create({
   },
   tasksList: {
     alignItems: 'flex-end',
-    marginRight: 10
+    //marginRight: 10,
+    marginBottom:7
   },
   tasksGroup: {
 

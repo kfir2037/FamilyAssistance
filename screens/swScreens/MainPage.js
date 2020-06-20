@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, YellowBox, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button } from 'react-native-elements';
@@ -15,7 +15,8 @@ export default class MainPage extends Component {
     this.state = {
       loading: true,
       data: [],
-      familySelectedUid: ''
+      familySelectedUid: '',
+      refreshing: false
     };
   }
 
@@ -54,7 +55,7 @@ export default class MainPage extends Component {
           familyObj[doc.id] = Object.assign({}, doc.data());
         });
         this.setState({ data: allFamilies });
-        this.setState({ loading: false });
+        this.setState({ loading: false, refreshing: false });
         // console.log('data: ', this.state.data);
       })
       .catch(error => {
@@ -97,20 +98,35 @@ export default class MainPage extends Component {
           paddingVertical: 20,
           paddingHorizontal: 10,
           borderColor: '#767ead',
-          borderBottomWidth:0.5,
-          borderBottomColor:'#767ead',
-          borderBottomRightRadius:35
+          borderBottomWidth: 0.5,
+          borderBottomColor: '#767ead',
+          borderBottomRightRadius: 35
 
         }}
       >
-        <Text style={{ fontWeight: 'bold', fontSize: 20,color:'#656d9c' }}>{item.data().lastName}</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#656d9c' }}>{item.data().lastName}</Text>
       </View>
     );
   }
 
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.getFamilies();
+  }
+
   render() {
     return (
-      <ScrollView showsVerticalScrollIndicator style={{ backgroundColor: '#b5bef5' }} >
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh.bind(this)}
+          enabled
+          colors={['#767ead']}
+        />
+      } 
+      showsVerticalScrollIndicator style={{ backgroundColor: '#b5bef5' }} >
+
+        
         <>
           <View style={styles.container}>
             <View style={styles.header}>
@@ -133,7 +149,7 @@ export default class MainPage extends Component {
                   />
                 </SafeAreaView>
               </View>}
-            <View style={{ flexDirection: 'column', alignItems: 'center',marginTop:10 }}>
+            <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
               <View style={styles.twoFirstButtons}>
                 {/* <View style={styles.buttons}>
                   <Button
@@ -247,7 +263,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingBottom: 10,
-    color:'#656d9c'
+    color: '#656d9c'
   },
   header: {
     alignItems: 'center'
