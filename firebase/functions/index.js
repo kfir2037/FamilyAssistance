@@ -435,8 +435,8 @@ sendPushNotification = async () => {
                         const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
                         const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
                         const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
-                        // console.log('taskDateOnlyDate ', taskDateOnlyDate)
-                        // console.log('currentDateOnlyDate', currentDateOnlyDate)
+                        console.log('taskDateOnlyDate ', taskDateOnlyDate)
+                        console.log('currentDateOnlyDate', currentDateOnlyDate)
                         if (taskDateOnlyDate == currentDateOnlyDate) {
                             console.log('same date')
                             const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
@@ -444,7 +444,14 @@ sendPushNotification = async () => {
                             const timeOfAlert3 = moment(currentDate).add(morningSecondsAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
                             const timeOfAlert4 = moment(currentDate).add(morningSecondsAlert, 'minutes').format('MM/DD/YYYY HH:mm')
 
-
+                            console.log('currentDate ' ,currentDate)
+                            console.log('taskDate ' ,taskDate)
+                            console.log('timeOfAlert ' ,timeOfAlert)
+                            console.log('timeOfAlert2 ' ,timeOfAlert2)
+                            console.log('timeOfAlert3 ' ,timeOfAlert3)
+                            console.log('timeOfAlert4 ' ,timeOfAlert4)
+                            console.log('morningFirstAlert ' ,morningFirstAlert)
+                            console.log('morningSecondsAlert ' ,morningSecondsAlert)
                             if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
                                 console.log('needs to send push notification - alert number 1')
                                 const message = {
