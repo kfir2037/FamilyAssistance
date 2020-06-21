@@ -211,15 +211,18 @@ export default class App extends Component {
           this.state.morningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}  |</Text>
-                <Text style={styles.taskName}> עבור: {obj.name} | </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
                   : <View style={{ marginTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} |  </Text>
+                <Text style={styles.taskName}> {obj.tasks} | </Text>
+                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -245,15 +248,18 @@ export default class App extends Component {
           this.state.noonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} | </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} |  </Text>
+                <Text style={styles.taskName}> {obj.tasks} | </Text>
+                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -269,15 +275,18 @@ export default class App extends Component {
           this.state.afternoonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} | </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} |  </Text>
+                <Text style={styles.taskName}> {obj.tasks} | </Text>
+                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -293,15 +302,18 @@ export default class App extends Component {
           this.state.eveningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} | </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} |  </Text>
+                <Text style={styles.taskName}> {obj.tasks} | </Text>
+                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -331,15 +343,18 @@ export default class App extends Component {
           this.state.customTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} | </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} |  </Text>
+                <Text style={styles.taskName}> {obj.tasks} | </Text>
+                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -353,8 +368,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>    
-        <View style={{ marginVertical: 30, borderRadius: 40 }}>
+      <SafeAreaView style={styles.container}>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: '#656d9c' }}>משימות</Text>
+        </View>
+        <View style={{ marginVertical: 20, borderRadius: 40 }}>
           <Calendar
             markedDates={{
               '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }

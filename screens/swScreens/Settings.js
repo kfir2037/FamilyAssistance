@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl
 } from "react-native";
 import { Button, Input } from 'react-native-elements';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -55,7 +56,10 @@ export default class Settings extends Component {
       newAfternoonTask: '',
       newEveningTask: '',
       isDeleted: false,
-      deleteMsg: ''
+      isAdded: false,
+      addMsg: '',
+      deleteMsg: '',
+      refreshing: false
     };
   }
 
@@ -114,7 +118,7 @@ export default class Settings extends Component {
             morningTasks: allData.tasks,
             alertBeforeMorning: allData.beforeAlertTime,
             alertAfterMorning: allData.afterAlertTime,
-            isReady: false
+            isReady: false,
 
           });
           console.log("statetpeof: ", typeof this.state.alertBeforeMorning);
@@ -190,7 +194,8 @@ export default class Settings extends Component {
             eveningTasks: allData.tasks,
             alertBeforeEvening: allData.beforeAlertTime,
             alertAfterEvening: allData.afterAlertTime,
-            isReady: false
+            isReady: false,
+            refreshing: false
           });
           // console.log('Document data:', this.state.eveningTasks);
         }
@@ -200,6 +205,7 @@ export default class Settings extends Component {
       });
 
     return null;
+
   };
 
   changeTasksToCategory = (el) => {
@@ -265,7 +271,9 @@ export default class Settings extends Component {
         afterAlertTime: this.state.alertAfterEvening,
       });
   };
+
   saveNewTasks = () => {
+    this.setState({ isAdded: true });
     console.log('44444444')
     let addTasks = firebase.functions().httpsCallable("addRoutineTasks");
     console.log('55555555555')
@@ -277,13 +285,15 @@ export default class Settings extends Component {
     };
     console.log('saveNewTasks')
     addTasks(data)
-    .then(()=>{
-      console.log('task added');
-    })
-    .catch(()=>{
-      console.log('task didnt added');
+      .then(() => {
+        console.log('task added');
+        this.setState({ isAdded: false });  
+      })
+      .catch(() => {
+        console.log('task didnt added');
+        this.setState({ isAdded: false });
 
-    })
+      })
   }
 
   deleteTask = () => {
@@ -383,7 +393,16 @@ export default class Settings extends Component {
 
   addTask = (taskType) => {
     let addTask = firebase.functions().httpsCallable("addTask");
-    addTask(taskType);
+    addTask(taskType)
+      .then(() => {
+        console.log('Task Added to Routine');
+        this.setState({ isAdded: false })
+      })
+      .catch(() => {
+        console.log('error adding task');
+        this.setState({ isAdded: false })
+
+      })
   };
   test = () => {
     console.log("testtttt ", this.state.alertBeforeMorning);
@@ -412,6 +431,13 @@ export default class Settings extends Component {
     );
   };
 
+  async _onRefresh() {
+    this.setState({ refreshing: true });
+    await this.getTasks();
+    this.changeTasksToCategory(<Text name='בוקר' />);
+    this.setState({ deleteMsg: '' });
+  }
+
   render() {
     if (
       this.state.alertBeforeMorning == "" ||
@@ -436,7 +462,15 @@ export default class Settings extends Component {
     //     x=22;
     // }
     return (
-      <ScrollView style={{ backgroundColor: '#b5bef5' }}>
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh.bind(this)}
+          enabled
+          colors={['#767ead']}
+        />
+
+      } style={{ backgroundColor: '#b5bef5' }}>
         <View style={styles.container}>
           <View>
             <Text style={{ marginRight: 5, color: '#767ead', fontSize: 27, fontWeight: 'bold' }}>הגדרות</Text>
@@ -771,17 +805,28 @@ export default class Settings extends Component {
 
             </View>
 
-            <View style={{ alignContent: "center" }}>
-              <Button
-                title="  הוספת משימות"
-                onPress={this.saveNewTasks}
-                icon={<Icon name="plus" size={20} color="white" />}
-                iconRight
-                titleStyle={{ justifyContent: 'center' }}
-                containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
-                buttonStyle={styles.button}
-              />
-            </View>
+
+            {this.state.isAdded
+              ? <ActivityIndicator style={{ marginVertical: 10 }} color='#767ead' size={25} />
+              :
+              <View style={{ alignContent: "center" }}>
+                <Button
+                  title="  הוספת משימות"
+                  onPress={this.saveNewTasks}
+                  icon={<Icon name="plus" size={20} color="white" />}
+                  iconRight
+                  titleStyle={{ justifyContent: 'center' }}
+                  containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
+                  buttonStyle={styles.button}
+                />
+              </View>
+            }
+            {this.state.addMsg == 'משימה נוספה'
+              ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }}>משימה נוספה</Text>
+              : this.state.deleteMsg == 'אירעה שגיאה'
+                ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>אירעה שגיאה</Text>
+                : null
+            }
           </View>
         </View>
       </ScrollView >
@@ -864,9 +909,9 @@ const styles = StyleSheet.create({
     // flex:1,
     //flexDirection: "row-reverse",
     // alignItems: 'stretch',
-    width:'90%',
+    width: '90%',
     marginTop: 10,
-    marginRight:10,
+    marginRight: 10,
     // borderRadius: 4,
     // borderWidth: 1,
     // borderColor: "#d6d7da",
