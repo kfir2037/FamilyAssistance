@@ -42,7 +42,7 @@ const SwStackNavigator = createStackNavigator({
         //     color='white' />
         // ),
         headerStyle: {
-          backgroundColor: '#767ead'
+          backgroundColor: '#e0aa00'
         }
       }
     }

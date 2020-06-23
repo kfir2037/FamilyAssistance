@@ -147,11 +147,11 @@ export default class Form extends Component {
           onChangeText={(password) => this.setState({ password })}
           value={this.state.password}
           style={styles.inputBox}
-          underlineColorAndroid='rgba(0,0,0,0)'
+          underlineColorAndroid='transparent'
           placeholder='סיסמה'
-          selectionColor="#fff"
+          selectionColor="gray"
           secureTextEntry
-          placeholderTextColor="#ffffff"
+          placeholderTextColor="white"
           ref={(input) => this.password = input}
         />
 

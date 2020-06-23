@@ -16,7 +16,7 @@ import { Ionicons as Icon } from '@expo/vector-icons';
 
 const CustomDrawerComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
-    <View style={{ backgroundColor: '#767ead', height: '25%', alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ backgroundColor: '#e0aa00', height: '25%', alignItems: 'center', justifyContent: 'center' }}>
       <Image source={require('../../assets/family.png')} style={{ marginVertical: 10, height: 120, width: 100 }} />
       <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}>שלום, {firebase.auth().currentUser.displayName}</Text>
     </View>
@@ -85,9 +85,9 @@ const SwDrawerNavigator = createDrawerNavigator({
 }, {
   drawerPosition: 'right',
   drawerWidth: '60%',
-  drawerBackgroundColor: '#767ead',
+  drawerBackgroundColor: '#e0aa00',
   contentOptions: {
-    activeTintColor: '#b5bef5',
+    activeTintColor: '#0ca5e5',
     inactiveTintColor: 'white',
     itemsContainerStyle: {
       alignItems: 'flex-end'

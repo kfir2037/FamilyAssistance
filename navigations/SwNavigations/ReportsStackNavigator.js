@@ -27,7 +27,7 @@ const ReportsStackNavigator = createStackNavigator({
         ),
         headerTintColor:'white',
         headerStyle: {
-          backgroundColor: '#767ead'
+          backgroundColor: '#e0aa00'
         }
       }
     }

@@ -453,8 +453,8 @@ export default class Settings extends Component {
       this.state.isReady
     ) {
       return (
-        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#b5bef5', height: '100%' }}>
-          <ActivityIndicator color='#767ead' size={60} />
+        <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fbc213', height: '100%' }}>
+          <ActivityIndicator color='#e0aa00' size={60} />
         </View>
       );
     }
@@ -469,13 +469,13 @@ export default class Settings extends Component {
           refreshing={this.state.refreshing}
           onRefresh={this._onRefresh.bind(this)}
           enabled
-          colors={['#767ead']}
+          colors={['#e0aa00']}
         />
 
-      } style={{ backgroundColor: '#b5bef5' }}>
+      } style={{ backgroundColor: '#fbc213' }}>
         <View style={styles.container}>
           <View>
-            <Text style={{ marginRight: 5, color: '#767ead', fontSize: 27, fontWeight: 'bold' }}>הגדרות</Text>
+            <Text style={{ marginRight: 5, color: 'white', fontSize: 27, fontWeight: 'bold' }}>הגדרות</Text>
           </View>
 
           <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 17, textAlign: 'right' }} title='דקות לפני קבלת התראה' >
@@ -498,11 +498,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -522,11 +522,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -547,11 +547,11 @@ export default class Settings extends Component {
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
                     containerStyle={{}}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor="#0ca5e5"
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -571,11 +571,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -600,11 +600,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -622,11 +622,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -646,11 +646,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -670,11 +670,11 @@ export default class Settings extends Component {
                     valueType="real"
                     rounded
                     inputStyle={{ fontWeight: 'bold' }}
-                    borderColor="#767ead"
-                    textColor="#767ead"
+                    borderColor='#0ca5e5'
+                    textColor='#0ca5e5'
                     iconStyle={{ color: "white", fontSize: 20 }}
-                    rightButtonBackgroundColor="#767ead"
-                    leftButtonBackgroundColor="#767ead"
+                    rightButtonBackgroundColor='#0ca5e5'
+                    leftButtonBackgroundColor='#0ca5e5'
                   />
                 </View>
               </View>
@@ -684,11 +684,12 @@ export default class Settings extends Component {
           <Button
             onPress={this.saveAlerts}
             buttonStyle={styles.button}
-            containerStyle={{ alignSelf: 'center', marginBottom: 10, width: '30%' }}
+
+            containerStyle={{borderWidth:2,borderColor:'white', alignSelf: 'center', marginBottom: 10, width: '30%' }}
             //icon={<Icon name="trash" size={20} color="white" />}
             title="שמור"
-            titleStyle={{ justifyContent: 'center' }}
-            color='#767ead'
+            titleStyle={{ justifyContent: 'center', fontWeight:'bold' }}
+            color='#c0d747'
           />
 
           <View style={styles.lineStyle} />
@@ -699,7 +700,7 @@ export default class Settings extends Component {
             <Tabs
               selected={this.state.page}
               style={{ alignContent: "center", justifyContent: 'center', backgroundColor: "white", borderRadius: 20, marginHorizontal: 18, marginVertical: 10 }}
-              selectedStyle={{ color: '#767ead' }}
+              selectedStyle={{ color: '#e0aa00' }}
               onSelect={(el) => this.changeTasksToCategory(el)}
             >
               <Text name="ערב" >ערב</Text>
@@ -726,10 +727,10 @@ export default class Settings extends Component {
               initialSelectedIndex={[0]}
               cellItemComponent={(item) => this.rowItem(item)}
               checkIcon={() => (
-                <FontAwesome name="circle" size={25} color="#767ead" />
+                <FontAwesome name="circle" size={25} color="#0ca5e5" />
               )}
               uncheckIcon={() => (
-                <FontAwesome name="circle-o" size={25} color="#767ead" />
+                <FontAwesome name="circle-o" size={25} color="#0ca5e5" />
               )}
               touchStyles={{
                 borderRadius: 20,
@@ -742,7 +743,7 @@ export default class Settings extends Component {
           </ScrollView>
 
           {this.state.isDeleted
-            ? <ActivityIndicator style={{ marginVertical: 10 }} color='#767ead' size={25} />
+            ? <ActivityIndicator style={{ marginVertical: 10 }} color='#e0aa00' size={25} />
             :
             <Button
               onPress={this.deleteTask}
@@ -750,7 +751,7 @@ export default class Settings extends Component {
               title="  הסרת משימה  "
               iconRight
               titleStyle={{ justifyContent: 'center' }}
-              containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
+              containerStyle={{borderWidth:2,borderColor:'white', alignSelf: 'center', marginVertical: 10, width: '50%' }}
               buttonStyle={{ ...styles.button, }}
             />
           }
@@ -764,7 +765,7 @@ export default class Settings extends Component {
           <View style={styles.lineStyle} />
 
           <View>
-            <View style={{ borderWidth: 1, borderColor: '#767ead', backgroundColor: 'white', borderRadius: 20, justifyContent: 'center', width: '90%', alignSelf: 'center', alignItems: 'flex-end', paddingVertical: 20 }}>
+            <View style={{ borderWidth: 1, borderColor: '#e0aa00', backgroundColor: 'white', borderRadius: 20, justifyContent: 'center', width: '90%', alignSelf: 'center', alignItems: 'flex-end', paddingVertical: 20 }}>
 
               <Input
                 containerStyle={styles.addTaskInputContainer}
@@ -808,7 +809,7 @@ export default class Settings extends Component {
 
 
             {this.state.isAdded
-              ? <ActivityIndicator style={{ marginVertical: 10 }} color='#767ead' size={25} />
+              ? <ActivityIndicator style={{ marginVertical: 10 }} color='#e0aa00' size={25} />
               :
               <View style={{ alignContent: "center" }}>
                 <Button
@@ -820,7 +821,7 @@ export default class Settings extends Component {
                   icon={<Icon name="plus" size={20} color="white" />}
                   iconRight
                   titleStyle={{ justifyContent: 'center' }}
-                  containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
+                  containerStyle={{ borderWidth:2,borderColor:'white', alignSelf: 'center', marginVertical: 10, width: '50%' }}
                   buttonStyle={styles.button}
                 />
               </View>
@@ -874,7 +875,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'right',
-    color: '#767ead',
+    color: 'white',
     marginRight: 10
     // marginTop: 20,
     //marginBottom: 50,
@@ -891,7 +892,7 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#767ead",
+    borderColor: "#e0aa00",
     //height: 400,
     backgroundColor: 'white'
   },
@@ -926,7 +927,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-    backgroundColor: '#767ead',
+    backgroundColor: '#c0d747',
     //width:'30%',
     // alignContent:'center'
   },
