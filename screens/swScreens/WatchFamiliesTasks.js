@@ -19,7 +19,7 @@ import moment from "moment";
 import { trackEvent } from "appcenter-analytics";
 import { Row } from "native-base";
 import { color } from "react-native-reanimated";
-import { FontAwesom, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -206,19 +206,22 @@ export default class App extends Component {
   }
   returnMorningTasks() {
     return (
-      <Card containerStyle={{ width: '90%' }} title="משימות בוקר">
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות בוקר">
         {
           this.state.morningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
                   : <View style={{ marginTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -239,20 +242,21 @@ export default class App extends Component {
   }
   returnNoonTasks() {
     return (
-      <Card containerStyle={{ width: '90%' }} title="משימות צהריים">
+      <Card containerStyle={{  width: '90%', borderRadius: 20 }} title="משימות צהריים">
         {
           this.state.noonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+              
               </View>
             );
           })
@@ -262,19 +266,22 @@ export default class App extends Component {
   }
   returnAfternoonTasks() {
     return (
-      <Card containerStyle={{ width: '90%' }} title="משימות אחר הצהריים">
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות אחר הצהריים">
         {
           this.state.afternoonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -285,19 +292,22 @@ export default class App extends Component {
   }
   returnEveningTasks() {
     return (
-      <Card containerStyle={{ width: '90%' }} title="משימות ערב">
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות ערב">
         {
           this.state.eveningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -322,19 +332,22 @@ export default class App extends Component {
   // }
   returnCustomTasks() {
     return (
-      <Card containerStyle={{ width: '90%' }} title="משימות">
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות">
         {
           this.state.customTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <Text style={styles.taskHour}>  {obj.time}</Text>
-                <Text style={styles.taskName}> {obj.tasks}   </Text>
                 {obj.isDone
-                  ? <FontAwesome name='check-square-o' color='green' size={18} />
-                  : <View style={{ marginTop: 3 }}>
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
             );
@@ -347,11 +360,12 @@ export default class App extends Component {
 
 
   render() {
-
     return (
       <SafeAreaView style={styles.container}>
-
-        <View style={{ marginVertical: 30, borderRadius: 40 }}>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: '#656d9c' }}>משימות</Text>
+        </View>
+        <View style={{ marginVertical: 20, borderRadius: 40 }}>
           <Calendar
             markedDates={{
               '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }
@@ -364,10 +378,12 @@ export default class App extends Component {
               [this.state.selected]: {
                 selected: true,
                 disableTouchEvent: true,
-                selectedColor: 'orange',
+                selectedColor: 'crimson',
                 selectedTextColor: 'red'
               }
             }}
+            style={{ borderRadius: 20, marginHorizontal: 10, paddingBottom: 10 }}
+
             //markedDates={{'2020-05-29':{selected:true}}}
             //style={{borderWidth:1, borderColor:'gray'}}
             theme={{
@@ -384,8 +400,6 @@ export default class App extends Component {
               dayTextColor: '#767ead',
               textDisabledColor: '#b5bef5',
               monthTextColor: '#767ead'
-
-
             }}
           />
           {/* <DateTime
@@ -470,7 +484,7 @@ const styles = StyleSheet.create({
   tasksList: {
     alignItems: 'flex-end',
     //marginRight: 10,
-    marginBottom:7
+    marginBottom: 7
   },
   tasksGroup: {
 
@@ -483,5 +497,8 @@ const styles = StyleSheet.create({
     top: 2,
     left: 1,
   },
+  taskName:{
+
+  }
 
 });

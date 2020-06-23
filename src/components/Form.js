@@ -134,12 +134,13 @@ export default class Form extends Component {
           onChangeText={(id) => this.setState({ id })}
           value={this.state.id}
           style={styles.inputBox}
-          underlineColorAndroid='rgba(0,0,0,0)'
+          underlineColorAndroid='transparent'
           placeholder="תעודת זהות"
           placeholderTextColor="#ffffff"
-          selectionColor="#fff"
+          selectionColor="gray"
           keyboardType='phone-pad'
           onSubmitEditing={() => this.password.focus()}
+          
         />
 
         <TextInput
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   inputBox: {
     width: 300,
     height: 40,
-    backgroundColor: 'rgba(255, 255,255,0.2)',
+    backgroundColor: 'lightgray',
     borderRadius: 20,
     paddingHorizontal: 16,
     fontSize: 20,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
   button: {
     width: 200,
     height: 40,
-    backgroundColor: '#767ead',
+    backgroundColor: '#0ca5e5',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 13,

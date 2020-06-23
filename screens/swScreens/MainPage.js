@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator, ImageBackground } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 // import { Button } from 'native-base';
 import firebase from '../../config/config';
 import { FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign } from '@expo/vector-icons';
@@ -91,7 +91,7 @@ export default class MainPage extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#b5bef5',
+          //backgroundColor: '#b5bef5',
           //borderWidth: 1,
           alignItems: 'flex-end',
           justifyContent: 'center',
@@ -116,6 +116,7 @@ export default class MainPage extends Component {
 
   render() {
     return (
+
       <ScrollView refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
@@ -123,31 +124,28 @@ export default class MainPage extends Component {
           enabled
           colors={['#767ead']}
         />
-      } 
-      showsVerticalScrollIndicator style={{ backgroundColor: '#b5bef5' }} >
-
-        
+      }
+        showsVerticalScrollIndicator style={{ backgroundColor: '#b5bef5' }} >
         <>
           <View style={styles.container}>
+
             <View style={styles.header}>
               <Text style={styles.titleText}>משפחות</Text>
             </View>
             {this.state.loading
               ? <ActivityIndicator size={50} color='#767ead' />
               : <View style={styles.familiesList}>
-                <SafeAreaView style={{ flex: 1 }}>
-                  <SelectableFlatlist
-                    data={this.state.data}
-                    state={STATE.EDIT}
-                    multiSelect={false}
-                    itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
-                    initialSelectedIndex={[0]}
-                    cellItemComponent={(item) => this.rowItem(item)}
-                    checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
-                    uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
-                    touchStyles={{ backgroundColor: '#b5bef5' }}
-                  />
-                </SafeAreaView>
+                <SelectableFlatlist
+                  data={this.state.data}
+                  state={STATE.EDIT}
+                  multiSelect={false}
+                  itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
+                  initialSelectedIndex={[0]}
+                  cellItemComponent={(item) => this.rowItem(item)}
+                  checkIcon={() => <FontAwesome name='circle' size={25} color='#767ead' />}
+                  uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#767ead' />}
+                  touchStyles={{ backgroundColor: 'transparent', opacity: 1 }}
+                />
               </View>}
             <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
               <View style={styles.twoFirstButtons}>
@@ -230,13 +228,10 @@ export default class MainPage extends Component {
                   />
                 </View>
               </View>
-              {/* <View style={styles.twoFirstButtons}>
-                
-              </View> */}
             </View>
           </View>
         </>
-      </ScrollView>
+      </ScrollView >
     )
   }
 }
@@ -251,6 +246,15 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
     // alignItems:'center'
+
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    justifyContent: "center",
+    opacity: 1
 
   },
   familiesList: {

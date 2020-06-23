@@ -195,13 +195,13 @@ exports.addRoutineTasks = functions.https.onCall(async (data, context) => {
             tasks: admin.firestore.FieldValue.arrayUnion(data.newMorningTask)
         });
     }
-    if (data.newNoonTasks) {
+    if (data.newNoonTask) {
         var arrUnion = routineTasksColl.doc('noon').update({
-            tasks: admin.firestore.FieldValue.arrayUnion(data.newNoonTasks)
+            tasks: admin.firestore.FieldValue.arrayUnion(data.newNoonTask)
         });
     }
     if (data.newAfternoonTask) {
-        var arrUnion = routineTasksColl.doc('afternoon').update({
+        var arrUnion = routineTasksColl.doc('afterNoon').update({
             tasks: admin.firestore.FieldValue.arrayUnion(data.newAfternoonTask)
         });
     }

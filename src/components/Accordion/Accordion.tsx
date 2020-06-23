@@ -126,7 +126,7 @@ export default Accordion2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#8b96d9",
+    backgroundColor: "#b5bef5",
     padding: 16,
   },
   header: {

@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
@@ -15,10 +15,11 @@ const styles = StyleSheet.create({
     height: LIST_ITEM_HEIGHT
   },
   name: {
-    fontSize: 16
+    fontSize: 16,
+    textAlign:'right'
   },
   pointsContainer: {
-    borderRadius: 8,
+    borderRadius: 20,
     backgroundColor: "#44c282",
     padding: 8
   },

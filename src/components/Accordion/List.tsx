@@ -18,11 +18,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
     backgroundColor: "white",
     padding: 16,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    flexDirection: "row",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flexDirection: "row-reverse",
     alignItems: "center",
-    flexDirection:'row-reverse',
     justifyContent: "space-between",
   },
   title: {
@@ -105,7 +104,7 @@ export default ({ list }: ListProps) => {
   );
   const bottomRadius = interpolate(transition, {
     inputRange: [0, 16 / 400],
-    outputRange: [8, 0],
+    outputRange: [20, 0],
   });
 
 

@@ -14,6 +14,7 @@ import {
   TextInput,
 } from "react-native";
 import firebase from "../../config/config";
+import { Segment, Button as Btn } from 'native-base';
 //import {Picker} from '@react-native-community/picker';
 import { CheckBox, Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -68,6 +69,8 @@ const AddNewTask = (familyId) => {
   const [modeDestination, setModeDestination] = useState("date");
   const [showDestination, setShowDestination] = useState(false);
   const [otherTask, setOtherTask] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState('');
 
   const onSelect = useCallback(
     (id) => {
@@ -124,342 +127,350 @@ const AddNewTask = (familyId) => {
 
   //-----------------------------------------------------
   const save = async () => {
-    let morningTasks = [];
-    let noonTasks = [];
-    let afternoonTasks = [];
-    let eveningTasks = [];
-    // let familyId = "";
-    let morningTime = "";
-    let noonTime = "";
-    let afternoonTime = "";
-    let eveningTime = "";
+    try {
+      let morningTasks = [];
+      let noonTasks = [];
+      let afternoonTasks = [];
+      let eveningTasks = [];
+      // let familyId = "";
+      let morningTime = "";
+      let noonTime = "";
+      let afternoonTime = "";
+      let eveningTime = "";
 
-    let morning = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("morning");
-    let getDoc = await morning
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!");
-        } else {
-          let allData = doc.data();
-          morningTime = allData.time;
-          morningTasks = allData.tasks.slice();
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document", err);
-      });
-
-    let noon = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("noon");
-    let getDoc2 = await noon
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document@!");
-        } else {
-          let allData = doc.data();
-          noonTime = allData.time;
-          noonTasks = allData.tasks.slice();
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document", err);
-      });
-
-    let afternoon = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("afterNoon");
-    let getDoc3 = await afternoon
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!1");
-        } else {
-          let allData = doc.data();
-          afternoonTime = allData.time;
-          afternoonTasks = allData.tasks.slice();
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document1", err);
-      });
-
-    let evening = firebase
-      .firestore()
-      .collection("RoutineTasks")
-      .doc("evening");
-    let getDoc4 = await evening
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          console.log("No such document!2");
-        } else {
-          let allData = doc.data();
-          eveningTime = allData.time;
-          eveningTasks = allData.tasks.slice();
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document2", err);
-      });
-
-    let userId = firebase.auth().currentUser.uid;
-
-    var familyId2 = familyId.navigation.state.params.familyId;
-    var familyKids = [];
-    var familyParents = [];
-    console.log("familyId: ", familyId.navigation.state.params.familyId);
-    let familyDetails = firebase
-      .firestore()
-      .collection("families")
-      .doc(familyId2);
-    let detailsFamily = await familyDetails
-      .get()
-      .then((doc) => {
-        // console.log("doc: ", doc);
-        if (!doc.exists) {
-          console.log("No such document!4");
-        } else {
-          let allData = doc.data();
-          familyKids = allData.kids.slice();
-          familyParents = allData.parents.slice();
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting document4", err);
-      });
-    var allFamily = [];
-    if (forKid) {
-      allFamily = allFamily.concat(familyKids);
-    }
-    if (forParent) {
-      allFamily = allFamily.concat(familyParents);
-    }
-    // allFamily = familyKids.concat(familyParents);
-
-    allFamily.forEach((member) => {
-      let y = date.toString();
-      let temp = new Date(y);
-
-      let sourceDate =
-        moment(new Date(temp)).format("DD/MM/YYYY") + " " + morningTime;
-      let destinationDate =
-        moment(new Date(dateDestination.toString())).format("DD/MM/YYYY") +
-        " " +
-        morningTime;
-      var split = sourceDate.split("/");
-      var split2 = destinationDate.split("/");
-      var days = date;
-
-      let counter = parseInt(split2[0]) - parseInt(split[0]);
-      for (let i = 0; i < counter + 1; i++) {
-        let tempMorningTasks = [];
-        let tempNoonTasks = [];
-        let tempAfternoonTasks = [];
-        let tempEveningTasks = [];
-
-        selected.forEach((key, taskSelected) => {
-          if (key == false) {
-            return;
+      let morning = firebase
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("morning");
+      let getDoc = await morning
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("No such document!");
+          } else {
+            let allData = doc.data();
+            morningTime = allData.time;
+            morningTasks = allData.tasks.slice();
           }
-          console.log("taskSelected: ", taskSelected);
-          if (morningTasks.includes(taskSelected)) {
-            tempMorningTasks.push(taskSelected);
-          } else if (noonTasks.includes(taskSelected)) {
-            tempNoonTasks.push(taskSelected);
-          } else if (afternoonTasks.includes(taskSelected)) {
-            tempAfternoonTasks.push(taskSelected);
-          } else if (eveningTasks.includes(taskSelected)) {
-            tempEveningTasks.push(taskSelected);
-          }
+        })
+        .catch((err) => {
+          console.log("Error getting document", err);
         });
-        var daysString = days.toString();
-        // var d = "";
-        var d;
-        // console.log("tempMorningTasks: ", tempMorningTasks);
-        // console.log("tempNoonTasks: ", tempNoonTasks);
-        // console.log("tempAfternoonTasks: ", tempAfternoonTasks);
-        // console.log("tempEveningTasks: ", tempEveningTasks);
 
-        if (tempMorningTasks.length > 0) {
-          var split = morningTime.split(":");
-          var taskDate = moment(daysString).toDate();
-          //var taskDate2 = taskDate.split(":")
+      let noon = firebase
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("noon");
+      let getDoc2 = await noon
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("No such document@!");
+          } else {
+            let allData = doc.data();
+            noonTime = allData.time;
+            noonTasks = allData.tasks.slice();
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting document", err);
+        });
 
-          console.log('taskDate', taskDate);
+      let afternoon = firebase
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("afterNoon");
+      let getDoc3 = await afternoon
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("No such document!1");
+          } else {
+            let allData = doc.data();
+            afternoonTime = allData.time;
+            afternoonTasks = allData.tasks.slice();
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting document1", err);
+        });
 
-          // var year = taskDate2[0]
-          // var month = taskDate2[1]
-          // var day = taskDate2[2]
-          // var hour = split[0]
-          // var minute = split[1]
+      let evening = firebase
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("evening");
+      let getDoc4 = await evening
+        .get()
+        .then((doc) => {
+          if (!doc.exists) {
+            console.log("No such document!2");
+          } else {
+            let allData = doc.data();
+            eveningTime = allData.time;
+            eveningTasks = allData.tasks.slice();
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting document2", err);
+        });
 
-          // console.log('taskDate2', taskDate2);
+      let userId = firebase.auth().currentUser.uid;
 
-          // d = new Date(year, month, day, hour, minute)
-          // console.log('d: ', d)
-          // d =
-          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
-          //   " " +
-          //   morningTime;
-
-          let addDoc = firebase
-            .firestore()
-            .collection("tasks")
-            .add({
-              date: taskDate,
-              familyId: familyId2,
-              userId: member,
-              time: morningTime,
-              tasks: tempMorningTasks,
-              category: "morning",
-              isDone: false,
-            })
-            .then((ref) => {
-              console.log("Added morning document with ID: ", ref.id);
-            });
-        }
-        if (tempNoonTasks.length > 0) {
-          var split = noonTime.split(":");
-          var taskDate = moment(daysString).toDate();
-          // var taskDate2 = taskDate.split(":")
-
-          // var year = taskDate2[0]
-          // var month = taskDate2[1]
-          // var day = taskDate2[2]
-          // var hour = split[0]
-          // var minute = split[1]
-
-          // d = new Date(year, month, day, hour, minute)
-          //   moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
-          let addDoc2 = firebase
-            .firestore()
-            .collection("tasks")
-            .add({
-              date: taskDate,
-              familyId: familyId2,
-              userId: member,
-              time: noonTime,
-              tasks: tempNoonTasks,
-              category: "noon",
-              isDone: false,
-            })
-            .then((ref) => {
-              console.log("Added noon document with ID: ", ref.id);
-            });
-        }
-        if (tempAfternoonTasks.length > 0) {
-          var split = afternoonTime.split(":");
-          var taskDate = moment(daysString).toDate();
-          // var taskDate2 = taskDate.split(":")
-
-          // var year = taskDate2[0]
-          // var month = taskDate2[1]
-          // var day = taskDate2[2]
-          // var hour = split[0]
-          // var minute = split[1]
-
-          // d = new Date(year, month, day, hour, minute)
-          // console.log('d: ', d)
-          // d =
-          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
-          //   " " +
-          //   afternoonTime;
-
-          let addDoc3 = firebase
-            .firestore()
-            .collection("tasks")
-            .add({
-              date: taskDate,
-              familyId: familyId2,
-              userId: member,
-              time: afternoonTime,
-              tasks: tempAfternoonTasks,
-              category: "afternoon",
-              isDone: false,
-            })
-            .then((ref) => {
-              console.log("Added afternoon document with ID: ", ref.id);
-            });
-        }
-        if (tempEveningTasks.length > 0) {
-          var split = eveningTime.split(":");
-          var taskDate = moment(daysString).toDate();
-          // var taskDate2 = taskDate.split(":")
-
-          // var year = taskDate2[0]
-          // var month = taskDate2[1]
-          // var day = taskDate2[2]
-          // var hour = split[0]
-          // var minute = split[1]
-
-          // d = new Date(year, month, day, hour, minute)
-          // console.log('d: ', d)
-          // d =
-          //   moment(new Date(daysString)).format("DD/MM/YYYY") +
-          //   " " +
-          //   eveningTime;
-
-          let addDoc4 = firebase
-            .firestore()
-            .collection("tasks")
-            .add({
-              date: taskDate,
-              familyId: familyId2,
-              userId: member,
-              time: eveningTime,
-              tasks: tempEveningTasks,
-              category: "evening",
-              isDone: false,
-            })
-            .then((ref) => {
-              console.log("Added evening document with ID: ", ref.id);
-            });
-        }
-        var tasksArr = [];
-        console.log("otherTask: ", otherTask);
-        if (otherTask != "") {
-          tasksArr.push(otherTask);
-          let addDoc4 = firebase
-            .firestore()
-            .collection("tasks")
-            .add({
-              date: days,
-              familyId: familyId2,
-              userId: member,
-              time: moment(days).format("HH:MM"),
-              tasks: tasksArr,
-              category: "custom tasks",
-              isDone: false,
-            })
-            .then((ref) => {
-              console.log("Added special document with ID: ", ref.id);
-            });
-        }
-        var cond;
-        var test = moment(days).format("DD/MM/YYYY");
-        var test2 = moment(dateDestination).format("DD/MM/YYYY");
-
-        cond = test == test2;
-
-        days = new Date(moment(days, "DD/MM/YYYY HH:MM A").add(1, "days"));
+      var familyId2 = familyId.navigation.state.params.familyId;
+      var familyKids = [];
+      var familyParents = [];
+      console.log("familyId: ", familyId.navigation.state.params.familyId);
+      let familyDetails = firebase
+        .firestore()
+        .collection("families")
+        .doc(familyId2);
+      let detailsFamily = await familyDetails
+        .get()
+        .then((doc) => {
+          // console.log("doc: ", doc);
+          if (!doc.exists) {
+            console.log("No such document!4");
+          } else {
+            let allData = doc.data();
+            familyKids = allData.kids.slice();
+            familyParents = allData.parents.slice();
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting document4", err);
+        });
+      var allFamily = [];
+      if (forKid) {
+        allFamily = allFamily.concat(familyKids);
       }
-    });
+      if (forParent) {
+        allFamily = allFamily.concat(familyParents);
+      }
+      // allFamily = familyKids.concat(familyParents);
+
+      allFamily.forEach((member) => {
+        let y = date.toString();
+        let temp = new Date(y);
+
+        let sourceDate =
+          moment(new Date(temp)).format("DD/MM/YYYY") + " " + morningTime;
+        let destinationDate =
+          moment(new Date(dateDestination.toString())).format("DD/MM/YYYY") +
+          " " +
+          morningTime;
+        var split = sourceDate.split("/");
+        var split2 = destinationDate.split("/");
+        var days = date;
+
+        let counter = parseInt(split2[0]) - parseInt(split[0]);
+        for (let i = 0; i < counter + 1; i++) {
+          let tempMorningTasks = [];
+          let tempNoonTasks = [];
+          let tempAfternoonTasks = [];
+          let tempEveningTasks = [];
+
+          selected.forEach((key, taskSelected) => {
+            if (key == false) {
+              return;
+            }
+            console.log("taskSelected: ", taskSelected);
+            if (morningTasks.includes(taskSelected)) {
+              tempMorningTasks.push(taskSelected);
+            } else if (noonTasks.includes(taskSelected)) {
+              tempNoonTasks.push(taskSelected);
+            } else if (afternoonTasks.includes(taskSelected)) {
+              tempAfternoonTasks.push(taskSelected);
+            } else if (eveningTasks.includes(taskSelected)) {
+              tempEveningTasks.push(taskSelected);
+            }
+          });
+          var daysString = days.toString();
+          // var d = "";
+          var d;
+          // console.log("tempMorningTasks: ", tempMorningTasks);
+          // console.log("tempNoonTasks: ", tempNoonTasks);
+          // console.log("tempAfternoonTasks: ", tempAfternoonTasks);
+          // console.log("tempEveningTasks: ", tempEveningTasks);
+
+          if (tempMorningTasks.length > 0) {
+            var split = morningTime.split(":");
+            var taskDate = moment(daysString).toDate();
+            //var taskDate2 = taskDate.split(":")
+
+            console.log('taskDate', taskDate);
+
+            // var year = taskDate2[0]
+            // var month = taskDate2[1]
+            // var day = taskDate2[2]
+            // var hour = split[0]
+            // var minute = split[1]
+
+            // console.log('taskDate2', taskDate2);
+
+            // d = new Date(year, month, day, hour, minute)
+            // console.log('d: ', d)
+            // d =
+            //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+            //   " " +
+            //   morningTime;
+
+            let addDoc = firebase
+              .firestore()
+              .collection("tasks")
+              .add({
+                date: taskDate,
+                familyId: familyId2,
+                userId: member,
+                time: morningTime,
+                tasks: tempMorningTasks,
+                category: "morning",
+                isDone: false,
+              })
+              .then((ref) => {
+                console.log("Added morning document with ID: ", ref.id);
+              });
+          }
+          if (tempNoonTasks.length > 0) {
+            var split = noonTime.split(":");
+            var taskDate = moment(daysString).toDate();
+            // var taskDate2 = taskDate.split(":")
+
+            // var year = taskDate2[0]
+            // var month = taskDate2[1]
+            // var day = taskDate2[2]
+            // var hour = split[0]
+            // var minute = split[1]
+
+            // d = new Date(year, month, day, hour, minute)
+            //   moment(new Date(daysString)).format("DD/MM/YYYY") + " " + noonTime;
+            let addDoc2 = firebase
+              .firestore()
+              .collection("tasks")
+              .add({
+                date: taskDate,
+                familyId: familyId2,
+                userId: member,
+                time: noonTime,
+                tasks: tempNoonTasks,
+                category: "noon",
+                isDone: false,
+              })
+              .then((ref) => {
+                console.log("Added noon document with ID: ", ref.id);
+              });
+          }
+          if (tempAfternoonTasks.length > 0) {
+            var split = afternoonTime.split(":");
+            var taskDate = moment(daysString).toDate();
+            // var taskDate2 = taskDate.split(":")
+
+            // var year = taskDate2[0]
+            // var month = taskDate2[1]
+            // var day = taskDate2[2]
+            // var hour = split[0]
+            // var minute = split[1]
+
+            // d = new Date(year, month, day, hour, minute)
+            // console.log('d: ', d)
+            // d =
+            //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+            //   " " +
+            //   afternoonTime;
+
+            let addDoc3 = firebase
+              .firestore()
+              .collection("tasks")
+              .add({
+                date: taskDate,
+                familyId: familyId2,
+                userId: member,
+                time: afternoonTime,
+                tasks: tempAfternoonTasks,
+                category: "afternoon",
+                isDone: false,
+              })
+              .then((ref) => {
+                console.log("Added afternoon document with ID: ", ref.id);
+              });
+          }
+          if (tempEveningTasks.length > 0) {
+            var split = eveningTime.split(":");
+            var taskDate = moment(daysString).toDate();
+            // var taskDate2 = taskDate.split(":")
+
+            // var year = taskDate2[0]
+            // var month = taskDate2[1]
+            // var day = taskDate2[2]
+            // var hour = split[0]
+            // var minute = split[1]
+
+            // d = new Date(year, month, day, hour, minute)
+            // console.log('d: ', d)
+            // d =
+            //   moment(new Date(daysString)).format("DD/MM/YYYY") +
+            //   " " +
+            //   eveningTime;
+
+            let addDoc4 = firebase
+              .firestore()
+              .collection("tasks")
+              .add({
+                date: taskDate,
+                familyId: familyId2,
+                userId: member,
+                time: eveningTime,
+                tasks: tempEveningTasks,
+                category: "evening",
+                isDone: false,
+              })
+              .then((ref) => {
+                console.log("Added evening document with ID: ", ref.id);
+              });
+          }
+          var tasksArr = [];
+          console.log("otherTask: ", otherTask);
+          if (otherTask != "") {
+            tasksArr.push(otherTask);
+            let addDoc4 = firebase
+              .firestore()
+              .collection("tasks")
+              .add({
+                date: days,
+                familyId: familyId2,
+                userId: member,
+                time: moment(days).format("HH:MM"),
+                tasks: tasksArr,
+                category: "custom tasks",
+                isDone: false,
+              })
+              .then((ref) => {
+                console.log("Added special document with ID: ", ref.id);
+              });
+          }
+          var cond;
+          var test = moment(days).format("DD/MM/YYYY");
+          var test2 = moment(dateDestination).format("DD/MM/YYYY");
+
+          cond = test == test2;
+
+          days = new Date(moment(days, "DD/MM/YYYY HH:MM A").add(1, "days"));
+        }
+      });
+      setFeedbackMsg('משימה נוספה בהצלחה');
+    } catch (err) {
+      setFeedbackMsg('אירעה שגיאה');
+    }
+    setIsLoading(false);
   };
 
   const setForKidCheckbox = () => {
     forKid ? setForKid(false) : setForKid(true);
   };
+
   const setForParentCheckbox = () => {
     forParent ? setForParent(false) : setForParent(true);
   };
+
   useEffect(() => {
     let currentTasks = firebase
       .firestore()
@@ -481,7 +492,16 @@ const AddNewTask = (familyId) => {
   return (
     <SafeAreaView>
       <ScrollView style={styles.container} showsVerticalScrollIndicator>
+
         <Text style={styles.headerTitle}>הגדרת משימה חדשה</Text>
+        {/* <Segment style={{ backgroundColor: '#767ead' }}>
+          <Btn style={{ borderBottomStartRadius: 20, borderTopLeftRadius: 20 }} first active >
+            <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה קבועה</Text>
+          </Btn>
+          <Btn style style={{ borderBottomEndRadius: 20, borderTopRightRadius: 20 }} last active>
+            <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה מותאמת</Text>
+          </Btn>
+        </Segment> */}
         <View style={styles.chooseType}>
           <Text style={styles.title}>בחר אשכול:</Text>
           <Picker
@@ -640,14 +660,26 @@ const AddNewTask = (familyId) => {
             )}
           </View>
         </View>
-        <View style={{ marginTop: 10 }}>
-          <Button
-            onPress={save}
-            title={"הוסף"}
-            buttonStyle={styles.button}
-            containerStyle={styles.containerButton}
-            titleStyle={{ color: 'black' }}
-          />
+        <View style={{ marginTop: 20 }}>
+          {isLoading
+            ? <ActivityIndicator size={30} color='#767ead' />
+            : <Button
+              onPress={() => {
+                setIsLoading(true);
+                setFeedbackMsg('')
+                save();
+              }}
+              title={"הוסף"}
+              buttonStyle={styles.button}
+              containerStyle={styles.containerButton}
+              titleStyle={{ color: 'black' }}
+            />}
+          {feedbackMsg == 'משימה נוספה בהצלחה'
+              ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }}>משימה נוספה בהצלחה</Text>
+              : feedbackMsg == 'אירעה שגיאה'
+                ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>אירעה שגיאה</Text>
+                : null
+            }
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -695,7 +727,8 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "#767ead",
     borderColor: "black",
-    borderRadius: 10,
+    borderRadius: 20,
+    justifyContent: 'center'
   },
 
   textCheckBoxStyle: {
@@ -709,9 +742,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#767ead',
     width: 120,
     height: 40,
-    borderRadius: 15,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'black'
+    borderColor: 'black',
+    justifyContent: 'center'
   },
   containerButton: {
     alignItems: 'center',

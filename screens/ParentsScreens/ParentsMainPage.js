@@ -222,8 +222,6 @@ export default class ParentsMainPage extends React.Component {
     });
   };
 
-
-
   async markMission(task) {
     // this.showAlert()
 
@@ -278,64 +276,59 @@ export default class ParentsMainPage extends React.Component {
         isDone: !isDone,
       });
 
-
-
   }
 
-
   render() {
-
 
     const { showAlert } = this.state;
 
     return (
       <View style={styles.container}>
-
         <ScrollView>
-            <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
+          <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
 
-            {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
-            <View style={styles.container}>
-              {this.state.loadingTasks
-                ? <ActivityIndicator />
-                : <View style={styles.container}>
-                  {/* { <ProgressBarAndroid
+          {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
+          <View style={styles.container}>
+            {this.state.loadingTasks
+              ? <ActivityIndicator size={40} color='#767ead' />
+              : <View style={styles.container}>
+                {/* { <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
             />  */}
-                  <Accordion2
-                    allTasks={this.state.allTasks}
-                    morningTasks={this.state.morningTasks}
-                    noonTasks={this.state.noonTasks}
-                    afternoonTasks={this.state.afternoonTasks}
-                    eveningTasks={this.state.eveningTasks}
-                    customTasks={this.state.customTasks}
-                    markMission={this.markMission.bind(this)}
-                  />
-                  <AwesomeAlert
-                    show={showAlert}
-                    showProgress={false}
-                    title="כל הכבוד"
-                    message="אתה בדרך הנכונה!"
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={false}
-                    showConfirmButton={true}
-                    cancelText="No, cancel"
-                    confirmText="סגור"
-                    confirmButtonColor="#DD6B55"
-                    onCancelPressed={() => {
-                      this.hideAlert();
-                    }}
-                    onConfirmPressed={() => {
-                      this.hideAlert();
-                    }}
-                  />
-                </View>}
-            </View>
-          
+                <Accordion2
+                  allTasks={this.state.allTasks}
+                  morningTasks={this.state.morningTasks}
+                  noonTasks={this.state.noonTasks}
+                  afternoonTasks={this.state.afternoonTasks}
+                  eveningTasks={this.state.eveningTasks}
+                  customTasks={this.state.customTasks}
+                  markMission={this.markMission.bind(this)}
+                />
+                <AwesomeAlert
+                  show={showAlert}
+                  showProgress={false}
+                  title="כל הכבוד"
+                  message="אתה בדרך הנכונה!"
+                  closeOnTouchOutside={true}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={false}
+                  showConfirmButton={true}
+                  cancelText="No, cancel"
+                  confirmText="סגור"
+                  confirmButtonColor="#DD6B55"
+                  onCancelPressed={() => {
+                    this.hideAlert();
+                  }}
+                  onConfirmPressed={() => {
+                    this.hideAlert();
+                  }}
+                />
+              </View>}
+          </View>
+
         </ScrollView>
 
       </View>
@@ -346,10 +339,10 @@ export default class ParentsMainPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#8b96d9",
+    backgroundColor: "#b5bef5",
     // alignItems: 'center',
     justifyContent: "center",
-    paddingTop: 15,
+    //paddingTop: 5,
   },
   days: {
     flex: 1,
@@ -393,10 +386,11 @@ const styles = StyleSheet.create({
   },
   temp: {
     flex: 1,
-    textAlign: "left",
+    textAlign: "right",
   },
   image: {
     width: '100%',
-    height: 260,
+    height: 220,
+
   },
 });

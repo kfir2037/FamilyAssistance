@@ -1,5 +1,5 @@
-import React from 'react';
-import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { Picker, StyleSheet, Text, View, ScrollView, TextInput, Switch, TouchableOpacity, ActivityIndicator } from 'react-native';
 //import {Picker as Select} from '@react-native-community/picker';
 import { Input } from 'react-native-elements';
 import firebase from '../../config/config';
@@ -27,13 +27,17 @@ const FamilySchema = yup.object({
 
 const AddNewFamily = () => {
 
+  const [addFamilyLoading, setAddFamilyLoading] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState('');
+
   return (
     <ScrollView style={{ backgroundColor: '#b5bef5' }}>
       <View style={styles.container}>
         <Formik
-          initialValues={{ lastName: '', numOfPersons: 0, email: '', phone: '', isSingleParent: false }}
+          initialValues={{ lastName: '', numOfPersons: 0, email: '', phone: '', isSingleParent: false, desc: '' }}
           validationSchema={FamilySchema}
           onSubmit={(values, actions) => {
+            setAddFamilyLoading(true);
             actions.resetForm();
             console.log('values', values);
             var createFamily = firebase.functions().httpsCallable('createFamily');
@@ -41,12 +45,16 @@ const AddNewFamily = () => {
             createFamily(values)
               .then(function (resp) {
                 //Display success
+                setAddFamilyLoading(false);
+                setFeedbackMsg('המשפחה נוספה בהצלחה למערכת');
                 console.log(resp.data.result);
               })
               .catch(function (error) {
                 var code = error.code;
                 var message = error.message;
                 //Display error
+                setAddFamilyLoading(false);
+                setFeedbackMsg('אירעה שגיאה בעת הוספת המשפחה');
                 console.log(code + ' ' + message);
               });
           }}
@@ -83,7 +91,7 @@ const AddNewFamily = () => {
                   </View>
                   <View style={styles.fields}>
                     <Picker
-                      
+
                       mode='dropdown'
                       accessibilityLabel='numOfPersons'
                       selectedValue={props.values.numOfPersons}
@@ -108,7 +116,7 @@ const AddNewFamily = () => {
                   <View style={styles.fields}>
                     <Text style={styles.text}>גרושים</Text>
                   </View>
-                  <View style={{ justifyContent: 'space-evenly', flex:1}}>
+                  <View style={{ justifyContent: 'space-evenly', flex: 1 }}>
                     <Switch
                       trackColor='black'
                       thumbColor='#b5bef5'
@@ -123,9 +131,6 @@ const AddNewFamily = () => {
               <Text style={styles.headlines}>פרטי קשר:</Text>
               <View style={styles.inputsContainer}>
                 <View style={styles.names}>
-                  {/* <View style={styles.fields}>
-                    <Text style={styles.text}>אימייל</Text>
-                  </View> */}
                   <View style={styles.fields}>
                     <Input
                       keyboardType='email-address'
@@ -144,9 +149,6 @@ const AddNewFamily = () => {
                 {props.errors.email && props.touched.email ? <Text style={styles.errorMsg}>{props.errors.email}</Text> : null}
 
                 <View style={styles.names}>
-                  {/* <View style={styles.fields}>
-                    <Text style={styles.text}>טלפון </Text>
-                  </View> */}
                   <View style={styles.fields}>
                     <Input
                       //keyboardType='phone-pad'
@@ -157,19 +159,54 @@ const AddNewFamily = () => {
                       onBlur={props.handleBlur('phone')}
                       inputContainerStyle={{ borderBottomColor: 'white' }}
                       textAlign='right'
+                      inputStyle={{ color: 'white' }}
+
                     />
                   </View>
                 </View>
                 {props.errors.phone && props.touched.phone ? <Text style={styles.errorMsg}>{props.errors.phone}</Text> : null}
+
+                <View style={styles.names}>
+                  <View style={styles.fields}>
+                    <Input
+                      //keyboardType='phone-pad'
+                      onChangeText={props.handleChange('desc')}
+                      value={props.values.desc}
+                      placeholder='הערות'
+                      placeholderTextColor='white'
+                      onBlur={props.handleBlur('desc')}
+                      multiline
+                      inputContainerStyle={{ borderBottomColor: 'white' }}
+                      textAlign='right'
+                      inputStyle={{ color: 'white' }}
+                    />
+                  </View>
+                </View>
+
+
               </View>
 
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={props.handleSubmit}
-              >
-                <Text style={styles.buttonText}> הוסף </Text>
-              </TouchableOpacity>
+              {addFamilyLoading
+                ? <ActivityIndicator />
+                : <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    
+                    props.handleSubmit();
+                  }}
+                >
+                  <Text style={styles.buttonText}> הוסף </Text>
+                </TouchableOpacity>
+              }
+              {feedbackMsg
+                ? feedbackMsg === 'המשפחה נוספה בהצלחה למערכת'
+                  ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }} >{feedbackMsg}</Text>
+                  : feedbackMsg === 'אירעה שגיאה בעת הוספת המשפחה'
+                    ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>{feedbackMsg}</Text>
+                    : null
+                : null
+              }
             </View>
           )}
         </Formik>
