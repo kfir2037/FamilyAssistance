@@ -68,6 +68,124 @@ exports.deleteTask2 = functions.https.onCall(async (data, context) => {
         tasks: FieldValue.arrayRemove(data.taskToDelete)
     })
 });
+exports.generateReports = functions.https.onCall(async (data, context) => {
+    // console.log('dataaaa: ', data)
+    // var startDate = moment(data.startDate)
+    // var endDate = moment(data.endDate)
+    // console.log('startDate: ',startDate)
+    // console.log('endDate: ',endDate)
+
+    // var diff = endDate.diff(startDate,'days')
+    // console.log('diff: ',diff)
+    var family = data.selectedFamily
+    var startDate = data.startDate
+    var endDate = data.endDate;
+    var data = data.data
+    var tempDate = startDate
+    // console.log('tempDate222: ',tempDate)
+    // var data = this.state.data
+    // console.log('startDate: ', startDate)
+    // console.log('endDate: ', endDate)
+    var familyDetails = {};
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].familyId == family) {
+            familyDetails = data[i]
+        }
+    }
+    // console.log('familyDetails: ', familyDetails)
+    var familyMembers = []
+    if (familyDetails.familyDetails && familyDetails.familyDetails.parents.length > 0) {
+        familyMembers = familyDetails.familyDetails.parents.slice()
+
+    }
+    if (familyDetails.familyDetails && familyDetails.familyDetails.kids.length > 0) {
+        familyMembers = familyDetails.familyDetails.kids.slice()
+
+    }
+    var diff = moment([endDate]).diff(moment([startDate]), 'years')
+    // console.log('diff: ', diff)
+    diff = parseInt(diff)
+    var reportContent = []
+    for (let i = 0; i < diff; i++) {
+        familyMembers.forEach(async (x) => {
+            var person = await firebase.firestore().collection('users').doc(x)
+            const swFamilies = await firebase
+                .firestore()
+                .collection("tasks")
+                .where("userId", "==", x)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data();
+                        var taskId = doc.id;
+                        var timeFromTheServer = moment(
+                            new Date(data.date.seconds * 1000)
+                        ).format("DD/MM/YYYY");
+
+                        if (timeFromTheServer == moment(tempDate).format('DD/MM/YYYY')) {
+                            console.log("same");
+                            reportContent.push({
+                                date: tempDate,
+                                name: person.firstName + ' ' + person.lastName,
+                                isDone: data.isDone,
+                                categoty: data.categoty,
+                                taskName: data.tasks
+                            })
+                            // console.log('reportContent2222: ',reportContent)
+
+                        } else {
+                            console.log("not same");
+                        }
+                    });
+                    // console.log("tempDate: ",moment(tempDate).format('DD/MM/YYYY'));
+
+                    tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
+
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+        })
+
+        // console.log("tempDate: ",moment(tempDate).format('DD/MM/YYYY'));
+        // tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
+
+    }
+    const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+    const csvWriter = createCsvWriter({
+        path: '/tmp/temp.csv',
+        header: [
+            { id: 'name', title: 'Name' },
+            { id: 'surname', title: 'Surname' },
+            { id: 'age', title: 'Age' },
+            { id: 'gender', title: 'Gender' },
+        ]
+    });
+    const data = [
+        {
+          name: 'John',
+          surname: 'Snow',
+          age: 26,
+          gender: 'M'
+        }, {
+          name: 'Clair',
+          surname: 'White',
+          age: 33,
+          gender: 'F',
+        }, {
+          name: 'Fancy',
+          surname: 'Brown',
+          age: 78,
+          gender: 'F'
+        }
+      ];
+    setTimeout(() => {
+        csvWriter
+            .writeRecords(data)
+            .then(() => console.log('The CSV file was written successfully'));
+    }, 1000)
+
+});
 
 exports.addRoutineTasks = functions.https.onCall(async (data, context) => {
     console.log('addRoutineTasks')
@@ -128,7 +246,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
                 }
             })
             .catch((err) => {
-                console.log('error adding ID number - email document: ', err );
+                console.log('error adding ID number - email document: ', err);
                 throw err;
             })
 
@@ -444,14 +562,14 @@ sendPushNotification = async () => {
                             const timeOfAlert3 = moment(currentDate).add(morningSecondsAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
                             const timeOfAlert4 = moment(currentDate).add(morningSecondsAlert, 'minutes').format('MM/DD/YYYY HH:mm')
 
-                            console.log('currentDate ' ,currentDate)
-                            console.log('taskDate ' ,taskDate)
-                            console.log('timeOfAlert ' ,timeOfAlert)
-                            console.log('timeOfAlert2 ' ,timeOfAlert2)
-                            console.log('timeOfAlert3 ' ,timeOfAlert3)
-                            console.log('timeOfAlert4 ' ,timeOfAlert4)
-                            console.log('morningFirstAlert ' ,morningFirstAlert)
-                            console.log('morningSecondsAlert ' ,morningSecondsAlert)
+                            console.log('currentDate ', currentDate)
+                            console.log('taskDate ', taskDate)
+                            console.log('timeOfAlert ', timeOfAlert)
+                            console.log('timeOfAlert2 ', timeOfAlert2)
+                            console.log('timeOfAlert3 ', timeOfAlert3)
+                            console.log('timeOfAlert4 ', timeOfAlert4)
+                            console.log('morningFirstAlert ', morningFirstAlert)
+                            console.log('morningSecondsAlert ', morningSecondsAlert)
                             if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
                                 console.log('needs to send push notification - alert number 1')
                                 const message = {

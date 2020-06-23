@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 
-const Dropdown = () => {
+const Dropdown = (props) => {
 
     const pickerStyle = {
         inputIOS: {
@@ -38,12 +38,14 @@ const Dropdown = () => {
     return (
         <RNPickerSelect
 
-            onValueChange={(value) => console.log(value)}
-            items={[
-                { label: 'משפחת כהן', value: 'kfir' },
-                { label: 'משפחת לוי', value: 'noa' },
-                { label: 'משפחת אהרונוביץ', value: 'shimon' },
-            ]}
+            // onValueChange={(value) => console.log(value)}
+            onValueChange={(value) => props.familySelected(value)}
+            items={props.families}
+            // items={[
+            //     { label: 'משפחת כהן', value: 'kfir' },
+            //     { label: 'משפחת לוי', value: 'noa' },
+            //     { label: 'משפחת אהרונוביץ', value: 'shimon' },
+            // ]}
             InputAccessoryView={() => null}
             style={pickerStyle}
         // value={this.state.favSport2}
