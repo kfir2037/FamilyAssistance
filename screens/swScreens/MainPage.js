@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   titleText: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     paddingBottom: 10,
     color: 'black'

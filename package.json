@@ -12,6 +12,7 @@
     "@expo-google-fonts/heebo": "^0.1.0",
     "@expo-google-fonts/inter": "^0.1.0",
     "@expo/vector-icons": "^10.0.6",
+    "@firebase/messaging": "^0.6.18",
     "@react-native-community/checkbox": "^0.3.0",
     "@react-native-community/datetimepicker": "^2.2.2",
     "@react-native-community/picker": "^1.6.5",

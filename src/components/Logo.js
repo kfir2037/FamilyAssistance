@@ -10,8 +10,8 @@ export default class Logo extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Image style={{ width: 150, height: 175 }}
-					source={require('../images/family.png')} />
+				<Image style={{ width: 150, height: 185 }}
+					source={require('../../assets/family2.png')} />
 				<Text style={styles.logoText}>מרכז ילדים - הורים{'\n'}עיריית באר-שבע</Text>
 			</View>
 		)

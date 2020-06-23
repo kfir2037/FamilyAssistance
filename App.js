@@ -17,6 +17,9 @@ const App = () => {
     'Heebo': require('./assets/fonts/Heebo-VariableFont_wght.ttf'),
   });
 
+  // const messaging = firebase.messaging();
+  // messaging.usePublicVapidKey('BCeJeaN3JawwJIYicC7n4cNkvfSdxkRuSjkXkiX_lvksdWks0bddHh39QhWnakxdu4PTMRSYKmU4BYhIAAViv10');
+
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
