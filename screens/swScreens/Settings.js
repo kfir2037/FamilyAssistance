@@ -273,7 +273,7 @@ export default class Settings extends Component {
   };
 
   saveNewTasks = () => {
-    this.setState({ isAdded: true });
+
     console.log('44444444')
     let addTasks = firebase.functions().httpsCallable("addRoutineTasks");
     console.log('55555555555')
@@ -281,17 +281,18 @@ export default class Settings extends Component {
       newMorningTask: this.state.newMorningTask,
       newNoonTask: this.state.newNoonTask,
       newAfternoonTask: this.state.newAfternoonTask,
-      newEveningsTask: this.state.newEveningsTask,
+      newEveningTask: this.state.newEveningTask,
     };
-    console.log('saveNewTasks')
+    console.log('saveNewTasks ', data)
     addTasks(data)
       .then(() => {
         console.log('task added');
-        this.setState({ isAdded: false });  
+
+        this.setState({ isAdded: false, addMsg: 'משימה נוספה' });
       })
       .catch(() => {
         console.log('task didnt added');
-        this.setState({ isAdded: false });
+        this.setState({ isAdded: false, addMsg: 'אירעה שגיאה' });
 
       })
   }
@@ -396,14 +397,15 @@ export default class Settings extends Component {
     addTask(taskType)
       .then(() => {
         console.log('Task Added to Routine');
-        this.setState({ isAdded: false })
+        //this.setState({ isAdded: false })
       })
       .catch(() => {
         console.log('error adding task');
-        this.setState({ isAdded: false })
+        //this.setState({ isAdded: false })
 
       })
   };
+
   test = () => {
     console.log("testtttt ", this.state.alertBeforeMorning);
   };
@@ -435,7 +437,7 @@ export default class Settings extends Component {
     this.setState({ refreshing: true });
     await this.getTasks();
     this.changeTasksToCategory(<Text name='בוקר' />);
-    this.setState({ deleteMsg: '' });
+    this.setState({ deleteMsg: '', addMsg: '' });
   }
 
   render() {
@@ -769,7 +771,7 @@ export default class Settings extends Component {
                 onChangeText={(text) => this.setState({ newMorningTask: text })}
                 value={this.state.newMorningTask}
                 placeholder='בוקר'
-                placeholderTextColor='black'
+                placeholderTextColor='lightgray'
                 textAlign='right'
               // value={this.state.text}
               />
@@ -779,7 +781,7 @@ export default class Settings extends Component {
                 onChangeText={(text) => this.setState({ newNoonTask: text })}
                 value={this.state.newNoonTask}
                 placeholder='צהריים'
-                placeholderTextColor='black'
+                placeholderTextColor='lightgray'
                 textAlign='right'
               // value={this.state.text}
               />
@@ -787,7 +789,7 @@ export default class Settings extends Component {
               <Input
                 containerStyle={styles.addTaskInputContainer}
                 placeholder='אחר הצהריים'
-                placeholderTextColor='black'
+                placeholderTextColor='lightgray'
                 onChangeText={(text) => this.setState({ newAfternoonTask: text })}
                 textAlign='right'
                 value={this.state.newAfternoonTask}
@@ -796,10 +798,9 @@ export default class Settings extends Component {
               <Input
                 containerStyle={styles.addTaskInputContainer}
                 placeholder='ערב'
-                placeholderTextColor='black'
+                placeholderTextColor='lightgray'
                 onChangeText={(text) => this.setState({ newEveningTask: text })}
                 value={this.state.newEveningTask}
-                placeholderTextColor='black'
               />
 
 
@@ -812,7 +813,10 @@ export default class Settings extends Component {
               <View style={{ alignContent: "center" }}>
                 <Button
                   title="  הוספת משימות"
-                  onPress={this.saveNewTasks}
+                  onPress={() => {
+                    this.setState({ isAdded: true })
+                    this.saveNewTasks();
+                  }}
                   icon={<Icon name="plus" size={20} color="white" />}
                   iconRight
                   titleStyle={{ justifyContent: 'center' }}

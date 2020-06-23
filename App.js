@@ -1,20 +1,30 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useFonts } from '@use-expo/font';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import WelcomeScreen from './screens/WelcomeScreen';
 import AppDrawerNavigator from './navigations/ParentsNavigations/AppDrawerNavigator';
 import SwDrawerNavigator from './navigations/SwNavigations/SwDrawerNavigator';
 import KidsDrawerNavigator from './navigations/KidsNavigations/KidsDrawerNavigator';
 import loadingScreen from './screens/loadingScreen';
+import { AppLoading } from 'expo';
 import firebase from './config/config';
 import moment from 'moment';
 
-class App extends React.Component {
-  render() {
+const App = () => {
+
+  let [fontsLoaded] = useFonts({
+    'Heebo': require('./assets/fonts/Heebo-VariableFont_wght.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
     return (
       <AppContainer />
     )
   }
+
 }
 
 export default App;
@@ -192,8 +202,8 @@ const AppContainer = createAppContainer(AppSwitchNavigator);
 //               // console.log('taskDate:::::::: ', taskDate)
 //               // console.log('timeOfAlert2::::::: ', timeOfAlert2)
 //               // console.log('timeOfAlert:::::::: ', timeOfAlert)
-              
-             
+
+
 //               if (moment(taskDate).isAfter(timeOfAlert2)  && moment(taskDate).isBefore(timeOfAlert)) {
 //                 console.log('needs to send push notification - alert number 1')
 //               }

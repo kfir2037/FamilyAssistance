@@ -219,9 +219,8 @@ export default class App extends Component {
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} |  </Text>
-                <Text style={styles.taskName}> {obj.tasks} | </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
 
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
@@ -243,7 +242,7 @@ export default class App extends Component {
   }
   returnNoonTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות צהריים">
+      <Card containerStyle={{  width: '90%', borderRadius: 20 }} title="משימות צהריים">
         {
           this.state.noonTasks.map((obj, i) => {
             return (
@@ -256,11 +255,8 @@ export default class App extends Component {
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} |  </Text>
-                <Text style={styles.taskName}> {obj.tasks} | </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} </Text>
-
-                {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+              
               </View>
             );
           })
@@ -283,9 +279,8 @@ export default class App extends Component {
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} |  </Text>
-                <Text style={styles.taskName}> {obj.tasks} | </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
 
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
@@ -310,9 +305,8 @@ export default class App extends Component {
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} |  </Text>
-                <Text style={styles.taskName}> {obj.tasks} | </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
 
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
@@ -351,9 +345,8 @@ export default class App extends Component {
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} |  </Text>
-                <Text style={styles.taskName}> {obj.tasks} | </Text>
-                <Text style={styles.taskName}> עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
 
                 {/* <Text style={styles.memberName}>  {obj.name}  </Text> */}
               </View>
@@ -504,5 +497,8 @@ const styles = StyleSheet.create({
     top: 2,
     left: 1,
   },
+  taskName:{
+
+  }
 
 });

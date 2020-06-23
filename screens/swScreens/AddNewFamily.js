@@ -201,9 +201,9 @@ const AddNewFamily = () => {
               }
               {feedbackMsg
                 ? feedbackMsg === 'המשפחה נוספה בהצלחה למערכת'
-                  ? <Text style={{ color: 'green' }} >{feedbackMsg}</Text>
+                  ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }} >{feedbackMsg}</Text>
                   : feedbackMsg === 'אירעה שגיאה בעת הוספת המשפחה'
-                    ? <Text style={{ color: 'crimson' }}>{feedbackMsg}</Text>
+                    ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>{feedbackMsg}</Text>
                     : null
                 : null
               }

@@ -86,6 +86,8 @@ const WatchFamilies = ({ navigation }) => {
 
 
   const getFamily = async () => {
+    // setKidsDetails([]);
+    // setParentDetails([]);
     const familyId = navigation.getParam('familyId');
     console.log(familyId);
     await firebase.firestore().collection('families').doc(familyId).get()
@@ -104,7 +106,9 @@ const WatchFamilies = ({ navigation }) => {
                   gender: doc.data().gender
                 })
 
+
                 setParentDetailsLoading(false);
+                console.log('parentDetails ', parentDetails);
                 //setRefreshing(false);
               })
           })
@@ -112,29 +116,31 @@ const WatchFamilies = ({ navigation }) => {
             setParentDetailsLoading(false);
             //setRefreshing(false);
           }
-          await doc.data().kids.forEach(async (kidID) => {
-            await firebase.firestore().collection('users').doc(kidID).get()
-              .then((doc) => {
+          if (kidsDetails.length == 0) {
+            await doc.data().kids.forEach(async (kidID) => {
+              await firebase.firestore().collection('users').doc(kidID).get()
+                .then((doc) => {
 
-                kidsDetails.push({
-                  key: doc.id,
-                  firstName: doc.data().firstName,
-                  birthDate: doc.data().birthDate,
-                  gender: doc.data().gender
+                  kidsDetails.push({
+                    key: doc.id,
+                    firstName: doc.data().firstName,
+                    birthDate: doc.data().birthDate,
+                    gender: doc.data().gender
+                  })
+
+                  setKidsDetailsLoading(false);
+                  //setRefreshing(false);
+                  console.log('100 refreshing ', refreshing);
+
                 })
+                .catch((err) => { console.log(err) })
+            })
+            if (doc.data().kids.length == 0) {
+              setKidsDetailsLoading(false);
+              //setRefreshing(false);
+              console.log('108 refreshing ', refreshing);
 
-                setKidsDetailsLoading(false);
-                //setRefreshing(false);
-                console.log('100 refreshing ', refreshing);
-
-              })
-              .catch((err) => { console.log(err) })
-          })
-          if (doc.data().kids.length == 0) {
-            setKidsDetailsLoading(false);
-            //setRefreshing(false);
-            console.log('108 refreshing ', refreshing);
-
+            }
           }
         }
         console.log('familyObj', familyObj);
@@ -171,6 +177,8 @@ const WatchFamilies = ({ navigation }) => {
   const onRefresh = useCallback(async () => {
     console.log('OnRefresh!!!!');
     setRefreshing(true);
+    //  setKidsDetails([]);
+    //  setParentDetails([]);
     await getFamily();
     //setRefreshing(false);
     wait(2000).then(() => setRefreshing(false));
@@ -300,7 +308,7 @@ const WatchFamilies = ({ navigation }) => {
                     </View>
 
                     <View style={styles.birtDateBox}>
-                      <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="בחר תאריך "
+                      <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'white' }} title="בחר תאריך "
                         onPress={showDatePicker}
                       />
                       <Text style={{ fontSize: 18 }}>תאריך לידה: </Text>
@@ -363,7 +371,7 @@ const WatchFamilies = ({ navigation }) => {
                   <View style={{ alignSelf: 'center', margin: 5 }}>
                     {modalLoading
                       ? <ActivityIndicator size={50} color='#767ead' />
-                      : <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף "
+                      : <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'white' }} title="הוסף "
                         onPress={() => {
                           setModalLoading(true);
                           props.handleSubmit();
@@ -560,6 +568,7 @@ const WatchFamilies = ({ navigation }) => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
+            enabled
           />
         }
           style={styles.scrollView} >
@@ -659,7 +668,7 @@ const WatchFamilies = ({ navigation }) => {
                               <TouchableHighlight onShowUnderlay={separators.highlight} onHideUnderlay={separators.unhighlight} >
                                 <View style={{ flexDirection: 'row-reverse' }}>
                                   <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['firstName']}</Text>
-                                  <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> 01/01/1998</Text>
+                                  <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['birthDate']}</Text>
                                   <Text style={{ textAlign: 'center', fontSize: 15, flex: 1 }}> {item['gender'] === 'male' ? 'זכר' : 'נקבה'}</Text>
                                 </View>
                               </TouchableHighlight>
@@ -679,7 +688,9 @@ const WatchFamilies = ({ navigation }) => {
 
                 </Card>
               </View>
-              <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' />
+              <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
+                      <Text style={{fontSize:18,marginRight:10}}>{familyObj.desc}</Text>
+              </Card>
             </View>
           </ImageBackground>
         </ScrollView>
@@ -706,7 +717,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     marginTop: 10,
-    color:'#656d9c'
+    color: '#656d9c'
     //marginBottom: 5
     // borderWidth: 1,
     // borderColor: 'black'
