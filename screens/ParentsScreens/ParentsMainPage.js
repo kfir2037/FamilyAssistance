@@ -6,6 +6,7 @@ import {
   Text,
   Image,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import Accordion from "../../src/components/Accordion";
 import {
@@ -22,8 +23,8 @@ import moment from "moment";
 import AwesomeAlert from "react-native-awesome-alerts";
 import * as Permissions from 'expo-permissions';
 import { Notifications } from 'expo';
-// import {Notifications} from 'expo-permissions';
-import * as firebasePush from 'firebase';
+import Constants from 'expo-constants';
+//import * as firebasePush from 'firebase';
 
 export default class ParentsMainPage extends React.Component {
   constructor() {
@@ -61,6 +62,7 @@ export default class ParentsMainPage extends React.Component {
     this.registerForPushNotification()
     await this.getCustomTasks();
   }
+
   registerForPushNotification = async () => {
 
     const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -74,14 +76,19 @@ export default class ParentsMainPage extends React.Component {
     if (finalStatus !== 'granted') {
       return;
     }
-    let token = await Notifications.getExpoPushTokenAsync();
-    console.log('123123123: ', token)
+    let token = await Notifications.getExpoPushTokenAsync()
+      .then(() => { console.log('token: ', token) })
+      .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
     const user = firebase.auth().currentUser.uid;
 
     var userDoc = firebase.firestore().collection('users').doc(user)
-    var addTokenToUser = userDoc.set({
-      pushNotificationToken: token
-    }, { merge: true });
+    if (token) {
+      var addTokenToUser = userDoc.set({
+        pushNotificationToken: token
+      }, { merge: true })
+        .then(() => { console.log('Added token to User') })
+        .catch((err) => { console.log('Adding Token Error ', err) });
+    }
 
   }
   getCustomTasks = async () => {
@@ -274,7 +281,10 @@ export default class ParentsMainPage extends React.Component {
       .doc(task)
       .update({
         isDone: !isDone,
-      });
+      })
+      .then(() => { console.log('updated') })
+      .catch(() => { console.log('update error ') })
+
 
   }
 
@@ -284,53 +294,54 @@ export default class ParentsMainPage extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ScrollView>
-          <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
+        <ImageBackground style={{ height: '100%', width: '100%' }} source={require('../../assets/new_background08.png')}>
+          <ScrollView>
+            <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
 
-          {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
-          <View style={styles.container}>
-            {this.state.loadingTasks
-              ? <ActivityIndicator size={40} color='#767ead' />
-              : <View style={styles.container}>
-                {/* { <ProgressBarAndroid
+            {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
+            <View style={styles.container}>
+              {this.state.loadingTasks
+                ? <ActivityIndicator size={40} color='#e0aa00' style={{ marginTop: 10 }} />
+                : <View style={styles.container}>
+                  {/* { <ProgressBarAndroid
               styleAttr="Horizontal"
               indeterminate={false}
               // progress={tasks / tasksDone}
               progress={this.state.numberOftasksDone / this.state.numberOftasks}
             />  */}
-                <Accordion2
-                  allTasks={this.state.allTasks}
-                  morningTasks={this.state.morningTasks}
-                  noonTasks={this.state.noonTasks}
-                  afternoonTasks={this.state.afternoonTasks}
-                  eveningTasks={this.state.eveningTasks}
-                  customTasks={this.state.customTasks}
-                  markMission={this.markMission.bind(this)}
-                />
-                <AwesomeAlert
-                  show={showAlert}
-                  showProgress={false}
-                  title="כל הכבוד"
-                  message="אתה בדרך הנכונה!"
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={false}
-                  showConfirmButton={true}
-                  cancelText="No, cancel"
-                  confirmText="סגור"
-                  confirmButtonColor="#DD6B55"
-                  onCancelPressed={() => {
-                    this.hideAlert();
-                  }}
-                  onConfirmPressed={() => {
-                    this.hideAlert();
-                  }}
-                />
-              </View>}
-          </View>
+                  <Accordion2
+                    allTasks={this.state.allTasks}
+                    morningTasks={this.state.morningTasks}
+                    noonTasks={this.state.noonTasks}
+                    afternoonTasks={this.state.afternoonTasks}
+                    eveningTasks={this.state.eveningTasks}
+                    customTasks={this.state.customTasks}
+                    markMission={this.markMission.bind(this)}
+                  />
+                  <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title="כל הכבוד"
+                    message="אתה בדרך הנכונה!"
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    cancelText="No, cancel"
+                    confirmText="סגור"
+                    confirmButtonColor="#DD6B55"
+                    onCancelPressed={() => {
+                      this.hideAlert();
+                    }}
+                    onConfirmPressed={() => {
+                      this.hideAlert();
+                    }}
+                  />
+                </View>}
+            </View>
 
-        </ScrollView>
-
+          </ScrollView>
+        </ImageBackground>
       </View>
     );
   }
@@ -339,7 +350,7 @@ export default class ParentsMainPage extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#b5bef5",
+    //backgroundColor: "#b5bef5",
     // alignItems: 'center',
     justifyContent: "center",
     //paddingTop: 5,

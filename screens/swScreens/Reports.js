@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import Dropdown from './Dropdown';
 import DatePicker from 'react-native-datepicker'
+import DateTimePicker from "@react-native-community/datetimepicker";
 // import DatePicker from '@react-native-community/dateptimepicker'
 import firebase from '../../config/config';
 import { color } from 'react-native-reanimated';
@@ -76,7 +77,7 @@ class Reports extends Component {
     var startDate = this.state.startDate
     var endDate = this.state.endDate;
     var tempDate = startDate
-    console.log('tempDate222: ',tempDate)
+    console.log('tempDate222: ', tempDate)
     var data = this.state.data
     console.log('startDate: ', startDate)
     console.log('endDate: ', endDate)
@@ -119,13 +120,13 @@ class Reports extends Component {
               if (timeFromTheServer == moment(tempDate).format('DD/MM/YYYY')) {
                 console.log("same");
                 reportContent.push({
-                  date:tempDate,
-                  name:person.firstName + ' ' + person.lastName,
+                  date: tempDate,
+                  name: person.firstName + ' ' + person.lastName,
                   isDone: data.isDone,
-                  categoty:data.categoty,
-                  taskName:data.tasks
+                  categoty: data.categoty,
+                  taskName: data.tasks
                 })
-                console.log('reportContent2222: ',reportContent)
+                console.log('reportContent2222: ', reportContent)
 
               } else {
                 console.log("not same");
@@ -134,7 +135,7 @@ class Reports extends Component {
             // console.log("tempDate: ",moment(tempDate).format('DD/MM/YYYY'));
 
             tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
-      
+
           })
           .catch((error) => {
             console.log("Error getting documents: ", error);
@@ -145,7 +146,7 @@ class Reports extends Component {
       // tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
 
     }
-    setTimeout(()=>{console.log('reporContent4444: ',reportContent)},1000)
+    setTimeout(() => { console.log('reporContent4444: ', reportContent) }, 1000)
 
   }
   generateReports = () => {
@@ -154,9 +155,10 @@ class Reports extends Component {
     var endDate = this.state.endDate;
     var data = this.state.data
     let genReport = firebase.functions().httpsCallable("generateReports");
-    genReport({ family: family, startDate: startDate, endDate: endDate,data:data }).then(result => {
-      console.log('result: ', result);
-    });
+    genReport({ family: family, startDate: startDate, endDate: endDate, data: data })
+      .then(result => {
+        console.log('result: ', result);
+      });
     // this.tempServerGenerateReports()
   }
   selectedFamily = async (family) => {

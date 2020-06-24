@@ -45,7 +45,7 @@ const MainPageStackNavigator = createStackNavigator({
         //   />
         // ),
         headerStyle: {
-          backgroundColor: '#767ead'
+          backgroundColor: '#e0aa00'
         }
       }
     }

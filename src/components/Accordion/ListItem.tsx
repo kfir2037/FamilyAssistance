@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    textAlign:'right'
+    textAlign:'right',
+    marginRight:10
+    //alignSelf:'flex-end'
   },
   pointsContainer: {
     borderRadius: 20,
-    backgroundColor: "#44c282",
+    backgroundColor: "#0ca5e5",
     padding: 8
   },
   points: {

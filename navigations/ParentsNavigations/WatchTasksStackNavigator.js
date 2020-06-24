@@ -25,13 +25,13 @@ const WatchTasksStackNavigator = createStackNavigator({
         // )
 
         headerStyle: {
-          backgroundColor: '#767ead'
+          backgroundColor: '#e0aa00'
         }
       }
     }
   },
   {
-    headerLayoutPreset: 'cenetr'
+    headerLayoutPreset: 'center'
   }
 )
 

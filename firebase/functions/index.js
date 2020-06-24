@@ -161,7 +161,7 @@ exports.generateReports = functions.https.onCall(async (data, context) => {
             { id: 'gender', title: 'Gender' },
         ]
     });
-    const data = [
+    const data2 = [
         {
           name: 'John',
           surname: 'Snow',
@@ -181,7 +181,7 @@ exports.generateReports = functions.https.onCall(async (data, context) => {
       ];
     setTimeout(() => {
         csvWriter
-            .writeRecords(data)
+            .writeRecords(data2)
             .then(() => console.log('The CSV file was written successfully'));
     }, 1000)
 
@@ -573,7 +573,7 @@ sendPushNotification = async () => {
                             if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
                                 console.log('needs to send push notification - alert number 1')
                                 const message = {
-                                    to: 'ExponentPushToken[V9Tum4EXGyriFFECBJ5iYO]',
+                                    to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
                                     sound: 'default',
                                     title: 'משימה מתקרבת',
                                     body: 'התראה מספר 1',
@@ -596,7 +596,7 @@ sendPushNotification = async () => {
                             else if (moment(taskDate).isAfter(timeOfAlert4) && moment(taskDate).isBefore(timeOfAlert3)) {
                                 console.log('needs to send push notification - alert number 2')
                                 const message = {
-                                    to: 'ExponentPushToken[V9Tum4EXGyriFFECBJ5iYO]',
+                                    to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
                                     sound: 'default',
                                     title: 'משימה ממש קרובה',
                                     body: 'התראה מספר 2',
