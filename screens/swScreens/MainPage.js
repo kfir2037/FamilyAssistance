@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator, ImageBackground, UIManager } from 'react-native';
 import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, Card } from 'react-native-elements';
@@ -66,6 +66,7 @@ export default class MainPage extends Component {
   }
 
 
+
   async componentDidMount() {
     YellowBox.ignoreWarnings(['Setting a timer']);
     YellowBox.ignoreWarnings(['VirtualizedLists']);
@@ -127,7 +128,6 @@ export default class MainPage extends Component {
         />
       }
         showsVerticalScrollIndicator contentContainerStyle={{height:'100%'}} style={{ backgroundColor: '#fbc213' }} >
-
 
         <ScrollView contentContainerStyle={{}} style={{ height:'50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
           <View style={styles.header}>
