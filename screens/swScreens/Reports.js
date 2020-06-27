@@ -73,7 +73,7 @@ class Reports extends Component {
 
     return allFamilies;
   }
-  
+
   tempServerGenerateReports = async () => {
     var family = this.state.selectedFamily
     var startDate = this.state.startDate
@@ -100,7 +100,7 @@ class Reports extends Component {
       familyMembers = familyMembers.concat(familyDetails.familyDetails.kids)
 
     }
-    var diff = await moment([endDate]).diff(moment([startDate]), 'years')
+    var diff = moment([endDate]).diff(moment([startDate]), 'years')
     // console.log('diff: ', diff)
     diff = parseInt(diff)
     let reportContent = []
@@ -108,8 +108,8 @@ class Reports extends Component {
 
       familyMembers.forEach(async (x) => {
         var person
-        
-        var y = await firebase.firestore().collection('users').doc(x).get().then(async (doc)=>{
+
+        var y = await firebase.firestore().collection('users').doc(x).get().then(async (doc) => {
           person = doc.data()
         })
         // console.log('person: ',person)
@@ -119,7 +119,7 @@ class Reports extends Component {
           .where("userId", "==", x)
           .get()
           .then(async (querySnapshot) => {
-            console.log('querySnapshot: ',querySnapshot)
+            //console.log('querySnapshot: ',querySnapshot)
             // for(let doc in querySnapshot){
             querySnapshot.forEach(async (doc) => {
               let data = doc.data();
@@ -129,12 +129,12 @@ class Reports extends Component {
               var timeFromTheTask = moment(
                 new Date(data.date.seconds * 1000)
               ).format("DD/MM/YYYY");
-           
+
               // console.log('tempDate: ', tempDate)
 
               var temp = tempDate
               console.log('temp2: ', temp)
-              temp = temp.replace(/-/g,'/')
+              temp = temp.replace(/-/g, '/')
               console.log('timeFromTheTask: ', timeFromTheTask)
               console.log('temp: ', temp)
               // console.log('data: ',data)
@@ -149,7 +149,7 @@ class Reports extends Component {
                   categoty: data.category,
                   taskName: data.tasks
                 })
-                console.log('x: ',x)
+                console.log('x: ', x)
                 console.log('reportContent2222: ', reportContent)
 
               } else {
@@ -174,30 +174,30 @@ class Reports extends Component {
     }
 
     const userId = firebase.auth().currentUser.uid;
-    var swMail=''
-    await firebase.firestore().collection('users').doc(userId).get().then((doc)=>{
+    var swMail = ''
+    await firebase.firestore().collection('users').doc(userId).get().then((doc) => {
       var data = doc.data()
       swMail = data.email
     })
-    console.log('swMail: ',swMail)
-    reportConterntToSend='';
-    for (raw in reportContent){
+    console.log('swMail: ', swMail)
+    reportConterntToSend = '';
+    for (raw in reportContent) {
       var values = Object.values(raw);
-      value.forEach((field)=>{
-        reportConterntToSend+=field+','
+      value.forEach((field) => {
+        reportConterntToSend += field + ','
       })
 
-      reportContent+='\n'
+      reportContent += '\n'
     }
     console.log('reportContent123:', reportContent)
     // reportContent='hello, world!\nkfir,nahmani\nshimon,emuna\n'
-    setTimeout(() => { 
-      console.log('reporContent4444: ', reportContent) 
-    let genReport = firebase.functions().httpsCallable("sendMail");
-    genReport({ reportContent: reportConterntToSend, swMailAddress:swMail })
-      .then(result => {
-        console.log('result: ', result);
-      });
+    setTimeout(() => {
+      console.log('reporContent4444: ', reportContent)
+      let genReport = firebase.functions().httpsCallable("sendMail");
+      genReport({ reportContent: reportConterntToSend, swMailAddress: swMail })
+        .then(result => {
+          console.log('result: ', result);
+        });
     }, 3000)
 
 
