@@ -180,7 +180,7 @@ class Reports extends Component {
 
     const userId = firebase.auth().currentUser.uid;
 
-    console.log('userId ', userId);
+    // console.log('userId ', userId);
     var swMail = ''
     await firebase.firestore().collection('users').doc(userId).get()
       .then((doc) => {
@@ -189,15 +189,38 @@ class Reports extends Component {
       })
       .catch((err) => console.log('get user email error: ', err));
 
-    console.log('swMail: ', swMail)
+    // console.log('swMail: ', swMail)
+    var headlines = 'תאריך, שם, האם בוצעה המשימה?, קטגוריה, שם המשימה\n'
     reportConterntToSend = '';
-    console.log('reportContent194 : ', reportContent)
+    reportConterntToSend += headlines;
+    // console.log('reportContent194 : ', reportContent)
     for (let k = 0; k < reportContent.length; k++) {
       //console.log('r: ', r);
       var values = Object.values(reportContent[k]);
       console.log('values', values);
       values.forEach((field) => {
         console.log('field: ', field);
+        if(field == 'morning'){
+          field = 'בוקר'
+        }
+        else if(field == 'noon'){
+          field = 'צהריים'
+        }
+        else if(field == 'afternoon'){
+          field = 'אחר הצהריים'
+        }
+        else if(field == 'evening'){
+          field = 'ערב'
+        }
+        else if(field == 'custom tasks'){
+          field = 'משימה מותאמת'
+        }
+        else if(field == 'true'){
+          field = 'כן'
+        }
+        else if(field == 'false'){
+          field = 'לא'
+        }
         reportConterntToSend += field + ','
       })
 
@@ -205,10 +228,10 @@ class Reports extends Component {
     }
 
 
-    console.log('reportContent123:', reportContent)
+    // console.log('reportContent123:', reportContent)
     // reportContent='hello, world!\nkfir,nahmani\nshimon,emuna\n'
     setTimeout(() => {
-      console.log('reporConterntToSend: ', reportConterntToSend)
+      // console.log('reporConterntToSend: ', reportConterntToSend)
       let genReport = firebase.functions().httpsCallable("sendMail");
       genReport({ reportContent: reportConterntToSend, swMailAddress: swMail })
         .then(result => {
