@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const FieldValue = require('firebase-admin').firestore.FieldValue;
+const { Expo } = require('expo-server-sdk');
 var fetch = require('node-fetch')
 var moment = require('moment');
 //const { doc } = require('prettier');
@@ -48,9 +49,17 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
+const query = admin.firestore().collection('tasks').where('category','==','morning');
+
+const observer = query.onSnapshot(querySnapshot => {
+  console.log(`Received query snapshot: ${querySnapshot.size}`);
+  // ...
+}, err => {
+  console.log(`Encountered error: ${err}`);
+});
+
 exports.getFamilyMembers = functions.https.onCall(async (data, context) => {
     let family = await admin.firestore().collection('families').doc(data).get();
-
 
 });
 
@@ -542,6 +551,108 @@ exports.signinUserEmail = functions.https.onCall(async (data, context) => {
 
 })
 
+
+sendPushNotification2 = async () => {
+    let expo = new Expo();
+
+    let morningTasks = admin
+        .firestore()
+        .collection("RoutineTasks")
+        .doc("morning");
+
+    let getDoc = morningTasks
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                console.log("No such document!");
+            } else {
+                let allData = doc.data();
+                morningFirstAlert = allData.beforeAlertTime
+                morningSecondsAlert = allData.afterAlertTime
+
+            }
+        })
+        .catch((err) => {
+            console.log("Error getting document", err);
+        });
+
+    let messages = [];
+
+    const currentDate = moment(new Date());
+
+    const allTasks = await admin
+        .firestore()
+        .collection("tasks")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach(async (doc) => {
+                if (!doc.exists) {
+                    console.log("No such document!!!!!!");
+                } else {
+                    let allData = doc.data();
+                    // console.log('category: ', allData.category)
+                    if (allData.category == 'morning') {
+
+                        const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
+                        const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
+                        const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
+                        console.log('taskDateOnlyDate ', taskDateOnlyDate)
+                        console.log('currentDateOnlyDate', currentDateOnlyDate)
+                        console.log('morningFirstAlert ', morningFirstAlert);
+                        console.log('morningSecondsAlert ', morningSecondsAlert);
+                        if (taskDateOnlyDate == currentDateOnlyDate) {
+                            console.log('same date')
+                            const timeOfAlert = currentDate.add(morningFirstAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert2 = currentDate.add(morningFirstAlert, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert3 = currentDate.add(morningSecondsAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert4 = currentDate.add(morningSecondsAlert, "minutes").format('DD/MM/YYYY HH:mm')
+
+                            console.log('currentDate ', currentDate)
+                            console.log('taskDate ', taskDate)
+                            console.log('timeOfAlert ', timeOfAlert)
+                            console.log('timeOfAlert2 ', timeOfAlert2)
+                            console.log('timeOfAlert3 ', timeOfAlert3)
+                            console.log('timeOfAlert4 ', timeOfAlert4)
+                            console.log('morningFirstAlert ', morningFirstAlert)
+                            console.log('morningSecondsAlert ', morningSecondsAlert)
+                            //if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
+                            console.log('needs to send push notification - alert number 1')
+
+                            messages.push({
+                                to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
+                                sound: 'default',
+                                title: 'משימה מתקרבת - 2',
+                                body: ' גוף הודעה -  משימה מתקרבת 2'
+                            })
+                        }
+                    }
+                }
+            })
+        }
+        )
+        .catch((err) => (console.log('tasks error ', err)));
+
+        
+    let chunks = expo.chunkPushNotifications(messages);
+    let tickets = [];
+    (async () => {
+        for (let chunk of chunks) {
+            try {
+                let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                console.log('ticketChunk ', ticketChunk);
+                tickets.push(...ticketChunk);
+                // NOTE: If a ticket contains an error code in ticket.details.error, you
+                // must handle it appropriately. The error codes are listed in the Expo
+                // documentation:
+                // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    })();
+
+}
+
 sendPushNotification = async () => {
     console.log('sendPushNotification is running')
     var morningFirstAlert = 1
@@ -645,9 +756,10 @@ sendPushNotification = async () => {
 
 
 
-    const currentDate = moment(new Date()).format('DD/MM/YYYY HH:mm')
+    const currentDate = moment(new Date());
     var add30Minutes = moment(new Date()).add(30, "minutes")
     add30Minutes = moment(add30Minutes).format('DD/MM/YYYY HH:mm A')
+    console.log('add30Minutes ', add30Minutes);
 
     const allTasks = await admin
         .firestore()
@@ -665,69 +777,71 @@ sendPushNotification = async () => {
                         const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
                         const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
                         const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
-                        // console.log('taskDateOnlyDate ', taskDateOnlyDate)
-                        // console.log('currentDateOnlyDate', currentDateOnlyDate)
+                        console.log('taskDateOnlyDate ', taskDateOnlyDate)
+                        console.log('currentDateOnlyDate', currentDateOnlyDate)
+                        console.log('morningFirstAlert ', morningFirstAlert);
+                        console.log('morningSecondsAlert ', morningSecondsAlert);
                         if (taskDateOnlyDate == currentDateOnlyDate) {
                             console.log('same date')
-                            const timeOfAlert = moment(currentDate).add(morningFirstAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
-                            const timeOfAlert2 = moment(currentDate).add(morningFirstAlert, 'minutes').format('MM/DD/YYYY HH:mm')
-                            const timeOfAlert3 = moment(currentDate).add(morningSecondsAlert + 5, 'minutes').format('MM/DD/YYYY HH:mm')
-                            const timeOfAlert4 = moment(currentDate).add(morningSecondsAlert, 'minutes').format('MM/DD/YYYY HH:mm')
+                            const timeOfAlert = currentDate.add(morningFirstAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert2 = currentDate.add(morningFirstAlert, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert3 = currentDate.add(morningSecondsAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
+                            const timeOfAlert4 = currentDate.add(morningSecondsAlert, "minutes").format('DD/MM/YYYY HH:mm')
 
-                            // console.log('currentDate ', currentDate)
-                            // console.log('taskDate ', taskDate)
-                            // console.log('timeOfAlert ', timeOfAlert)
-                            // console.log('timeOfAlert2 ', timeOfAlert2)
-                            // console.log('timeOfAlert3 ', timeOfAlert3)
-                            // console.log('timeOfAlert4 ', timeOfAlert4)
-                            // console.log('morningFirstAlert ', morningFirstAlert)
-                            // console.log('morningSecondsAlert ', morningSecondsAlert)
-                            if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
-                                // console.log('needs to send push notification - alert number 1')
-                                const message = {
-                                    to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
-                                    sound: 'default',
-                                    title: 'משימה מתקרבת',
-                                    body: 'התראה מספר 1',
-                                    data: { data: 'goes here' },
-                                    _displayInForeground: true,
-                                };
-                                await fetch('https://exp.host/--/api/v2/push/send', {
-                                    method: 'POST',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        'Accept-encoding': 'gzip, deflate',
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(message)
+                            console.log('currentDate ', currentDate)
+                            console.log('taskDate ', taskDate)
+                            console.log('timeOfAlert ', timeOfAlert)
+                            console.log('timeOfAlert2 ', timeOfAlert2)
+                            console.log('timeOfAlert3 ', timeOfAlert3)
+                            console.log('timeOfAlert4 ', timeOfAlert4)
+                            console.log('morningFirstAlert ', morningFirstAlert)
+                            console.log('morningSecondsAlert ', morningSecondsAlert)
+                            //if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
+                            console.log('needs to send push notification - alert number 1')
+                            const message = {
+                                to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
+                                sound: 'default',
+                                title: 'משימה מתקרבת',
+                                body: 'התראה מספר 1',
+                                data: { data: 'goes here' },
+                                _displayInForeground: true,
+                            };
+                            await fetch('https://exp.host/--/api/v2/push/send', {
+                                method: 'POST',
+                                headers: {
+                                    Accept: 'application/json',
+                                    'Accept-encoding': 'gzip, deflate',
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(message)
 
-                                }).then(res => {
-                                    console.log('res: ', res)
-                                });
-                            }
-                            else if (moment(taskDate).isAfter(timeOfAlert4) && moment(taskDate).isBefore(timeOfAlert3)) {
-                                console.log('needs to send push notification - alert number 2')
-                                const message = {
-                                    to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
-                                    sound: 'default',
-                                    title: 'משימה ממש קרובה',
-                                    body: 'התראה מספר 2',
-                                    data: { data: 'goes here' },
-                                    _displayInForeground: true,
-                                };
-                                await fetch('https://exp.host/--/api/v2/push/send', {
-                                    method: 'POST',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        'Accept-encoding': 'gzip, deflate',
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(message)
+                            }).then(res => {
+                                console.log('res: ', res)
+                            });
+                            //}
+                            // else if (moment(taskDate).isAfter(timeOfAlert4) && moment(taskDate).isBefore(timeOfAlert3)) {
+                            //     console.log('needs to send push notification - alert number 2')
+                            //     const message = {
+                            //         to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
+                            //         sound: 'default',
+                            //         title: 'משימה ממש קרובה',
+                            //         body: 'התראה מספר 2',
+                            //         data: { data: 'goes here' },
+                            //         _displayInForeground: true,
+                            //     };
+                            //     await fetch('https://exp.host/--/api/v2/push/send', {
+                            //         method: 'POST',
+                            //         headers: {
+                            //             Accept: 'application/json',
+                            //             'Accept-encoding': 'gzip, deflate',
+                            //             'Content-Type': 'application/json',
+                            //         },
+                            //         body: JSON.stringify(message)
 
-                                }).then(res => {
-                                    console.log('res: ', res)
-                                });
-                            }
+                            //     }).then(res => {
+                            //         console.log('res: ', res)
+                            //     });
+                            // }
                         }
                     }
                 }
@@ -773,12 +887,12 @@ sendPushNotification = async () => {
 
 }
 
-// setInterval(()=>{
-//     console.log('test test test')
-//     sendPushNotification()
-// },500)
+setInterval(() => {
+    console.log('setInterval')
+    sendPushNotification2()
+}, 300000)
 
-sendPushNotification()
+//sendPushNotification2();
 
 
 
