@@ -74,15 +74,13 @@ class Reports extends Component {
     return allFamilies;
   }
 
-  tempServerGenerateReports = async () => {
-    var family = this.state.selectedFamily
-    var startDate = this.state.startDate
-    var endDate = this.state.endDate;
+  tempServerGenerateReports = async (family,startDate,endDate,data) => {
+    // var family = this.state.selectedFamily
+    // var startDate = this.state.startDate
+    // var endDate = this.state.endDate;
     var tempDate = startDate
-    console.log('tempDate222: ', tempDate)
-    var data = this.state.data
-    // console.log('startDate: ', startDate)
-    // console.log('endDate: ', endDate)
+    // var data = this.state.data
+
     var familyDetails = {};
     for (let i = 0; i < data.length; i++) {
       if (data[i].familyId == family) {
@@ -100,8 +98,9 @@ class Reports extends Component {
       familyMembers = familyMembers.concat(familyDetails.familyDetails.kids)
 
     }
+
     var diff = moment([endDate]).diff(moment([startDate]), 'years')
-    // console.log('diff: ', diff)
+    console.log('diff: ', diff)
     diff = parseInt(diff)
     let reportContent = []
     console.log('familyMembers.length: ', familyMembers.length);
@@ -215,10 +214,10 @@ class Reports extends Component {
         else if(field == 'custom tasks'){
           field = 'משימה מותאמת'
         }
-        else if(field == 'true'){
+        else if(field == true){
           field = 'כן'
         }
-        else if(field == 'false'){
+        else if(field == false){
           field = 'לא'
         }
         reportConterntToSend += field + ','
@@ -242,7 +241,36 @@ class Reports extends Component {
 
 
   }
+  generateWeeklyReports = ()=>{
+    var family = this.state.selectedFamily
+    var data = this.state.data
+    var endDate = moment(new Date()).format('DD/MM/YYYY')
+    var startDate = new Date(moment(endDate, "DD/MM/YYYY HH:MM A").subtract(7, "days"));
+    startDate = moment(startDate).format('DD/MM/YYYY')
+            // tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
+            // tempDate = moment(tempDate).format('DD/MM/YYYY')
+    console.log('endDate ' ,endDate)
+    console.log('startDate',startDate)
+    console.log('family',family)
+    console.log('',)
+    this.tempServerGenerateReports(family,startDate,endDate,data)
 
+  }
+  generateMonthlyReports = ()=>{
+    var family = this.state.selectedFamily
+    var data = this.state.data
+    var endDate = moment(new Date()).format('DD/MM/YYYY')
+    var startDate = new Date(moment(endDate, "DD/MM/YYYY HH:MM A").subtract(30, "days"));
+    startDate = moment(startDate).format('DD/MM/YYYY')
+            // tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
+            // tempDate = moment(tempDate).format('DD/MM/YYYY')
+    console.log('endDate ' ,endDate)
+    console.log('startDate',startDate)
+    console.log('family',family)
+    console.log('',)
+    this.tempServerGenerateReports(family,startDate,endDate,data)
+
+  }
   generateReports = () => {
     var family = this.state.selectedFamily
     var startDate = this.state.startDate
@@ -253,7 +281,7 @@ class Reports extends Component {
     //   .then(result => {
     //     console.log('result: ', result);
     //   });
-    this.tempServerGenerateReports()
+    this.tempServerGenerateReports(family,startDate,endDate,data)
   }
 
   selectedFamily = async (family) => {
@@ -280,11 +308,13 @@ class Reports extends Component {
         <Dropdown families={this.state.familiesNames} familySelected={this.selectedFamily.bind(this)} />
         <View style={{ marginBottom: 10 }}>
           <Button
+            onPress={this.generateWeeklyReports}
             title="הפקת דו''ח שבועי"
           />
         </View>
         <View>
           <Button
+            onPress={this.generateMonthlyReports}
             title="הפקת דו''ח חודשי"
           />
         </View>
