@@ -4,6 +4,8 @@ const FieldValue = require('firebase-admin').firestore.FieldValue;
 const { Expo } = require('expo-server-sdk');
 var fetch = require('node-fetch')
 var moment = require('moment');
+const nodemailer = require('nodemailer');
+const cors = require('cors')({ origin: true });
 //const { doc } = require('prettier');
 
 admin.initializeApp({
@@ -80,11 +82,8 @@ exports.deleteTask2 = functions.https.onCall(async (data, context) => {
 
 // const functions = require('firebase-functions');
 // const admin = require('firebase-admin');
-const nodemailer = require('nodemailer');
-const cors = require('cors')({ origin: true });
+
 // admin.initializeApp();
-
-
 
 /**
 * Here we're using Gmail to send
@@ -110,8 +109,9 @@ exports.sendMail = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    const event = data.event;
-    const action = data.action;
+    // const event = data.event;
+    // const action = data.action;
+    
     const mailOptions = {
         from: 'myuser', // Something like: Jane Doe <janedoe@gmail.com>
         to: data.swMailAddress,
@@ -303,7 +303,8 @@ exports.generateReports = functions.https.onCall(async (data, context) => {
     setTimeout(() => {
         csvWriter
             .writeRecords(data2)
-            .then(() => console.log('The CSV file was written successfully'));
+            .then(() => console.log('The CSV file was written successfully'))
+            .catch((err) => console.log('csvWriter Error: ', err));
     }, 1000)
 
 });
@@ -632,7 +633,7 @@ sendPushNotification2 = async () => {
         )
         .catch((err) => (console.log('tasks error ', err)));
 
-        
+
     let chunks = expo.chunkPushNotifications(messages);
     let tickets = [];
     (async () => {

@@ -104,15 +104,18 @@ class Reports extends Component {
     // console.log('diff: ', diff)
     diff = parseInt(diff)
     let reportContent = []
+    console.log('familyMembers.length: ', familyMembers.length);
     for (let i = 0; i < diff; i++) {
-        // familyMembers.forEach(async (x) => {
-      for(let j=0;j<familyMembers.length;j++){
-        x=familyMembers[i]
+      // familyMembers.forEach(async (x) => {
+      for (let j = 0; j < familyMembers.length; j++) {
+        x = familyMembers[j]
         var person
 
-        var y = await firebase.firestore().collection('users').doc(x).get().then(async (doc) => {
-          person = doc.data()
-        })
+        var y = await firebase.firestore().collection('users').doc(x).get()
+          .then(async (doc) => {
+            person = doc.data()
+          })
+          .catch((err) => console.log('doc(x) Error: ', err));
         // console.log('person: ',person)
         const swFamilies = await firebase
           .firestore()
@@ -176,34 +179,47 @@ class Reports extends Component {
     }
 
     const userId = firebase.auth().currentUser.uid;
+
+    console.log('userId ', userId);
     var swMail = ''
-    await firebase.firestore().collection('users').doc(userId).get().then((doc) => {
-      var data = doc.data()
-      swMail = data.email
-    })
+    await firebase.firestore().collection('users').doc(userId).get()
+      .then((doc) => {
+        var data = doc.data()
+        swMail = data.email
+      })
+      .catch((err) => console.log('get user email error: ', err));
+
     console.log('swMail: ', swMail)
     reportConterntToSend = '';
-    for (raw in reportContent) {
-      var values = Object.values(raw);
-      value.forEach((field) => {
+    console.log('reportContent194 : ', reportContent)
+    for (let k = 0; k < reportContent.length; k++) {
+      //console.log('r: ', r);
+      var values = Object.values(reportContent[k]);
+      console.log('values', values);
+      values.forEach((field) => {
+        console.log('field: ', field);
         reportConterntToSend += field + ','
       })
 
-      reportContent += '\n'
+      reportConterntToSend += '\n'
     }
+
+
     console.log('reportContent123:', reportContent)
     // reportContent='hello, world!\nkfir,nahmani\nshimon,emuna\n'
     setTimeout(() => {
-      console.log('reporContent4444: ', reportContent)
+      console.log('reporConterntToSend: ', reportConterntToSend)
       let genReport = firebase.functions().httpsCallable("sendMail");
       genReport({ reportContent: reportConterntToSend, swMailAddress: swMail })
         .then(result => {
           console.log('result: ', result);
-        });
+        })
+        .catch((err) => console.log('genReport Error: ', err));
     }, 3000)
 
 
   }
+
   generateReports = () => {
     var family = this.state.selectedFamily
     var startDate = this.state.startDate
@@ -216,11 +232,13 @@ class Reports extends Component {
     //   });
     this.tempServerGenerateReports()
   }
+
   selectedFamily = async (family) => {
     this.setState({ selectedFamily: family })
     console.log('selectedFamily: ', family)
     console.log('this.state.selectedFamily: ', this.state.selectedFamily)
   }
+
   render() {
 
     // console.log(this.state.families)
