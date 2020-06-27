@@ -104,9 +104,10 @@ class Reports extends Component {
     // console.log('diff: ', diff)
     diff = parseInt(diff)
     let reportContent = []
-    for (var i = 0; i < diff; i++) {
-
-      familyMembers.forEach(async (x) => {
+    for (let i = 0; i < diff; i++) {
+        // familyMembers.forEach(async (x) => {
+      for(let j=0;j<familyMembers.length;j++){
+        x=familyMembers[i]
         var person
         
         var y = await firebase.firestore().collection('users').doc(x).get().then(async (doc)=>{
@@ -119,7 +120,7 @@ class Reports extends Component {
           .where("userId", "==", x)
           .get()
           .then(async (querySnapshot) => {
-            console.log('querySnapshot: ',querySnapshot)
+            // console.log('querySnapshot: ',querySnapshot)
             // for(let doc in querySnapshot){
             querySnapshot.forEach(async (doc) => {
               let data = doc.data();
@@ -164,7 +165,8 @@ class Reports extends Component {
           .catch((error) => {
             console.log("Error getting documents: ", error);
           });
-      })
+      }
+      // )
       console.log('*******************************************')
       tempDate = new Date(moment(tempDate, "DD/MM/YYYY HH:MM A").add(1, "days"));
       tempDate = moment(tempDate).format('DD/MM/YYYY')
