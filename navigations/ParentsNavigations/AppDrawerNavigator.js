@@ -5,6 +5,7 @@ import { Ionicons as Icon } from '@expo/vector-icons';
 import DashboardStackNavigator from './DashboardStackNavigator';
 import WatchTasksStackNavigator from './WatchTasksStackNavigator';
 import MainPageStackNavigator from './MainPageStackNavigator';
+import MotivationStackNavigator from './MotivationStackNavigator';
 import TestScreen from '../../screens/swScreens/TestScreen';
 import firebase from '../../config/config';
 
@@ -51,11 +52,12 @@ const AppDrawerNavigator = createDrawerNavigator({
     }
   },
 
-  // Phrases: {
-  //   navigationOptions: {
-  //     drawerLabel: 'משפטים'
-  //   }
-  //}
+  Motivation: {
+    screen: MotivationStackNavigator,
+    navigationOptions: {
+      drawerLabel: 'משפטי מוטיבציה'
+    }
+  }
   // Dashboard: {
   //   screen: DashboardStackNavigator,
   // },

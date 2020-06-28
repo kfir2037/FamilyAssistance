@@ -368,12 +368,7 @@ class Reports extends Component {
                 onPress={this.generateWeeklyReports}
                 title="הפקת דו''ח שבועי"
               />}
-            {this.state.feedbackMsg == 'הדו"ח נשלח בהצלחה'
-              ? <Text style={styles.waitingMsg}>{this.state.feedbackMsg}</Text>
-              : this.state.feedbackMsg == 'אירעה שגיאה'
-                ? <Text style={styles.waitingMsg, { color: 'crimson' }}>{this.state.feedbackMsg}</Text>
-                : null
-            }
+            
           </View>
           <View style={{ width: '50%', alignSelf: 'center' }}>
             {this.state.loadingMonth
@@ -530,6 +525,12 @@ class Reports extends Component {
               iconRight
               titleStyle={{ marginRight: 10 }}
             />}
+            {this.state.feedbackMsg == 'הדו"ח נשלח בהצלחה'
+              ? <Text style={styles.waitingMsg}>{this.state.feedbackMsg}</Text>
+              : this.state.feedbackMsg == 'אירעה שגיאה'
+                ? <Text style={{...styles.waitingMsg,  color: 'crimson' }}>{this.state.feedbackMsg}</Text>
+                : null
+            }
         </ScrollView>
       </ImageBackground>
 

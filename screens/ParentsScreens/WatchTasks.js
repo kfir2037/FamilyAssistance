@@ -147,7 +147,7 @@
 // }
 
 import React, { Component } from 'react';
-import { SafeAreaView, Platform, StyleSheet, Text, View, Image } from 'react-native';
+import { SafeAreaView, Platform, StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import DateTime from 'react-native-customize-selected-date'
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import moment from 'moment';
@@ -158,7 +158,8 @@ export default class App extends Component {
     super(props)
     this.state = {
       time: '',
-      test: []
+      test: [],
+      selected: ''
     };
 
     LocaleConfig.locales['heb'] = {
@@ -174,12 +175,13 @@ export default class App extends Component {
 
   onChangeDate(date) {
     let arr = []
+    this.setState({ selected: date });
     for (let i = 0; i < 10; i++) {
       arr.push(date)
     }
     this.setState({ test: arr })
 
-    alert(date)
+    //alert(date)
 
   }
 
@@ -195,56 +197,59 @@ export default class App extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={{marginVertical:10,alignSelf:'center', fontWeight:'bold', color:'#767ead',fontSize:22}}>משימות חודשיות</Text>
-        <View style={{ marginVertical: 5 }}>
-          <Calendar
-            markedDates={{
-              '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }
-            }}
-            //markingType={'custom'}
-            onDayPress={(day) => this.onChangeDate(day.dateString)}
-            monthFormat={'MMM yyyy'}
-            displayLoadingIndicator
-            markedDates={{
-              [this.state.selected]: {
-                selected: true,
-                disableTouchEvent: true,
-                selectedColor: 'crimson',
-                selectedTextColor: 'red'
-              }
-            }}
-            style={{ borderRadius: 20, marginVertical: 10, marginHorizontal: 10, paddingBottom: 10 }}
-            //markedDates={{'2020-05-29':{selected:true}}}
-            //style={{borderWidth:1, borderColor:'gray'}}
-            theme={{
-              arrowColor: '#767ead',
-              calendarBackground: 'white',
-              todayTextColor: 'crimson',
-              todayTextBackground: '#b5bef5',
-              selectedDayBackgroundColor: '#767ead',
-              selectedDayTextColor: 'white',
-              textSectionTitleColor: 'gray',
-              textDayFontWeight: 'bold',
-              textDayHeaderFontWeight: 'bold',
-              textMonthFontWeight: 'bold',
-              dayTextColor: '#767ead',
-              textDisabledColor: '#b5bef5',
-              monthTextColor: '#767ead'
+
+        <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background08.png')}>
+          <Text style={{ marginVertical: 10, alignSelf: 'center', fontWeight: 'bold', color: 'white', fontSize: 22 }}>משימות חודשיות</Text>
+          <View style={{ marginVertical: 5 }}>
+            <Calendar
+              markedDates={{
+                '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }
+              }}
+              //markingType={'custom'}
+              onDayPress={(day) => this.onChangeDate(day.dateString)}
+              monthFormat={'MMM yyyy'}
+              displayLoadingIndicator
+              markedDates={{
+                [this.state.selected]: {
+                  selected: true,
+                  disableTouchEvent: true,
+                  selectedColor: '#0ca5e5',
+                  selectedTextColor: 'white'
+                }
+              }}
+              style={{ borderRadius: 20, marginVertical: 10, marginHorizontal: 10, paddingBottom: 10 }}
+              //markedDates={{'2020-05-29':{selected:true}}}
+              //style={{borderWidth:1, borderColor:'gray'}}
+              theme={{
+                arrowColor: '#e0aa00',
+                calendarBackground: 'white',
+                todayTextColor: '#0ca5e5',
+                todayTextBackground: 'lightgray',
+                selectedDayBackgroundColor: '#e0aa00',
+                selectedDayTextColor: 'white',
+                textSectionTitleColor: 'gray',
+                textDayFontWeight: 'bold',
+                textDayHeaderFontWeight: 'bold',
+                textMonthFontWeight: 'bold',
+                dayTextColor: '#e0aa00',
+                textDisabledColor: 'lightgray',
+                monthTextColor: '#e0aa00'
 
 
-            }}
-          />
+              }}
+            />
 
-          {/* <DateTime
-            date={this.state.time}
-            changeDate={(date) => this.onChangeDate(date)}
-            format='YYYY-MM-DD'
-            renderChildDay={(day) => this.renderChildDay(day)}
-          /> */}
-          <View style={styles.tasks}>
-            <Text>{this.state.test}</Text>
+            {/* <DateTime
+              date={this.state.time}
+              changeDate={(date) => this.onChangeDate(date)}
+              format='YYYY-MM-DD'
+              renderChildDay={(day) => this.renderChildDay(day)}
+            /> */}
+            <View style={styles.tasks}>
+              <Text>{this.state.test}</Text>
+            </View>
           </View>
-        </View>
+        </ImageBackground>
       </SafeAreaView>
     );
   }
@@ -253,7 +258,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     //flex: 1,
-    backgroundColor: '#b5bef5',
+    backgroundColor: 'lightgray',
     height: '100%',
     width: '100%',
   },

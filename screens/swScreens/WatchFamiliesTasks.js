@@ -242,7 +242,7 @@ export default class App extends Component {
   }
   returnNoonTasks() {
     return (
-      <Card containerStyle={{  width: '90%', borderRadius: 20 }} title="משימות צהריים">
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות צהריים">
         {
           this.state.noonTasks.map((obj, i) => {
             return (
@@ -256,7 +256,7 @@ export default class App extends Component {
                   </View>
                 }
                 <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
-              
+
               </View>
             );
           })
@@ -378,7 +378,7 @@ export default class App extends Component {
               [this.state.selected]: {
                 selected: true,
                 disableTouchEvent: true,
-                selectedColor: 'crimson',
+                selectedColor: '#0ca5e5',
                 selectedTextColor: 'red'
               }
             }}
@@ -387,19 +387,19 @@ export default class App extends Component {
             //markedDates={{'2020-05-29':{selected:true}}}
             //style={{borderWidth:1, borderColor:'gray'}}
             theme={{
-              arrowColor: '#767ead',
+              arrowColor: '#e0aa00',
               calendarBackground: 'white',
-              todayTextColor: 'crimson',
-              todayTextBackground: '#b5bef5',
-              selectedDayBackgroundColor: '#767ead',
+              todayTextColor: '#0ca5e5',
+              todayTextBackground: 'lightgray',
+              selectedDayBackgroundColor: '#e0aa00',
               selectedDayTextColor: 'white',
               textSectionTitleColor: 'gray',
               textDayFontWeight: 'bold',
               textDayHeaderFontWeight: 'bold',
               textMonthFontWeight: 'bold',
-              dayTextColor: '#767ead',
-              textDisabledColor: '#b5bef5',
-              monthTextColor: '#767ead'
+              dayTextColor: '#e0aa00',
+              textDisabledColor: 'lightgray',
+              monthTextColor: '#e0aa00'
             }}
           />
           {/* <DateTime
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
     top: 2,
     left: 1,
   },
-  taskName:{
+  taskName: {
 
   }
 
