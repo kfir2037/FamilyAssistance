@@ -214,7 +214,6 @@ export default class MainPage extends Component {
                 onPress={() => this.props.navigation.navigate('AddNewTask', {
                   familyId: this.state.familySelectedUid
                 })}
-                color='#767ead'
                 icon={<FontAwesome5
                   name="plus"
                   size={24}
