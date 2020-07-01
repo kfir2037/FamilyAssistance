@@ -102,7 +102,7 @@ export default class MainPage extends Component {
           borderBottomWidth: 1,
           borderBottomColor: 'black',
           borderBottomRightRadius: 35,
-          marginRight: 20
+          marginRight: 20,
 
         }}
       >
@@ -119,116 +119,120 @@ export default class MainPage extends Component {
   render() {
     return (
 
-      <ScrollView refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh.bind(this)}
-          enabled
-          colors={['#767ead']}
-        />
-      }
-        showsVerticalScrollIndicator contentContainerStyle={{height:'100%'}} style={{ backgroundColor: '#fbc213' }} >
-
-        <ScrollView contentContainerStyle={{}} style={{ height:'50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
-          <View style={styles.header}>
-            <Text style={styles.titleText}>משפחות</Text>
-          </View>
-          {this.state.loading
-            ? <ActivityIndicator size={50} color='#e0aa00' style={{ marginBottom: 10 }} />
-            : <View style={styles.familiesList}>
-              <SelectableFlatlist
-                data={this.state.data}
-                state={STATE.EDIT}
-                multiSelect={false}
-                itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
-                initialSelectedIndex={[0]}
-                cellItemComponent={(item) => this.rowItem(item)}
-                checkIcon={() => <FontAwesome name='circle' size={25} color='#0ca5e5' />}
-                uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#0ca5e5' />}
-                touchStyles={{ backgroundColor: 'transparent', opacity: 1 }}
-              />
-            </View>}
-        </ScrollView>
-
-        <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
-          <View style={styles.twoFirstButtons}>
-
-            <View style={styles.buttons}>
-              <Button
-                buttonStyle={styles.button}
-                title="פרטי המשפחה"
-                onPress={() => this.props.navigation.navigate('WatchFamilies', {
-                  familyId: this.state.familySelectedUid
-                })}
-                color='#767ead'
-                icon={<MaterialCommunityIcons
-                  name="account-details"
-                  size={26}
-                  color="white"
-                />
-                }
-                titleStyle={{ marginRight: 5 }}
-                iconRight
-              />
+      <SafeAreaView>
+        <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
+          <ScrollView refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+              enabled
+              colors={['#e0aa00']}
+            />
+          }
+            showsVerticalScrollIndicator contentContainerStyle={{ height: '100%' }} style={{  }} >
+  
+            <ScrollView contentContainerStyle={{}} style={{ height: '50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
+              <View style={styles.header}>
+                <Text style={styles.titleText}>משפחות</Text>
+              </View>
+              {this.state.loading
+                ? <ActivityIndicator size={50} color='#e0aa00' style={{ marginBottom: 10 }} />
+                : <View style={styles.familiesList}>
+                  <SelectableFlatlist
+                    data={this.state.data}
+                    state={STATE.EDIT}
+                    multiSelect={false}
+                    itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
+                    initialSelectedIndex={[0]}
+                    cellItemComponent={(item) => this.rowItem(item)}
+                    checkIcon={() => <FontAwesome name='circle' size={25} color='#0ca5e5' />}
+                    uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#0ca5e5' />}
+                    touchStyles={{ backgroundColor: 'transparent', opacity: 1 }}
+                  />
+                </View>}
+            </ScrollView>
+  
+            <View style={{ height: '30%', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
+              <View style={styles.twoFirstButtons}>
+  
+                <View style={styles.buttons}>
+                  <Button
+                    buttonStyle={styles.button}
+                    title="פרטי המשפחה"
+                    onPress={() => this.props.navigation.navigate('WatchFamilies', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    color='#767ead'
+                    icon={<MaterialCommunityIcons
+                      name="account-details"
+                      size={26}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 5 }}
+                    iconRight
+                  />
+                </View>
+                <View style={styles.buttons}>
+                  <Button
+                    buttonStyle={styles.button}
+                    onPress={() => this.props.navigation.navigate('Tasks2', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    title="משימות"
+                    color='#767ead'
+                    icon={<FontAwesome
+                      name="calendar"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 10 }}
+                    iconRight
+                  />
+                </View>
+              </View>
+              <View style={styles.twoFirstButtons}>
+                <View style={styles.buttons}>
+                  <Button
+                    buttonStyle={styles.button}
+                    onPress={() => this.props.navigation.navigate('AddNewFamily')}
+                    title="הוספת משפחה"
+                    color='#767ead'
+                    icon={<AntDesign
+                      name="addusergroup"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 5 }}
+                    iconRight
+                  />
+                </View>
+                <View style={styles.buttons}>
+                  <Button
+                    buttonStyle={styles.button}
+                    title="משימה חדשה"
+                    onPress={() => this.props.navigation.navigate('AddNewTask', {
+                      familyId: this.state.familySelectedUid
+                    })}
+                    icon={<FontAwesome5
+                      name="plus"
+                      size={24}
+                      color="white"
+                    />
+                    }
+                    titleStyle={{ marginRight: 10 }}
+                    iconRight
+                  />
+                </View>
+              </View>
             </View>
-            <View style={styles.buttons}>
-              <Button
-                buttonStyle={styles.button}
-                onPress={() => this.props.navigation.navigate('Tasks2', {
-                  familyId: this.state.familySelectedUid
-                })}
-                title="משימות"
-                color='#767ead'
-                icon={<FontAwesome
-                  name="calendar"
-                  size={24}
-                  color="white"
-                />
-                }
-                titleStyle={{ marginRight: 10 }}
-                iconRight
-              />
-            </View>
-          </View>
-          <View style={styles.twoFirstButtons}>
-            <View style={styles.buttons}>
-              <Button
-                buttonStyle={styles.button}
-                onPress={() => this.props.navigation.navigate('AddNewFamily')}
-                title="הוספת משפחה"
-                color='#767ead'
-                icon={<AntDesign
-                  name="addusergroup"
-                  size={24}
-                  color="white"
-                />
-                }
-                titleStyle={{ marginRight: 5 }}
-                iconRight
-              />
-            </View>
-            <View style={styles.buttons}>
-              <Button
-                buttonStyle={styles.button}
-                title="משימה חדשה"
-                onPress={() => this.props.navigation.navigate('AddNewTask', {
-                  familyId: this.state.familySelectedUid
-                })}
-                icon={<FontAwesome5
-                  name="plus"
-                  size={24}
-                  color="white"
-                />
-                }
-                titleStyle={{ marginRight: 10 }}
-                iconRight
-              />
-            </View>
-          </View>
-        </View>
-        {/* </View> */}
-
-      </ScrollView >
+            {/* </View> */}
+  
+          </ScrollView >
+        </ImageBackground>
+      </SafeAreaView>
     )
   }
 }

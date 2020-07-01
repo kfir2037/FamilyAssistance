@@ -10,8 +10,9 @@ import {
   SafeAreaView,
   Modal,
   FlatList,
-  TouchableHighlight,
+  TouchableOpacity,
   TextInput,
+  ImageBackground
 } from "react-native";
 import firebase from "../../config/config";
 import { Segment, Button as Btn } from 'native-base';
@@ -22,26 +23,26 @@ import moment from "moment";
 
 function Item({ id, title, selected, onSelect }) {
   return (
-    <CheckBox
-      checkedColor={"black"}
-      uncheckedColor={"black"}
-      containerStyle={styles.checkBoxStyle}
-      textStyle={styles.textCheckBoxStyle}
-      iconRight
-      right
-      title={title}
-      checked={selected ? true : false}
-      onPress={() => onSelect(id)}
-    />
-    // <TouchableOpacity
+    // <CheckBox
+    //   checkedColor={"black"}
+    //   uncheckedColor={"black"}
+    //   containerStyle={styles.checkBoxStyle}
+    //   textStyle={styles.textCheckBoxStyle}
+    //   iconRight
+    //   right
+    //   title={title}
+    //   checked={selected ? true : false}
     //   onPress={() => onSelect(id)}
-    //   style={[
-    //     styles.item,
-    //     { backgroundColor: selected ? '#6e3b6e' : '#f9c2ff' },
-    //   ]}
-    // >
-    //   <Text style={styles.title}>{title}</Text>
-    // </TouchableOpacity>
+    // />
+    <TouchableOpacity
+      onPress={() => onSelect(id)}
+      style={[
+        styles.item,
+        { backgroundColor: selected ? '#0ca5e5' : 'white' },
+      ]}
+    >
+      <Text style={{ color: selected ? 'white' : '#0ca5e5', fontWeight: 'bold', fontSize: 15, marginVertical: 5, marginHorizontal: 10 }}>{title}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -469,9 +470,11 @@ const AddNewTask = (familyId) => {
 
   const setForParentCheckbox = () => {
     forParent ? setForParent(false) : setForParent(true);
+    console.log('forParent: ', forParent)
   };
 
   useEffect(() => {
+    setFeedbackMsg('');
     let currentTasks = firebase
       .firestore()
       .collection("RoutineTasks")
@@ -491,206 +494,233 @@ const AddNewTask = (familyId) => {
 
   return (
     <SafeAreaView>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator>
+      <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')} >
+        <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container} showsVerticalScrollIndicator>
 
-        <Text style={styles.headerTitle}>הגדרת משימה חדשה</Text>
-        {/* <Segment style={{ backgroundColor: '#767ead' }}>
-          <Btn style={{ borderBottomStartRadius: 20, borderTopLeftRadius: 20 }} first active >
-            <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה קבועה</Text>
-          </Btn>
-          <Btn style style={{ borderBottomEndRadius: 20, borderTopRightRadius: 20 }} last active>
-            <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה מותאמת</Text>
-          </Btn>
-        </Segment> */}
-        <View style={styles.chooseType}>
-          <Text style={styles.title}>בחר אשכול:</Text>
-          <Picker
-            accessibilityLabel={'time'}
-            mode={"dropdown"}
-            itemStyle={{ fontWeight: "bold" }}
-            selectedValue={time}
-            style={styles.pickerStyle}
-            onValueChange={(itemValue, itemIndex) => setTime(itemValue)}
-          >
-            <Picker.Item label="בוקר" value="morning" />
-            <Picker.Item label="צהריים" value="noon" />
-            <Picker.Item label="אחר הצהריים" value="afterNoon" />
-            <Picker.Item label="ערב" value="evening" />
-          </Picker>
-        </View>
-        <View style={styles.chooseTasks}>
-          <Text style={styles.title}>בחר משימות לאשכול:</Text>
-          {tasks.length <= 0 ? (
-            <ActivityIndicator size={50} color="#767ead" />
-          ) : (
-              <FlatList
-                inverted
-                refreshing
-                horizontal
-                data={tasks}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <Item
-                    id={item}
-                    title={item}
-                    selected={!!selected.get(item)}
-                    onSelect={onSelect}
-                  />
-                )}
-                extraData={selected}
-                contentContainerStyle={{ margin: 5 }}
-              ></FlatList>
-            )}
-        </View>
-        <View>
-          <View
-            style={{
-              backgroundColor: "#b5bef5"
-            }}
-          >
-            <Text style={styles.title}>משימה מותאמת:</Text>
-            <UselessTextInput
-              multiline
-              numberOfLines={4}
-              onChangeText={(text) => setOtherTask(text)}
-              value={otherTask}
-              textAlign='right'
-              style={{ margin: 5, backgroundColor: "#b5bef5", borderWidth: 1 }}
-            />
+          <Text style={styles.headerTitle}>הגדרת משימה חדשה</Text>
+          {/* <Segment style={{ backgroundColor: '#767ead' }}>
+            <Btn style={{ borderBottomStartRadius: 20, borderTopLeftRadius: 20 }} first active >
+              <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה קבועה</Text>
+            </Btn>
+            <Btn style style={{ borderBottomEndRadius: 20, borderTopRightRadius: 20 }} last active>
+              <Text style={{ fontWeight: 'bold', color: '#b5bef5', margin: 10 }}>משימה מותאמת</Text>
+            </Btn>
+          </Segment> */}
+          <View style={styles.chooseType}>
+            <Text style={styles.title}>בחר אשכול:</Text>
+            <Picker
+              accessibilityLabel={'time'}
+              mode={"dropdown"}
+              itemStyle={{ fontWeight: "bold" }}
+              selectedValue={time}
+              style={styles.pickerStyle}
+              onValueChange={(itemValue, itemIndex) => setTime(itemValue)}
+            >
+              <Picker.Item label="בוקר" value="morning" />
+              <Picker.Item label="צהריים" value="noon" />
+              <Picker.Item label="אחר הצהריים" value="afterNoon" />
+              <Picker.Item label="ערב" value="evening" />
+            </Picker>
           </View>
-        </View>
-        <View style={styles.kidOrParent}>
-          <Text style={styles.title}>המשימה עבור:</Text>
-          <View style={{ flexDirection: "row" }}>
-            <CheckBox
-              iconRight
-              right
-              textStyle={styles.textCheckBoxStyle}
-              title="הורה"
-              containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
-              checkedColor={"black"}
-              uncheckedColor={"black"}
-              checked={forParent}
-              onPress={setForParentCheckbox}
-            />
-            <CheckBox
-              iconRight
-              right
-              textStyle={styles.textCheckBoxStyle}
-              title="ילד"
-              containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
-              checkedColor={"black"}
-              uncheckedColor={"black"}
-              checked={forKid}
-              onPress={setForKidCheckbox}
-            />
+          <View style={styles.chooseTasks}>
+            <Text style={styles.title}>בחר משימות לאשכול:</Text>
+            {tasks.length <= 0 ? (
+              <ActivityIndicator size={50} color="#767ead" />
+            ) : (
+                <FlatList
+                  inverted
+                  refreshing
+                  horizontal
+                  data={tasks}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <Item
+                      id={item}
+                      title={item}
+                      selected={!!selected.get(item)}
+                      onSelect={onSelect}
+                    />
+                  )}
+                  extraData={selected}
+                  contentContainerStyle={{ margin: 5 }}
+                ></FlatList>
+              )}
           </View>
-        </View>
-
-        <View>
-          <Text style={styles.title}>מתאריך:</Text>
-          <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
-            <View>
-              <Button
-                onPress={showDatepicker}
-                title={moment(date).format("DD/MM/YYYY")}
-                buttonStyle={styles.button}
-                containerStyle={styles.containerButton}
-                titleStyle={{ color: 'black' }}
-              />
-
-            </View>
-            <View>
-              <Button
-                onPress={showTimepicker}
-                title={moment(date).format("H:MM")}
-                buttonStyle={styles.button}
-                containerStyle={styles.containerButton}
-                titleStyle={{ color: 'black' }}
-              />
-            </View>
-            {show && (
-              <DateTimePicker
-                accessibilityLabel={'date'}
-                testID="dateTimePicker"
-                timeZoneOffsetInMinutes={0}
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChange}
-              />
-            )}
-          </View>
-        </View>
-        <View>
-          <Text style={styles.title}>עד תאריך:</Text>
-          <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
-            <View>
-              <Button
-                onPress={showDatepickerDestination}
-                title={moment(dateDestination).format("DD/MM/YYYY")}
-                buttonStyle={styles.button}
-                containerStyle={styles.containerButton}
-                titleStyle={{ color: 'black' }}
-              />
-
-            </View>
-            <View>
-              <Button
-                onPress={showTimepickerDestination}
-                title={moment(dateDestination).format("H:MM")}
-                buttonStyle={styles.button}
-                containerStyle={styles.containerButton}
-                titleStyle={{ color: 'black' }}
-              />
-
-            </View>
-            {showDestination && (
-              <DateTimePicker
-                accessibilityLabel={'hour'}
-                testID="dateTimePicker"
-                timeZoneOffsetInMinutes={0}
-                value={dateDestination}
-                mode={modeDestination}
-                is24Hour={true}
-                display="default"
-                onChange={onChangeDestination}
-              />
-            )}
-          </View>
-        </View>
-        <View style={{ marginTop: 20 }}>
-          {isLoading
-            ? <ActivityIndicator size={30} color='#767ead' />
-            : <Button
-              onPress={() => {
-                setIsLoading(true);
-                setFeedbackMsg('')
-                save();
+          <View>
+            <View
+              style={{
+                //backgroundColor: "#b5bef5"
               }}
-              title={"הוסף"}
-              buttonStyle={styles.button}
-              containerStyle={styles.containerButton}
-              titleStyle={{ color: 'black' }}
-            />}
-          {feedbackMsg == 'משימה נוספה בהצלחה'
+            >
+              <Text style={styles.title}>משימה מותאמת:</Text>
+              <UselessTextInput
+                multiline
+                numberOfLines={4}
+                onChangeText={(text) => setOtherTask(text)}
+                value={otherTask}
+                textAlign='right'
+                style={{ marginHorizontal: 10, borderRadius: 15, borderWidth: 1, paddingHorizontal: 10 }}
+              />
+            </View>
+          </View>
+          <View style={styles.kidOrParent}>
+            <Text style={styles.title}>המשימה עבור:</Text>
+            <View style={{ flexDirection: "row" }}>
+              {/* <CheckBox
+                iconRight
+                right
+                textStyle={styles.textCheckBoxStyle}
+                title="הורה"
+                containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
+                checkedColor={"black"}
+                uncheckedColor={"black"}
+                checked={forParent}
+                onPress={setForParentCheckbox}
+              /> */}
+              <TouchableOpacity
+                onPress={setForParentCheckbox}
+                style={[
+                  styles.item,
+                  { backgroundColor: forParent ? '#0ca5e5' : 'white' },
+                ]}
+              >
+                <Text style={{ color: forParent? 'white' : '#0ca5e5', fontWeight: 'bold', fontSize: 15, marginVertical: 5, marginHorizontal: 15 }}>הורה</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={setForKidCheckbox}
+                style={[
+                  styles.item,
+                  {  backgroundColor: forKid ? '#0ca5e5' : 'white' },
+                ]}
+              >
+                <Text style={{ color: forKid? 'white' : '#0ca5e5', fontWeight: 'bold', fontSize: 15, marginVertical: 5, marginHorizontal: 20 }}>ילד</Text>
+              </TouchableOpacity>
+              {/* <CheckBox
+                iconRight
+                right
+                textStyle={styles.textCheckBoxStyle}
+                title="ילד"
+                containerStyle={{ ...styles.checkBoxStyle, height: 40 }}
+                checkedColor={"black"}
+                uncheckedColor={"black"}
+                checked={forKid}
+                onPress={setForKidCheckbox}
+              /> */}
+            </View>
+          </View>
+
+          <View>
+            <Text style={styles.title}>מתאריך:</Text>
+            <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
+              <View>
+                <Button
+                  onPress={showDatepicker}
+                  title={moment(date).format("DD/MM/YYYY")}
+                  buttonStyle={[styles.button, { backgroundColor: '#0ca5e5'}]}
+                  containerStyle={styles.containerButton}
+                  titleStyle={{ color: 'white' }}
+                />
+
+              </View>
+              <View>
+                <Button
+                  onPress={showTimepicker}
+                  title={moment(date).format("H:MM")}
+                  buttonStyle={[styles.button, { backgroundColor: '#0ca5e5'}]}
+                  containerStyle={styles.containerButton}
+                  titleStyle={{ color: 'white' }}
+                />
+              </View>
+              {show && (
+                <DateTimePicker
+                  accessibilityLabel={'date'}
+                  testID="dateTimePicker"
+                  //timeZoneOffsetInMinutes={0}
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+            </View>
+          </View>
+          <View>
+            <Text style={styles.title}>עד תאריך:</Text>
+            <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
+              <View>
+                <Button
+                  onPress={showDatepickerDestination}
+                  title={moment(dateDestination).format("DD/MM/YYYY")}
+                  buttonStyle={[styles.button, { backgroundColor: '#0ca5e5'}]}
+                  containerStyle={styles.containerButton}
+                  titleStyle={{ color: 'white' }}
+                />
+
+              </View>
+              <View>
+                <Button
+                  onPress={showTimepickerDestination}
+                  title={moment(dateDestination).format("H:MM")}
+                  buttonStyle={[styles.button, { backgroundColor: '#0ca5e5'}]}
+                  containerStyle={styles.containerButton}
+                  titleStyle={{ color: 'white' }}
+                />
+
+              </View>
+              {showDestination && (
+                <DateTimePicker
+                  accessibilityLabel={'hour'}
+                  testID="dateTimePicker"
+                  timeZoneOffsetInMinutes={0}
+                  value={dateDestination}
+                  mode={modeDestination}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeDestination}
+                />
+              )}
+            </View>
+          </View>
+          <View style={{ marginTop: 20 }}>
+            {isLoading
+              ? <ActivityIndicator size={30} color='#c0d747' />
+              : <Button
+                onPress={() => {
+                  setIsLoading(true);
+                  setFeedbackMsg('')
+                  save();
+                }}
+                title={"הוסף"}
+                buttonStyle={styles.button}
+                containerStyle={styles.containerButton}
+                titleStyle={{ color: 'white' }}
+              />}
+            {feedbackMsg == 'משימה נוספה בהצלחה'
               ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'green', fontSize: 18, alignSelf: 'center' }}>משימה נוספה בהצלחה</Text>
               : feedbackMsg == 'אירעה שגיאה'
                 ? <Text style={{ fontWeight: 'bold', marginBottom: 10, color: 'crimson', fontSize: 18, alignSelf: 'center' }}>אירעה שגיאה</Text>
                 : null
             }
-        </View>
-      </ScrollView>
+          </View>
+        </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#b5bef5",
     height: "100%",
     width: "100%",
+  },
+  contentContainer:{
+    backgroundColor: "white",
+    marginHorizontal:10,
+    marginVertical:10,
+    borderRadius:20,
+    paddingBottom:10
+
   },
   headerTitle: {
     fontSize: 25,
@@ -739,12 +769,12 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   button: {
-    backgroundColor: '#767ead',
+    backgroundColor: '#c0d747',
     width: 120,
     height: 40,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'black',
+    // borderWidth: 1,
+    // borderColor: 'black',
     justifyContent: 'center'
   },
   containerButton: {
@@ -752,6 +782,13 @@ const styles = StyleSheet.create({
     margin: 5,
 
   },
+  item: {
+    marginHorizontal: 5,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#0ca5e5',
+    marginVertical: 5
+  }
 });
 
 export default AddNewTask;

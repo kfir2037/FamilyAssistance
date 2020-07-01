@@ -490,10 +490,8 @@ export default class Settings extends Component {
                     }
                     // onLimitReached={(isMax,msg) => console.log(isMax,msg)}
                     totalWidth={140}
-
                     totalHeight={35}
                     iconSize={25}
-
                     step={1}
                     valueType="real"
                     rounded

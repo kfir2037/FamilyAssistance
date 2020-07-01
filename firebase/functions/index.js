@@ -135,60 +135,6 @@ exports.sendMail = functions.https.onCall(async (data, context) => {
 });
 
 
-
-
-
-/**
-* Here we're using Gmail to send 
-*/
-// let transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: 'familymailer123@gmail.com',
-//         pass: 'shimon123'
-//     }
-// });
-
-
-// exports.sendMail = functions.https.onRequest((req, res) => {
-// // exports.sendMail = functions.https.onCall(async (data, context) => {
-//     console.log('send maillll')
-//     console.log('data: ',data)
-//     // console.log('req: ',req)
-//     cors(req, res, () => {
-
-//         // getting dest email by query string
-//         const dest = 'kfir2037@gmail.com';
-//         // const dest = req.swMailAddress;
-
-//         const mailOptions = {
-//             // from: 'Your Account Name <yourgmailaccount@gmail.com>', // Something like: Jane Doe <janedoe@gmail.com>
-//             from: 'מרכז הורים ילדים>', 
-//             to: dest,
-//             subject: 'family Report', // email subject
-//             // html: `<p style="font-size: 16px;">Pickle Riiiiiiiiiiiiiiiick!!</p>
-//             //     <br />
-//             //     <img src="https://images.prod.meredith.com/product/fc8754735c8a9b4aebb786278e7265a5/1538025388228/l/rick-and-morty-pickle-rick-sticker" />
-//             // `,// email content in HTML
-//             attachments: [
-//                 {
-//                     filename: 'report.csv',
-//                     // content: new Buffer(req.reportContent,'utf-8')
-//                     content: new Buffer('hello, world!\nkfir,nahmani\nshimon,emuna\n','utf-8')
-//                 }
-//             ]
-//             };
-
-//         // returning result
-//         return transporter.sendMail(mailOptions, (erro, info) => {
-//             if(erro){
-//                 return res.send(erro.toString());
-//             }
-//             return res.send('Sended');
-//         });
-//     });    
-// });
-
 exports.generateReports = functions.https.onCall(async (data, context) => {
     // console.log('dataaaa: ', data)
     // var startDate = moment(data.startDate)
@@ -403,6 +349,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         const newUser = {
             email: data.email,
             emailVerified: false,
+            phoneNumber:data.phone,
             password: data.id,
             displayName: data.firstName + ' ' + data.lastName,
             disabled: false

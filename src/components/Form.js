@@ -29,9 +29,6 @@ export default class Form extends Component {
         user = firebase.auth().currentUser;
         if (user) {
           userUid = user.uid
-
-
-          // console.log("user22: ",user);
           firebase.firestore().collection('users').doc(userUid).get()
             .then(doc => {
               // console.log("doc: ", doc)
@@ -65,19 +62,12 @@ export default class Form extends Component {
   }
 
   onButtonPress() {
-    //this.props.navigation.navigate('SwDashboard');
-
-    // const { id, password } = this.state;
-    // this.setState({ errorMessage: '', loading: true });
 
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
 
     const userEmail = firebase.functions().httpsCallable('signinUserEmail');
 
-    //const data = { idNummber: id };
-
-    //console.log('data',data);
     userEmail(id)
       .then((resp) => {
         console.log(resp);
@@ -91,22 +81,6 @@ export default class Form extends Component {
         console.log('userEmail Error ', err);
         this.onLoginFail();
       })
-
-
-
-    // var users = firebase.firestore().collection('users').doc('LruTTvuWdqWd6RqUs9JN1tPjAcJ2');
-    // users.get().then(function (doc) {
-    //   if (doc.exists) {
-    //     console.log("Document data:", doc.data());
-    //   } else {
-    //     // doc.data() will be undefined in this case
-    //     console.log("No such document!");
-    //   }
-    // }).catch(function (error) {
-    //   console.log("Error getting document:", error);
-    // });
-
-    //this.props.navigation.navigate('SwDashboard');
   }
 
   onLoginFail() {

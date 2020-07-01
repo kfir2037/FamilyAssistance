@@ -160,6 +160,12 @@ export default class App extends Component {
       time: '',
       test: [],
       selected: ''
+
+
+
+
+
+
     };
 
     LocaleConfig.locales['heb'] = {
@@ -183,15 +189,6 @@ export default class App extends Component {
 
     //alert(date)
 
-  }
-
-  renderChildDay(day) {
-    if (_.includes(['2020-02-12', '2020-02-20', '2018-12-20'], day)) {
-      return <Image source={require('../../src/images/ic_lock_green.png')} style={styles.icLockRed} />
-    }
-    if (_.includes(['2020-02-16', '2020-02-26', '2018-12-21', '2018-12-18'], day)) {
-      return <Image source={require('../../src/images/ic_lock_red.png')} style={styles.icLockRed} />
-    }
   }
 
   render() {
@@ -218,8 +215,6 @@ export default class App extends Component {
                 }
               }}
               style={{ borderRadius: 20, marginVertical: 10, marginHorizontal: 10, paddingBottom: 10 }}
-              //markedDates={{'2020-05-29':{selected:true}}}
-              //style={{borderWidth:1, borderColor:'gray'}}
               theme={{
                 arrowColor: '#e0aa00',
                 calendarBackground: 'white',
@@ -238,13 +233,6 @@ export default class App extends Component {
 
               }}
             />
-
-            {/* <DateTime
-              date={this.state.time}
-              changeDate={(date) => this.onChangeDate(date)}
-              format='YYYY-MM-DD'
-              renderChildDay={(day) => this.renderChildDay(day)}
-            /> */}
             <View style={styles.tasks}>
               <Text>{this.state.test}</Text>
             </View>
