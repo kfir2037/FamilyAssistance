@@ -7,9 +7,11 @@ import AppDrawerNavigator from './navigations/ParentsNavigations/AppDrawerNaviga
 import SwDrawerNavigator from './navigations/SwNavigations/SwDrawerNavigator';
 import KidsDrawerNavigator from './navigations/KidsNavigations/KidsDrawerNavigator';
 import loadingScreen from './screens/loadingScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import { AppLoading } from 'expo';
 import firebase from './config/config';
 import moment from 'moment';
+import { createStackNavigator } from 'react-navigation-stack';
 
 const App = () => {
 
@@ -34,9 +36,14 @@ export default App;
 
 const AppSwitchNavigator = createSwitchNavigator({
   loading: loadingScreen,
-  Welcome: {
-    screen: WelcomeScreen,
-  },
+  WelcomeFlow: createStackNavigator({
+    Welcome: WelcomeScreen,
+    ForgotPassword: ForgotPasswordScreen
+  }, {
+    navigationOptions: {
+      header: null
+    }
+  }),
   ParentsDashboard: {
     screen: AppDrawerNavigator,
   },

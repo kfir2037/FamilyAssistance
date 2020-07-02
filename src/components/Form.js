@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import firebase from '../../config/config';
 import Spinner from '../components/Spinner';
+import { auth } from 'firebase';
 
 export default class Form extends Component {
 
@@ -26,8 +27,16 @@ export default class Form extends Component {
     var that = this;
     firebase.auth().onAuthStateChanged(function (user) {
       try {
+        let sessionTimeout;
         user = firebase.auth().currentUser;
         if (user) {
+          user.getIdTokenResult().then((idTokenResult) => {
+            const authTime = idTokenResult.claims.auth_time * 1000;
+            console.log('authTime: ', authTime);
+            const sessionDuration = 1000 * 60 * 10;
+            const millisecondsUntilExpiration = sessionDuration - (Date.now() - authTime);
+            sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
+          })
           userUid = user.uid
           firebase.firestore().collection('users').doc(userUid).get()
             .then(doc => {
@@ -49,6 +58,8 @@ export default class Form extends Component {
             })
             .catch((err) => { console.log('Form ', err) })
         } else {
+          sessionTimeout && clearTimeout(sessionTimeout);
+          sessionTimeout = null;
           that.props.navigation.navigate('Welcome');
         }
         // if (userUid) {
@@ -114,7 +125,7 @@ export default class Form extends Component {
           selectionColor="gray"
           keyboardType='phone-pad'
           onSubmitEditing={() => this.password.focus()}
-          
+
         />
 
         <TextInput
@@ -131,37 +142,14 @@ export default class Form extends Component {
 
         {this.state.errorMessage ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : null}
 
-
         <View>
           {this.renderButton()}
         </View>
 
-        {/* <TouchableOpacity onPress={() => this.onButtonPress()} style={styles.button}>
-          <Text style={styles.buttonText}>התחברות</Text>
-        </TouchableOpacity> */}
       </View>
     )
   }
 
-  // loginUser = async (id, password) => {
-
-  //   if (id != '' && password != '') {
-  //     try {
-  //       let user = await firebase.auth().signInWithEmailAndPassword(id, password);
-  //       this.props.navigation.navigate('ParentsDashboard');
-  //     } catch (error) {
-  //       this.addError();
-  //       console.log(error);
-  //     }
-  //   }
-  //   else {
-  //     this.addError();
-  //   }
-  // }
-
-  // addError = () => {
-  //   this.setState({ errorMessage: 'שם משתמש או סיסמה שגויים' });
-  // }
 }
 
 const styles = StyleSheet.create({

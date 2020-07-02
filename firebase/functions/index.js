@@ -349,12 +349,12 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         const newUser = {
             email: data.email,
             emailVerified: false,
-            phoneNumber:data.phone,
+            phoneNumber:`+972${data.phone}`,
             password: data.id,
             displayName: data.firstName + ' ' + data.lastName,
             disabled: false
         }
-        console.log(84);
+        console.log('newUser: ',newUser);
 
         const userRecord = await admin
             .auth()

@@ -302,7 +302,7 @@ export default class App extends Component {
         <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background08.png')}>
 
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: 'white' }}>משימות</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: 'white' }}>לוח משימות חודשי</Text>
           </View>
           <View style={{ marginVertical: 20, borderRadius: 40 }}>
             <Calendar
