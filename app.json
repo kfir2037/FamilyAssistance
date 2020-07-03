@@ -3,6 +3,13 @@
     "name": "Family Assistance",
     "slug": "FamilyAssistance",
     "privacy": "public",
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+      "package": "com.beersheva.B7"
+    },
     "platforms": [
       "ios",
       "android",
