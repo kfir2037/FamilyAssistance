@@ -51,13 +51,17 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
-const query = admin.firestore().collection('tasks').where('category','==','morning');
+admin.auth().setCustomUserClaims('oJbsyP4Hg2b7BLUtuaIkA1stSMO2', { admin: true })
+    .then((resp) => console.log('claims resp: ', resp));
+
+
+const query = admin.firestore().collection('tasks').where('category', '==', 'morning');
 
 const observer = query.onSnapshot(querySnapshot => {
-  console.log(`Received query snapshot: ${querySnapshot.size}`);
-  // ...
+    console.log(`Received query snapshot: ${querySnapshot.size}`);
+    // ...
 }, err => {
-  console.log(`Encountered error: ${err}`);
+    console.log(`Encountered error: ${err}`);
 });
 
 exports.getFamilyMembers = functions.https.onCall(async (data, context) => {
@@ -111,7 +115,7 @@ exports.sendMail = functions.https.onCall(async (data, context) => {
     }
     // const event = data.event;
     // const action = data.action;
-    
+
     const mailOptions = {
         from: 'myuser', // Something like: Jane Doe <janedoe@gmail.com>
         to: data.swMailAddress,
@@ -120,7 +124,7 @@ exports.sendMail = functions.https.onCall(async (data, context) => {
         attachments: [
             {
                 filename: 'Report.csv',
-                content: new Buffer(data.reportContent,'utf-8')
+                content: new Buffer(data.reportContent, 'utf-8')
                 // content: new Buffer('hello, world!\nkfir,nahmani\nshimon,emuna\n', 'utf-8')
             }
         ]
@@ -349,12 +353,12 @@ exports.createUser = functions.https.onCall(async (data, context) => {
         const newUser = {
             email: data.email,
             emailVerified: false,
-            phoneNumber:`+972${data.phone}`,
+            phoneNumber: `+972${data.phone}`,
             password: data.id,
             displayName: data.firstName + ' ' + data.lastName,
             disabled: false
         }
-        console.log('newUser: ',newUser);
+        console.log('newUser: ', newUser);
 
         const userRecord = await admin
             .auth()

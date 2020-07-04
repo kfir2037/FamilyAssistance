@@ -76,7 +76,7 @@ export default class ParentsMainPage extends React.Component {
     if (finalStatus !== 'granted') {
       return;
     }
-    let token = await Notifications.getExpoPushTokenAsync()
+    const token = await Notifications.getExpoPushTokenAsync()
       .then(() => { console.log('token: ', token) })
       .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
     const user = firebase.auth().currentUser.uid;

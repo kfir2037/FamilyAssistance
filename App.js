@@ -36,14 +36,25 @@ export default App;
 
 const AppSwitchNavigator = createSwitchNavigator({
   loading: loadingScreen,
-  WelcomeFlow: createStackNavigator({
-    Welcome: WelcomeScreen,
-    ForgotPassword: ForgotPasswordScreen
-  }, {
-    navigationOptions: {
-      header: null
+  WelcomeFlow:
+    createStackNavigator({
+      Welcome: {
+        screen: WelcomeScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
+      ForgotPassword: {
+        screen: ForgotPasswordScreen,
+        navigationOptions: {
+          headerStyle: {
+            backgroundColor: '#e0aa00'
+          }
+        }
+      }
     }
-  }),
+
+    ),
   ParentsDashboard: {
     screen: AppDrawerNavigator,
   },

@@ -50,13 +50,17 @@ export default class Form extends Component {
               else if (role == 'parent') {
                 that.props.navigation.navigate('ParentsDashboard');
               }
-              else if (role == 'child') {
+              else if (role == 'kid') {
                 that.props.navigation.navigate('KidsDashboard');
               } else {
+                that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
                 that.props.navigation.navigate('Welcome');
               }
             })
-            .catch((err) => { console.log('Form ', err) })
+            .catch((err) => {
+              console.log('Form ', err);
+              that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
+            })
         } else {
           sessionTimeout && clearTimeout(sessionTimeout);
           sessionTimeout = null;
