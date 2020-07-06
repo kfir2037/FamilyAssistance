@@ -32,7 +32,7 @@ export default class Login extends Component {
                 </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
-            <Image style={{ alignSelf: 'center', marginBottom: 15, height: 30, width: 150, bottom: 17 }} source={require('../assets/logo_b7.png')} />
+            <Image style={{ alignSelf: 'center', marginBottom: 15, height: 40, width: 160, bottom: 17 }} source={require('../assets/logo_b7.png')} />
           </ImageBackground>
         </View>
       </TouchableWithoutFeedback>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    top: -17,
+    top: -5,
     //marginBottom: 20
   }
 });

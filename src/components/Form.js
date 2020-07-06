@@ -33,7 +33,7 @@ export default class Form extends Component {
           user.getIdTokenResult().then((idTokenResult) => {
             const authTime = idTokenResult.claims.auth_time * 1000;
             console.log('authTime: ', authTime);
-            const sessionDuration = 1000 * 60 * 10;
+            const sessionDuration = 1000 * 60 * 100;
             const millisecondsUntilExpiration = sessionDuration - (Date.now() - authTime);
             sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
           })
@@ -127,7 +127,7 @@ export default class Form extends Component {
           placeholder="תעודת זהות"
           placeholderTextColor="#ffffff"
           selectionColor="gray"
-          keyboardType='phone-pad'
+          keyboardType='numeric'
           onSubmitEditing={() => this.password.focus()}
 
         />

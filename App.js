@@ -7,7 +7,7 @@ import AppDrawerNavigator from './navigations/ParentsNavigations/AppDrawerNaviga
 import SwDrawerNavigator from './navigations/SwNavigations/SwDrawerNavigator';
 import KidsDrawerNavigator from './navigations/KidsNavigations/KidsDrawerNavigator';
 import loadingScreen from './screens/loadingScreen';
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import ChangePasswordScreen from './screens/ChangePasswordScreen';
 import { AppLoading } from 'expo';
 import firebase from './config/config';
 import moment from 'moment';
@@ -15,7 +15,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 const App = () => {
 
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     'Heebo': require('./assets/fonts/Heebo-VariableFont_wght.ttf'),
   });
 
@@ -44,14 +44,14 @@ const AppSwitchNavigator = createSwitchNavigator({
           header: null
         }
       },
-      ForgotPassword: {
-        screen: ForgotPasswordScreen,
-        navigationOptions: {
-          headerStyle: {
-            backgroundColor: '#e0aa00'
-          }
-        }
-      }
+      // ForgotPassword: {
+      //   screen: ForgotPasswordScreen,
+      //   navigationOptions: {
+      //     headerStyle: {
+      //       backgroundColor: '#e0aa00'
+      //     }
+      //   }
+      // }
     }
 
     ),

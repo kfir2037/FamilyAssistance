@@ -9,6 +9,7 @@ import firebase from '../../config/config';
 import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
 import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
+import ChangePasswordScreen from '../../screens/ChangePasswordScreen'
 import SettingsStackNavigator from './SettingsStackNavigator'
 import ReportsStackNavigator from './ReportsStackNavigator'
 import { Ionicons as Icon } from '@expo/vector-icons';
@@ -30,7 +31,7 @@ const CustomDrawerComponent = (props) => (
         }
 
       }}>
-        <View style={{ padding:10, flexDirection: 'row', justifyContent: 'center', marginVertical: 15 }}>
+        <View style={{ padding: 10, flexDirection: 'row', justifyContent: 'center', marginVertical: 15 }}>
           <Icon style={{ marginHorizontal: 10 }} name='md-exit' color='white' size={24} />
           <Text style={{ color: 'white', fontWeight: 'bold' }}>התנתקות</Text>
         </View>
@@ -74,14 +75,36 @@ const SwDrawerNavigator = createDrawerNavigator({
     }
   },
 
-  // Logout: {
-  //   screen: WelcomeScreen,
-
-  //   navigationOptions: {
-  //     drawerLabel: 'התנתקות',
-  //     drawerIcon: <Icon name='md-exit' color='white' size={24} />
-  //   }
-  // }
+  ChangePasswordFlow:{
+    screen: createStackNavigator({
+      ChangePassword: {
+        screen: ChangePasswordScreen,
+      }
+    },{
+      defaultNavigationOptions:({navigation}) => {
+        return {
+          headerRight: (
+            <Icon style={{ padding: 10 }}
+              onPress={() => navigation.openDrawer()}
+              name="md-menu"
+              size={30}
+              color='white'
+            />
+          ),
+          headerTintColor:'white',
+          headerStyle: {
+            backgroundColor: '#e0aa00'
+          }
+        }
+      }
+    }),
+    navigationOptions:{
+      drawerLabel:'ערוך פרופיל'
+    }
+    
+  },
+  
+    
 }, {
   drawerPosition: 'right',
   drawerWidth: '60%',
