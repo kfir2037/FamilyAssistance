@@ -22,7 +22,11 @@ const App = () => {
   });
 
   console.log('isRTL: ', I18nManager.isRTL);
-  I18nManager.allowRTL(false);
+
+  
+  useEffect(() => {
+    I18nManager.allowRTL(false);
+  }, []);
   // const messaging = firebase.messaging();
   // messaging.usePublicVapidKey('BCeJeaN3JawwJIYicC7n4cNkvfSdxkRuSjkXkiX_lvksdWks0bddHh39QhWnakxdu4PTMRSYKmU4BYhIAAViv10');
 
