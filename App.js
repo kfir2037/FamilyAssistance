@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, I18nManager } from 'react-native';
 import { useFonts } from '@use-expo/font';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -15,20 +15,20 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 const App = () => {
 
+
+
   const [fontsLoaded] = useFonts({
     'Heebo': require('./assets/fonts/Heebo-VariableFont_wght.ttf'),
   });
 
+  console.log('isRTL: ', I18nManager.isRTL);
+  I18nManager.allowRTL(false);
   // const messaging = firebase.messaging();
   // messaging.usePublicVapidKey('BCeJeaN3JawwJIYicC7n4cNkvfSdxkRuSjkXkiX_lvksdWks0bddHh39QhWnakxdu4PTMRSYKmU4BYhIAAViv10');
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <AppContainer />
-    )
-  }
+  return (
+    <AppContainer />
+  )
 
 }
 

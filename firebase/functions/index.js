@@ -464,7 +464,7 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
             throw new functions.https.HttpsError('internal', error.message);
         }
     }
-})
+});
 
 exports.signinUserEmail = functions.https.onCall(async (data, context) => {
     //admin.firestore().collection('users').where('id')
@@ -501,7 +501,7 @@ exports.signinUserEmail = functions.https.onCall(async (data, context) => {
     //         throw new functions.https.HttpsError('internal', error.message);
     //     });
 
-})
+});
 
 
 sendPushNotification2 = async () => {

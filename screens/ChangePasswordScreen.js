@@ -4,7 +4,8 @@ import { Button, Input as InputElement } from 'react-native-elements';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Spinner from '../src/components/Spinner';
-
+import firebase from '../config/config'
+import { auth } from 'firebase';
 
 const passRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$+=!*()@%&]).{8,10}$/g
 
@@ -25,6 +26,39 @@ const changePassSchema = yup.object().shape({
 const ChangePasswordScreen = () => {
 
   const [loadingChangePass, setLoadingChangePass] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState('');
+
+
+  const reauthenticate = (currentPassword) => {
+    try {
+      var user = firebase.auth().currentUser;
+      var cred = auth.EmailAuthProvider.credential(
+        user.email, currentPassword);
+      return user.reauthenticateWithCredential(cred);
+    } catch (err) {
+      setLoadingChangePass(false);
+      setFeedbackMsg('אירעה שגיאה');
+      console.log('reauthenticate error1: ', err);
+    }
+
+  }
+
+  const changePassword = (currentPassword, newPassword) => {
+    reauthenticate(currentPassword).then(() => {
+      var user = firebase.auth().currentUser;
+      user.updatePassword(newPassword).then(() => {
+        console.log("Password updated!");
+        setFeedbackMsg('שינוי הסיסמה בוצע בהצלחה');
+      }).catch((error) => {
+        console.log('updatePassword error: ', error);
+        setFeedbackMsg('אירעה שגיאה');
+      });
+    }).catch((error) => {
+      console.log('reauthenticate error: ', error);
+      setFeedbackMsg('אירעה שגיאה');
+
+    });
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -44,6 +78,15 @@ const ChangePasswordScreen = () => {
               onSubmit={(values, actions) => {
                 actions.resetForm();
 
+                try {
+                  changePassword(values.oldPass, values.newPass);
+                  setLoadingChangePass(false);
+                }
+                catch (err) {
+                  console.log('changePassword form error: ', err);
+                  setLoadingChangePass(false);
+                  setFeedbackMsg('אירעה שגיאה');
+                }
               }}
             >
               {(props) => (
@@ -104,14 +147,20 @@ const ChangePasswordScreen = () => {
                       buttonStyle={styles.button}
                       containerStyle={{ width: '50%', alignSelf: 'center', marginBottom: 10 }}
                       title='אישור'
-                      titleStyle={{fontWeight:'bold'}}
+                      titleStyle={{ fontWeight: 'bold' }}
                       onPress={() => {
                         setLoadingChangePass(true);
                         props.handleSubmit();
                       }}
                     />
                   }
+                  {feedbackMsg === 'שינוי הסיסמה בוצע בהצלחה'
+                    ? <Text style={styles.successMsg}>{feedbackMsg}</Text>
+                    : feedbackMsg === 'אירעה שגיאה'
+                      ? <Text style={styles.errorMsg}>{feedbackMsg}</Text>
+                      : null
 
+                  }
 
                 </View>
               )}
@@ -154,12 +203,18 @@ const styles = StyleSheet.create({
 
   },
   errorMsg: {
-    marginHorizontal: 7,
+    alignSelf: 'center',
     color: 'crimson',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 5,
-    marginRight: 20
+  },
+  successMsg: {
+    alignSelf: 'center',
+    color: 'green',
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   button: {
     borderRadius: 20,

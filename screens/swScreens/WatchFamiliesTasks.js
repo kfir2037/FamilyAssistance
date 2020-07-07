@@ -301,10 +301,11 @@ export default class App extends Component {
       <SafeAreaView style={styles.container}>
         <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background08.png')}>
 
-          <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: 'white' }}>לוח משימות חודשי</Text>
-          </View>
-          <View style={{ marginVertical: 20, borderRadius: 40 }}>
+
+          <View style={{ backgroundColor: 'white', marginVertical: 20, marginHorizontal: 10, borderRadius: 20 }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', paddingTop: 10, color: 'black' }}>לוח משימות חודשי</Text>
+            </View>
             <Calendar
               markedDates={{
                 '2020-06-12': { selected: true, marked: true, selectedColor: 'blue' }

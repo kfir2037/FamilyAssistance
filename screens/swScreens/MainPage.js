@@ -118,10 +118,10 @@ export default class MainPage extends Component {
 
   render() {
     return (
-
       <SafeAreaView>
         <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
-          <ScrollView refreshControl={
+          <ScrollView showsVerticalScrollIndicator contentContainerStyle={{ height: '100%' }} 
+           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh.bind(this)}
@@ -129,9 +129,9 @@ export default class MainPage extends Component {
               colors={['#e0aa00']}
             />
           }
-            showsVerticalScrollIndicator contentContainerStyle={{ height: '100%' }} style={{  }} >
+             >
   
-            <ScrollView contentContainerStyle={{}} style={{ height: '50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
+            <ScrollView  style={{ height: '50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
               <View style={styles.header}>
                 <Text style={styles.titleText}>משפחות</Text>
               </View>
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 25,
     fontWeight: 'bold',
-    paddingBottom: 10,
+    //paddingBottom: 10,
     color: 'black'
   },
   header: {
