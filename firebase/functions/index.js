@@ -52,7 +52,7 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
-admin.auth().updateUser('LruTTvuWdqWd6RqUs9JN1tPjAcJ2',{ email:'123456789@gmail.com'})
+admin.auth().updateUser('oJbsyP4Hg2b7BLUtuaIkA1stSMO2',{ uid:'203720172'})
 
 const passRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$+=!*()@%&]).{8,10}$/g
 

@@ -28,7 +28,7 @@ export default class Login extends Component {
         if (user) {
           user.getIdTokenResult().then((idTokenResult) => {
             const authTime = idTokenResult.claims.auth_time * 1000;
-            console.log('authTime: ',authTime);
+            console.log('authTime: ', authTime);
             const sessionDuration = 1000 * 60 * 100;
             const millisecondsUntilExpiration = sessionDuration - (Date.now() - authTime);
             sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
@@ -47,7 +47,8 @@ export default class Login extends Component {
               }
               else if (role == 'kid') {
                 that.props.navigation.navigate('KidsDashboard');
-              } else if (role == 'admin') {
+              }
+              else if (role == 'admin') {
                 console.log('1111')
                 that.props.navigation.navigate('adminDashboard');
               } else {
