@@ -30,10 +30,6 @@ const UserSchema = yup.object({
   phone: yup.string()
     .required('שדה חובה')
     .matches(phoneRegEx, 'מספר טלפון לא תקין'),
-  email: yup.string()
-    .required('שדה חובה')
-    .email('כתובת הדוא"ל אינה תקינה'),
-
 
 })
 
@@ -62,32 +58,8 @@ const WatchFamilies = ({ navigation }) => {
     setIsKidModalVisible(!isKidModalVisible);
   }
 
-  // ParentListItem = async (item) => {
-  //   // let parentDetails = {};
-  //   // await firebase.firestore().collection('users').doc(item).get()
-
-  //   //   .then(doc => {
-  //   //     //console.log(doc.data().firstName);
-  //   //     parentDetails = ({
-  //   //       firstName: doc.data().firstName,
-  //   //       birthDate: doc.data().birthDate,
-  //   //       gender: doc.data().gender
-  //   //     })
-  //   //     console.log(parentDetails['firstName']);
-  //   //   })
-  //   //   .catch(error => {
-
-  //   //   });
-
-
-  //   return <Text>HI</Text>
-
-  // }
-
 
   const getFamily = async () => {
-    // setKidsDetails([]);
-    // setParentDetails([]);
     const familyId = navigation.getParam('familyId');
     console.log(familyId);
     await firebase.firestore().collection('families').doc(familyId).get()
@@ -177,6 +149,7 @@ const WatchFamilies = ({ navigation }) => {
   const onRefresh = useCallback(async () => {
     console.log('OnRefresh!!!!');
     setRefreshing(true);
+    setModalLoading(false);
     //  setKidsDetails([]);
     //  setParentDetails([]);
     await getFamily();
@@ -229,12 +202,13 @@ const WatchFamilies = ({ navigation }) => {
               <TouchableHighlight style={styles.closeIcon} onPress={() => {
                 setIsParentModalVisible(!isParentModalVisible);
                 setMessage('');
+                setModalLoading(false);
               }}>
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
 
-                initialValues={{ firstName: '', lastName: '', id: '', gender: '', phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
+                initialValues={{ firstName: '', lastName: '', id: '', gender: '', phone: '', familyId: navigation.getParam('familyId'), role: 'parent' }}
                 validationSchema={UserSchema}
                 onSubmit={async (values, actions) => {
                   //actions.resetForm();
@@ -356,18 +330,6 @@ const WatchFamilies = ({ navigation }) => {
                   />
                   {props.errors.phone && props.touched.phone ? <Text style={styles.errorMsg}>{props.errors.phone}</Text> : null}
 
-                  <Input
-                    value={props.values.email}
-                    onChangeText={props.handleChange('email')}
-                    onBlur={props.handleBlur('email')}
-                    containerStyle={styles.modalInput}
-                    placeholder='דוא"ל'
-                    placeholderTextColor='black'
-                    keyboardType='email-address'
-                    textContentType='emailAddress'
-                  />
-                  {props.errors.email && props.touched.email ? <Text style={styles.errorMsg}>{props.errors.email}</Text> : null}
-
                   <View style={{ alignSelf: 'center', margin: 5 }}>
                     {modalLoading
                       ? <ActivityIndicator size={50} color='#767ead' />
@@ -405,18 +367,20 @@ const WatchFamilies = ({ navigation }) => {
               <TouchableHighlight style={styles.closeIcon} onPress={() => {
                 setIsKidModalVisible(!isKidModalVisible);
                 setMessage('');
+                setModalLoading(false);
               }}>
                 <AntDesign name="close" size={25} />
               </TouchableHighlight>
               <Formik
-                initialValues={{ firstName: '', lastName: '', id: '', phone: '', email: '', familyId: navigation.getParam('familyId'), role: 'kid' }}
+                initialValues={{ firstName: '', lastName: '', id: '', phone: '', familyId: navigation.getParam('familyId'), role: 'kid' }}
                 validationSchema={UserSchema}
-                onSubmit={(values, actions) => {
+                onSubmit={async (values, actions) => {
                   //actions.resetForm();
                   console.log('values', values);
                   values = { ...values, birthDate: birthDate.format('DD/MM/YYYY').toString() }
                   var createUser = firebase.functions().httpsCallable('createUser');
-                  createUser(values)
+                  //console.log('createUser ref: ', createUser);
+                  await createUser(values)
                     .then((resp) => {
                       //Display success
                       console.log('values', values);
@@ -436,128 +400,118 @@ const WatchFamilies = ({ navigation }) => {
 
 
                 }}
-              >{(props) => (
-                <>
-                  <Text style={{ ...styles.headlineText, alignSelf: 'center' }}>הוספת ילד חדש</Text>
-                  <Input
-                    value={props.values.firstName}
-                    onChangeText={props.handleChange('firstName')}
-                    onBlur={props.handleBlur('firstName')}
-                    containerStyle={styles.modalInput}
-                    placeholderTextColor='black'
-                    autoCorrect={false}
-                    textAlign='right'
-                    placeholder='שם פרטי'
-                  />
-                  {props.errors.firstName && props.touched.firstName ? <Text style={styles.errorMsg}>{props.errors.firstName}</Text> : null}
+              >
+                {(props) => (
+                  <>
+                    <Text style={{ ...styles.headlineText, alignSelf: 'center' }}>הוספת ילד חדש</Text>
+                    <Input
+                      value={props.values.firstName}
+                      onChangeText={props.handleChange('firstName')}
+                      onBlur={props.handleBlur('firstName')}
+                      containerStyle={styles.modalInput}
+                      placeholderTextColor='black'
+                      autoCorrect={false}
+                      textAlign='right'
+                      placeholder='שם פרטי'
+                    />
+                    {props.errors.firstName && props.touched.firstName ? <Text style={styles.errorMsg}>{props.errors.firstName}</Text> : null}
 
-                  <Input
-                    value={props.values.lastName}
-                    onChangeText={props.handleChange('lastName')}
-                    onBlur={props.handleBlur('lastName')}
-                    containerStyle={styles.modalInput}
-                    placeholderTextColor='black'
-                    autoCorrect={false}
-                    textAlign='right'
-                    placeholder='שם משפחה '
-                  />
-                  {props.errors.lastName && props.touched.lastName ? <Text style={styles.errorMsg}>{props.errors.lastName}</Text> : null}
+                    <Input
+                      value={props.values.lastName}
+                      onChangeText={props.handleChange('lastName')}
+                      onBlur={props.handleBlur('lastName')}
+                      containerStyle={styles.modalInput}
+                      placeholderTextColor='black'
+                      autoCorrect={false}
+                      textAlign='right'
+                      placeholder='שם משפחה '
+                    />
+                    {props.errors.lastName && props.touched.lastName ? <Text style={styles.errorMsg}>{props.errors.lastName}</Text> : null}
 
-                  <Input
-                    value={props.values.id}
-                    onChangeText={props.handleChange('id')}
-                    onBlur={props.handleBlur('id')}
-                    containerStyle={styles.modalInput}
-                    placeholderTextColor='black'
-                    autoCorrect={false}
-                    textAlign='right'
-                    keyboardType='phone-pad'
-                    placeholder='תעודת זהות'
-                  />
-                  {props.errors.id && props.touched.id ? <Text style={styles.errorMsg}>{props.errors.id}</Text> : null}
+                    <Input
+                      value={props.values.id}
+                      onChangeText={props.handleChange('id')}
+                      onBlur={props.handleBlur('id')}
+                      containerStyle={styles.modalInput}
+                      placeholderTextColor='black'
+                      autoCorrect={false}
+                      textAlign='right'
+                      keyboardType='phone-pad'
+                      placeholder='תעודת זהות'
+                    />
+                    {props.errors.id && props.touched.id ? <Text style={styles.errorMsg}>{props.errors.id}</Text> : null}
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ alignSelf: 'center' }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.format('DD/MM/YYYY').toString()}</Text>
-                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <View style={{ alignSelf: 'center' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{birthDate.format('DD/MM/YYYY').toString()}</Text>
+                      </View>
 
-                    <View style={styles.birtDateBox}>
-                      <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="בחר תאריך "
-                        onPress={showDatePicker}
-                      />
-                      <Text style={{ fontSize: 18 }}>תאריך לידה: </Text>
-                      <View>
-                        {show && <DateTimePicker
-                          display='spinner'
-                          style={{ position: 'absolute' }}
-                          value={props.values.birthDate}
-                          onChange={(event, selectedDate) => {
-                            onChange(event, selectedDate);
-                            //props.setFieldValue('birthDate', birthDate.toDate());
-                            //props.handleChange('birthDate')
-                            //console.log('formik birthDate ', props.values.birthDate);
-                            console.log('state birthDate ', birthDate);
-                          }}
+                      <View style={styles.birtDateBox}>
+                        <Button containerStyle={{ margin: 5, alignItems: 'flex-start' }} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="בחר תאריך "
+                          onPress={showDatePicker}
                         />
-                        }
+                        <Text style={{ fontSize: 18 }}>תאריך לידה: </Text>
+                        <View>
+                          {show && <DateTimePicker
+                            display='spinner'
+                            style={{ position: 'absolute' }}
+                            value={birthDate.toDate()}
+                            onChange={(event, selectedDate) => {
+                              onChange(event, selectedDate);
+                              //props.setFieldValue('birthDate', birthDate.toDate());
+                              //props.handleChange('birthDate')
+                              //console.log('formik birthDate ', props.values.birthDate);
+                              console.log('state birthDate ', birthDate);
+                            }}
+                          />
+                          }
+                        </View>
                       </View>
                     </View>
-                  </View>
-                  <View style={{ flexDirection: 'row-reverse', margin: 10 }}>
-                    <Text style={{ fontSize: 18 }}>מין</Text>
-                    <Picker
-                      mode='dropdown'
-                      selectedValue={props.values.gender}
-                      style={{ height: 30, width: 110 }}
-                      onValueChange={props.handleChange('gender')}
-                    >
-                      <Picker.Item label='בחר/י' value='' />
-                      <Picker.Item label='זכר' value='male' />
-                      <Picker.Item label='נקבה' value='female' />
-                    </Picker>
-                  </View>
-                  <Input
-                    value={props.values.phone}
-                    onChangeText={props.handleChange('phone')}
-                    onBlur={props.handleBlur('phone')}
-                    containerStyle={styles.modalInput}
-                    textAlign='right'
-                    placeholderTextColor='black'
-                    keyboardType='phone-pad'
-                    textContentType='telephoneNumber'
-                    placeholder='טלפון'
-                  />
-                  {props.errors.phone && props.touched.phone ? <Text style={styles.errorMsg}>{props.errors.phone}</Text> : null}
+                    <View style={{ flexDirection: 'row-reverse', margin: 10 }}>
+                      <Text style={{ fontSize: 18 }}>מין</Text>
+                      <Picker
+                        mode='dropdown'
+                        selectedValue={props.values.gender}
+                        style={{ height: 30, width: 110 }}
+                        onValueChange={props.handleChange('gender')}
+                      >
+                        <Picker.Item label='בחר/י' value='' />
+                        <Picker.Item label='זכר' value='male' />
+                        <Picker.Item label='נקבה' value='female' />
+                      </Picker>
+                    </View>
+                    <Input
+                      value={props.values.phone}
+                      onChangeText={props.handleChange('phone')}
+                      onBlur={props.handleBlur('phone')}
+                      containerStyle={styles.modalInput}
+                      textAlign='right'
+                      placeholderTextColor='black'
+                      keyboardType='phone-pad'
+                      textContentType='telephoneNumber'
+                      placeholder='טלפון'
+                    />
+                    {props.errors.phone && props.touched.phone ? <Text style={styles.errorMsg}>{props.errors.phone}</Text> : null}
 
-                  <Input
-                    value={props.values.email}
-                    onChangeText={props.handleChange('email')}
-                    onBlur={props.handleBlur('email')}
-                    containerStyle={styles.modalInput}
-                    placeholder='דוא"ל'
-                    placeholderTextColor='black'
-                    keyboardType='email-address'
-                    textContentType='emailAddress'
-                  />
-                  {props.errors.email && props.touched.email ? <Text style={styles.errorMsg}>{props.errors.email}</Text> : null}
 
-                  <View style={{ alignSelf: 'center', margin: 5 }}>
-                    {modalLoading
-                      ? <ActivityIndicator size={50} color='#767ead' />
-                      : <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף "
-                        onPress={() => {
-                          setModalLoading(true);
-                          props.handleSubmit();
-                          //setIsKidModalVisible(!isKidModalVisible);
-                        }}
-                      />
-                    }
+                    <View style={{ alignSelf: 'center', margin: 5 }}>
+                      {modalLoading
+                        ? <ActivityIndicator size={50} color='#767ead' />
+                        : <Button containerStyle={styles.containerButton} buttonStyle={styles.button} titleStyle={{ color: 'black' }} title="הוסף "
+                          onPress={() => {
+                            setModalLoading(true);
+                            props.handleSubmit();
+                            //setIsKidModalVisible(!isKidModalVisible);
+                          }}
+                        />
+                      }
 
-                    {message ? <Text style={{ fontSize: 18, color: 'crimson' }}>{message}</Text> : null}
+                      {message ? <Text style={{ fontSize: 18, color: 'crimson' }}>{message}</Text> : null}
 
-                  </View>
-                </>
-              )}
+                    </View>
+                  </>
+                )}
               </Formik>
             </ScrollView>
           </View>
@@ -689,7 +643,7 @@ const WatchFamilies = ({ navigation }) => {
                 </Card>
               </View>
               <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
-                      <Text style={{fontSize:18,marginRight:10}}>{familyObj.desc}</Text>
+                <Text style={{ fontSize: 18, marginRight: 10 }}>{familyObj.desc}</Text>
               </Card>
             </View>
           </ImageBackground>

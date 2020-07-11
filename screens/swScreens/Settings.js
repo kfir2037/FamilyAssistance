@@ -683,7 +683,7 @@ export default class Settings extends Component {
             onPress={this.saveAlerts}
             buttonStyle={styles.button}
 
-            containerStyle={{borderWidth:2,borderColor:'white', alignSelf: 'center', marginBottom: 10, width: '30%' }}
+            containerStyle={{ alignSelf: 'center', marginBottom: 10, width: '30%' }}
             //icon={<Icon name="trash" size={20} color="white" />}
             title="שמור"
             titleStyle={{ justifyContent: 'center', fontWeight:'bold' }}
@@ -747,9 +747,10 @@ export default class Settings extends Component {
               onPress={this.deleteTask}
               icon={<Icon name="trash" size={20} color="white" />}
               title="  הסרת משימה  "
+              
               iconRight
-              titleStyle={{ justifyContent: 'center' }}
-              containerStyle={{borderWidth:2,borderColor:'white', alignSelf: 'center', marginVertical: 10, width: '50%' }}
+              titleStyle={{ fontWeight:'bold', justifyContent: 'center' }}
+              containerStyle={{ alignSelf: 'center', marginVertical: 10, width: '50%' }}
               buttonStyle={{ ...styles.button, }}
             />
           }
@@ -818,8 +819,8 @@ export default class Settings extends Component {
                   }}
                   icon={<Icon name="plus" size={20} color="white" />}
                   iconRight
-                  titleStyle={{ justifyContent: 'center' }}
-                  containerStyle={{ borderWidth:2,borderColor:'white', alignSelf: 'center', marginVertical: 10, width: '50%' }}
+                  titleStyle={{ fontWeight:'bold', justifyContent: 'center' }}
+                  containerStyle={{  alignSelf: 'center', marginVertical: 10, width: '50%' }}
                   buttonStyle={styles.button}
                 />
               </View>

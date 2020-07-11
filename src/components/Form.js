@@ -24,56 +24,52 @@ export default class Form extends Component {
     };
 
 
-    var that = this;
-    firebase.auth().onAuthStateChanged(function (user) {
-      try {
-        let sessionTimeout;
-        user = firebase.auth().currentUser;
-        if (user) {
-          user.getIdTokenResult().then((idTokenResult) => {
-            const authTime = idTokenResult.claims.auth_time * 1000;
-            console.log('authTime: ', authTime);
-            const sessionDuration = 1000 * 60 * 100;
-            const millisecondsUntilExpiration = sessionDuration - (Date.now() - authTime);
-            sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
-          })
-          userUid = user.uid
-          firebase.firestore().collection('users').doc(userUid).get()
-            .then(doc => {
-              // console.log("doc: ", doc)
-              console.log("doc role: ", doc._document.proto.fields.role.stringValue)
-              let role = doc._document.proto.fields.role.stringValue;
-              console.log('role: ', role)
-              if (role == 'sw') {
-                that.props.navigation.navigate('SwDashboard');
-              }
-              else if (role == 'parent') {
-                that.props.navigation.navigate('ParentsDashboard');
-              }
-              else if (role == 'kid') {
-                that.props.navigation.navigate('KidsDashboard');
-              } else {
-                that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
-                that.props.navigation.navigate('Welcome');
-              }
-            })
-            .catch((err) => {
-              console.log('Form ', err);
-              that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
-            })
-        } else {
-          sessionTimeout && clearTimeout(sessionTimeout);
-          sessionTimeout = null;
-          that.props.navigation.navigate('Welcome');
-        }
-        // if (userUid) {
-        //   that.props.navigation.navigate('SwDashboard');
-        // } else {
-        // }
-      } catch {
-        console.log('error get current user');
-      }
-    });
+    // var that = this;
+    // firebase.auth().onAuthStateChanged(function (user) {
+    //   try {
+    //     let sessionTimeout;
+    //     user = firebase.auth().currentUser;
+    //     if (user) {
+    //       user.getIdTokenResult().then((idTokenResult) => {
+    //         const authTime = idTokenResult.claims.auth_time * 1000;
+    //         console.log('authTime: ', authTime);
+    //         const sessionDuration = 1000 * 60 * 100;
+    //         const millisecondsUntilExpiration = sessionDuration - (Date.now() - authTime);
+    //         sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
+    //       })
+    //       userUid = user.uid
+    //       firebase.firestore().collection('users').doc(userUid).get()
+    //         .then(doc => {
+    //           // console.log("doc: ", doc)
+    //           console.log("doc role: ", doc._document.proto.fields.role.stringValue)
+    //           let role = doc._document.proto.fields.role.stringValue;
+    //           console.log('role: ', role)
+    //           if (role == 'sw') {
+    //             that.props.navigation.navigate('SwDashboard');
+    //           }
+    //           else if (role == 'parent') {
+    //             that.props.navigation.navigate('ParentsDashboard');
+    //           }
+    //           else if (role == 'kid') {
+    //             that.props.navigation.navigate('KidsDashboard');
+    //           } else {
+    //             that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
+    //             that.props.navigation.navigate('Welcome');
+    //           }
+    //         })
+    //         .catch((err) => {
+    //           console.log('Form ', err);
+    //           that.setState({ errorMessage: 'אירעה שגיאה', loading: false })
+    //         })
+    //     } else {
+    //       sessionTimeout && clearTimeout(sessionTimeout);
+    //       sessionTimeout = null;
+    //       that.props.navigation.navigate('Welcome');
+    //     }
+    //   } catch {
+    //     console.log('error get current user');
+    //   }
+    // });
   }
 
   onButtonPress() {
@@ -81,21 +77,27 @@ export default class Form extends Component {
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
 
-    const userEmail = firebase.functions().httpsCallable('signinUserEmail');
-
-    userEmail(id)
-      .then((resp) => {
-        console.log(resp);
-        firebase.auth().signInWithEmailAndPassword(resp.data, password)
+    firebase.auth().signInWithEmailAndPassword(`${id}@gmail.com`, password)
           .catch((err) => {
             console.log('86');
             this.onLoginFail();
           });
-      })
-      .catch((err) => {
-        console.log('userEmail Error ', err);
-        this.onLoginFail();
-      })
+
+    const userEmail = firebase.functions().httpsCallable('signinUserEmail');
+
+    // userEmail(id)
+    //   .then((resp) => {
+    //     console.log(resp);
+    //     firebase.auth().signInWithEmailAndPassword(resp.data, password)
+    //       .catch((err) => {
+    //         console.log('86');
+    //         this.onLoginFail();
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.log('userEmail Error ', err);
+    //     this.onLoginFail();
+    //   })
   }
 
   onLoginFail() {

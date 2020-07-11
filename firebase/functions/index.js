@@ -6,6 +6,7 @@ var fetch = require('node-fetch')
 var moment = require('moment');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
+const RandExp = require('randexp');
 //const { doc } = require('prettier');
 
 admin.initializeApp({
@@ -51,9 +52,9 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
-admin.auth().setCustomUserClaims('oJbsyP4Hg2b7BLUtuaIkA1stSMO2', { admin: true })
-    .then((resp) => console.log('claims resp: ', resp));
+admin.auth().updateUser('LruTTvuWdqWd6RqUs9JN1tPjAcJ2',{ email:'123456789@gmail.com'})
 
+const passRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$+=!*()@%&]).{8,10}$/g
 
 const query = admin.firestore().collection('tasks').where('category', '==', 'morning');
 
@@ -291,7 +292,7 @@ exports.createUser = functions.https.onCall(async (data, context) => {
     try {
         //Checking that the user calling the Cloud Function is authenticated
         if (!context.auth) {
-            throw new UnauthenticatedError('The user is not authenticated. Only authenticated Admin users can create new users.');
+            throw new UnauthenticatedError('The user is not authenticated. Only authenticated SW users can create new users.');
         }
 
         // let userID = data.id;
@@ -301,26 +302,26 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         // await admin.firestore().collection('usersIDs').doc(userID).set(userEmail);
 
-        await admin.firestore().collection('usersIDs').doc(data.id).get()
-            .then(async (doc) => {
-                if (!doc.exists) {
-                    await admin.firestore().collection('usersIDs').doc(data.id).set({
-                        email: data.email
-                    })
-                        .then(() => {
-                            console.log('id-email doc added successfuly');
-                        })
-                        .catch((err) => {
-                            console.log('id-email doc writing Error: ', err);
-                        })
-                } else {
-                    throw new IDAlreadyInUseError('This ID number already signed');
-                }
-            })
-            .catch((err) => {
-                console.log('error adding ID number - email document: ', err);
-                throw err;
-            })
+        // await admin.firestore().collection('usersIDs').doc(data.id).get()
+        //     .then(async (doc) => {
+        //         if (!doc.exists) {
+        //             await admin.firestore().collection('usersIDs').doc(data.id).set({
+        //                 email: data.id
+        //             })
+        //                 .then(() => {
+        //                     console.log('id-email doc added successfuly');
+        //                 })
+        //                 .catch((err) => {
+        //                     console.log('id-email doc writing Error: ', err);
+        //                 })
+        //         } else {
+        //             throw new IDAlreadyInUseError('This ID number already signed');
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.log('error adding ID number - email document: ', err);
+        //         throw err;
+        //     })
 
 
         //Checking that the user calling the Cloud Function is an Admin user
@@ -350,14 +351,19 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         console.log(75);
 
+        const pass = new RandExp(passRegEx);
+
         const newUser = {
-            email: data.email,
+            //email: data.email,
+            uid:data.id,
+            email:`${data.id}@gmail.com`,
             emailVerified: false,
             phoneNumber: `+972${data.phone}`,
             password: data.id,
             displayName: data.firstName + ' ' + data.lastName,
             disabled: false
         }
+
         console.log('newUser: ', newUser);
 
         const userRecord = await admin
@@ -486,6 +492,7 @@ exports.signinUserEmail = functions.https.onCall(async (data, context) => {
 
 
         })
+
 
     return userEmail;
 
