@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, TextInput, ImageBackground, Text } from 'react-native';
+import {
+    StyleSheet, View, TextInput, ImageBackground, Text, ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from '../../config/config';
@@ -16,7 +18,7 @@ export default class editFamilies extends React.Component {
             familyId: this.props.navigation.state.params.familyId,
             familyData: {},
             socialWorkers: [],
-            country: 'uk',
+            country: '',
 
 
         }
@@ -51,7 +53,7 @@ export default class editFamilies extends React.Component {
                         icon: () => <Icon name="flag" size={18} color="#900" />
                     });
                 });
-                console.log('allFamilies: ',allFamilies)
+                console.log('allFamilies: ', allFamilies)
                 this.setState({ socialWorkers: allFamilies })
             })
             .catch(error => {
@@ -80,77 +82,82 @@ export default class editFamilies extends React.Component {
         tempData.swInCharge = value;
         this.setState({ familyData: tempData })
     }
+    save= ()=>{
+        firebase.firestore().collection('families').doc(this.state.familyId).update({
+            lastName:this.state.familyData.lastName,
+            phone:this.state.familyData.phone,
+            swInCharge:this.state.familyData.swInCharge,
+            email:this.state.familyData.email,
+        })
+        console.log('changes was saved')
+        alert('השינויים בוצעו בהצלחה')
+    }
 
     render() {
-        console.log('this.state.socialWorkers: ',this.state.socialWorkers)
-
+        if (this.state.socialWorkers.length <= 0) {
+            return (
+                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fbc213', height: '100%' }}>
+                    <ActivityIndicator color='#e0aa00' size={60} />
+                </View>
+            );
+        }
         return (
+
             <SafeAreaView>
-
                 <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
+                <ScrollView>
 
-                    <ScrollView>
-                        <TextInput
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                            onChangeText={text => this.onChangeLastName(text)}
-                            value={this.state.familyData.lastName}
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => this.onChangeLastName(text)}
+                        value={this.state.familyData.lastName}
+                    />
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => this.onChangeEmail(text)}
+                        value={this.state.familyData.email}
+                    />
+                    <TextInput
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        onChangeText={text => this.onChangePhone(text)}
+                        value={this.state.familyData.phone}
+                    />
+                    <DropDownPicker
+                        items={this.state.socialWorkers}
+            
+                        defaultValue={this.state.country}
+                        containerStyle={{ height: 40 }}
+                        placeholder='בחר עובד סוציאלי'
+                        style={{ backgroundColor: '#fafafa' }}
+                        searchable={true}
+                        searchablePlaceholder="חיפוש"
+                        searchablePlaceholderTextColor="gray"
+                        seachableStyle={{}}
+                        searchableError={() => <Text>לא נמצאו תוצאות</Text>}
+                        itemStyle={{
+                            justifyContent: 'flex-start'
+                        }}
+                        dropDownStyle={{ backgroundColor: '#fafafa' }}
+                 
+                        onChangeItem={item => this.onChangeSocialWorker(item.value)}
+                    />
+                    <Button
+                        buttonStyle={styles.button}
+                        title="עריכה"
+                        onPress={item=>this.save(item)}
+                        color='#767ead'
+                        icon={<MaterialCommunityIcons
+                            name="account-details"
+                            size={26}
+                            color="white"
                         />
-                        <TextInput
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                            onChangeText={text => this.onChangeEmail(text)}
-                            value={this.state.familyData.email}
-                        />
-                        <TextInput
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                            onChangeText={text => this.onChangePhone(text)}
-                            value={this.state.familyData.phone}
-                        />
-                        <DropDownPicker
-                            // items={this.state.socialWorkers}
-                            items={[
-                                {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
-                                {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
-                            ]}
-                            defaultValue={this.state.country}
-                            containerStyle={{ height: 40 }}
-                            placeholder='בחר עובד סוציאלי'
-                            style={{ backgroundColor: '#fafafa' }}
-                            // searchable={true}
-                            // searchablePlaceholder="חיפוש"
-                            // searchablePlaceholderTextColor="gray"
-                            // seachableStyle={{}}
-                            // searchableError={() => <Text>לא נמצאו תוצאות</Text>}
-                            itemStyle={{
-                                justifyContent: 'flex-start'
-                            }}
-                            dropDownStyle={{ backgroundColor: '#fafafa' }}
-                            onChangeItem={item => this.setState({
-                              country: item.value
-                            })}
-                            // onChangeItem={item => this.onChangeSocialWorker(item.value)}
-                        />
-
-
-                        {/* <Button
-                            buttonStyle={styles.button}
-                            title="עריכה"
-                            onPress={() => this.props.navigation.navigate('editFamilies', {
-                                familyId: doc.id
-                            })}
-                            color='#767ead'
-                            icon={<MaterialCommunityIcons
-                                name="account-details"
-                                size={26}
-                                color="white"
-                            />
-                            }
-                            titleStyle={{ marginRight: 5 }}
-                            iconRight
-                        /> */}
+                        }
+                        titleStyle={{ marginRight: 5 }}
+                        iconRight
+                    />
+                        {/* {this.state.data} */}
                     </ScrollView>
-
                 </ImageBackground>
-
             </SafeAreaView>
 
         )
