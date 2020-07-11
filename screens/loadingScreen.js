@@ -47,7 +47,11 @@ export default class Login extends Component {
               }
               else if (role == 'kid') {
                 that.props.navigation.navigate('KidsDashboard');
+              } else if (role == 'admin') {
+                console.log('1111')
+                that.props.navigation.navigate('adminDashboard');
               } else {
+                console.log('2222')
                 that.props.navigation.navigate('Welcome');
               }
             })
