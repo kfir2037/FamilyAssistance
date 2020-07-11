@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, RefreshControl, YellowBox, FlatList, ActivityIndicator, ImageBackground, UIManager } from 'react-native';
-import SelectableFlatlist, { STATE } from 'react-native-selectable-flatlist';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Button, Card } from 'react-native-elements';
-// import { Button } from 'native-base';
+import { StyleSheet, YellowBox, ImageBackground, Text } from 'react-native';
 import firebase from '../../config/config';
-import { FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-navigation';
+import Icon from 'react-native-vector-icons/Feather';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { View } from 'native-base';
+import { Card } from 'react-native-elements';
+import { Button } from 'react-native-elements';
+import { FontAwesome, MaterialCommunityIcons, FontAwesome5, AntDesign } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default class adminMainPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      country: '',
+      socialWorkers: [],
       loading: true,
       data: [],
       familySelectedUid: '',
@@ -37,130 +41,48 @@ export default class adminMainPage extends Component {
     firebase.firestore().collection('families').onSnapshot(this.getFamilies());
   }
 
-  getFamilies = async () => {
+  getFamilies = async (socialWorkerId) => {
 
     let allFamilies = []
     let familyObj = {}
-    const socialWorkerUid = firebase.auth().currentUser['uid'];
-    console.log('socialWorkerId ' + socialWorkerUid);
+
 
     const swFamilies = await firebase
       .firestore()
       .collection('families')
-      .where('swInCharge', '==', socialWorkerUid)
+      .where('swInCharge', '==', socialWorkerId)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          allFamilies.push(doc);
-          familyObj[doc.id] = Object.assign({}, doc.data());
-        });
-        this.setState({ data: allFamilies });
-        this.setState({ loading: false, refreshing: false });
-        // console.log('data: ', this.state.data);
-      })
-      .catch(error => {
-        console.log("Error getting documents: ", error);
-      });
-
-    return allFamilies;
-  }
-
-
-
-  async componentDidMount() {
-    YellowBox.ignoreWarnings(['Setting a timer']);
-    YellowBox.ignoreWarnings(['VirtualizedLists']);
-
-    const arr = [];
-    // this.setState({ data: arr })
-    let families = await this.getFamilies();
-    // console.log('families: ', families);
-    for (let key in families) {
-      arr.push({
-        uid: key, details: families[key]
-      })
-    }
-    // console.log('arr: ', arr);
-
-
-    //this.setState({ data: arr })
-  }
-
-  rowItem = (item) => {
-    //console.log('item :', item);
-    return (
-      <View
-        style={{
-          flex: 1,
-          //backgroundColor: '#b5bef5',
-          //borderWidth: 1,
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          paddingVertical: 20,
-          paddingHorizontal: 10,
-          borderColor: 'black',
-          borderBottomWidth: 1,
-          borderBottomColor: 'black',
-          borderBottomRightRadius: 35,
-          marginRight: 20,
-
-        }}
-      >
-        <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'black' }}>{item.data().lastName}</Text>
-      </View>
-    );
-  }
-
-  _onRefresh() {
-    this.setState({ refreshing: true });
-    this.getFamilies();
-  }
-
-  render() {
-    return (
-
-      <SafeAreaView>
-        <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
-          <ScrollView refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh.bind(this)}
-              enabled
-              colors={['#e0aa00']}
-            />
-          }
-            showsVerticalScrollIndicator contentContainerStyle={{ height: '100%' }} style={{  }} >
-  
-            <ScrollView contentContainerStyle={{}} style={{ height: '50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
-              <View style={styles.header}>
-                <Text style={styles.titleText}>משפחות</Text>
-              </View>
-              {this.state.loading
-                ? <ActivityIndicator size={50} color='#e0aa00' style={{ marginBottom: 10 }} />
-                : <View style={styles.familiesList}>
-                  <SelectableFlatlist
-                    data={this.state.data}
-                    state={STATE.EDIT}
-                    multiSelect={false}
-                    itemsSelected={(selectedItem) => this.itemsSelected(selectedItem)}
-                    initialSelectedIndex={[0]}
-                    cellItemComponent={(item) => this.rowItem(item)}
-                    checkIcon={() => <FontAwesome name='circle' size={25} color='#0ca5e5' />}
-                    uncheckIcon={() => <FontAwesome name='circle-o' size={25} color='#0ca5e5' />}
-                    touchStyles={{ backgroundColor: 'transparent', opacity: 1 }}
-                  />
-                </View>}
-            </ScrollView>
-  
-            <View style={{ height: '30%', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
-              <View style={styles.twoFirstButtons}>
-  
-                <View style={styles.buttons}>
+          // allFamilies.push(doc.data());
+          var family = doc.data()
+          // allFamilies.push(
+          //   <View style={styles.family}>
+          //     <Text>{family.email}</Text>
+          //     {/* <Text>{family.parent}</Text> */}
+          //     {/* <Text>{family.kids}</Text> */}
+          //     <Text>{family.lastName}</Text>
+          //     <Text>{family.phone}</Text>
+          //     <Text>{family.status}</Text>
+          //   </View>
+          // );
+          allFamilies.push(
+            <Card containerStyle={{ width: '90%', borderRadius: 20 }} title={family.lastName}>
+              {
+                <View style={{ flexDirection: 'column' }} >
+                  <View style={{ paddingTop: 3 }}></View>
+                  <Text>{family.email}</Text>
+                  <Text>{family.parent}</Text>
+                  <Text>{family.kids}</Text>
+                  <Text>{family.lastName}</Text>
+                  <Text>{family.phone}</Text>
+                  <Text>{family.status}</Text>
+                  <View style={{ paddingBottom: 3 }}></View>
                   <Button
                     buttonStyle={styles.button}
-                    title="פרטי המשפחה"
-                    onPress={() => this.props.navigation.navigate('WatchFamilies', {
-                      familyId: this.state.familySelectedUid
+                    title="עריכה"
+                    onPress={() => this.props.navigation.navigate('editFamilies', {
+                      familyId: doc.id
                     })}
                     color='#767ead'
                     icon={<MaterialCommunityIcons
@@ -173,64 +95,91 @@ export default class adminMainPage extends Component {
                     iconRight
                   />
                 </View>
-                <View style={styles.buttons}>
-                  <Button
-                    buttonStyle={styles.button}
-                    onPress={() => this.props.navigation.navigate('Tasks2', {
-                      familyId: this.state.familySelectedUid
-                    })}
-                    title="משימות"
-                    color='#767ead'
-                    icon={<FontAwesome
-                      name="calendar"
-                      size={24}
-                      color="white"
-                    />
-                    }
-                    titleStyle={{ marginRight: 10 }}
-                    iconRight
-                  />
-                </View>
-              </View>
-              <View style={styles.twoFirstButtons}>
-                <View style={styles.buttons}>
-                  <Button
-                    buttonStyle={styles.button}
-                    onPress={() => this.props.navigation.navigate('AddNewFamily')}
-                    title="הוספת משפחה"
-                    color='#767ead'
-                    icon={<AntDesign
-                      name="addusergroup"
-                      size={24}
-                      color="white"
-                    />
-                    }
-                    titleStyle={{ marginRight: 5 }}
-                    iconRight
-                  />
-                </View>
-                <View style={styles.buttons}>
-                  <Button
-                    buttonStyle={styles.button}
-                    title="משימה חדשה"
-                    onPress={() => this.props.navigation.navigate('AddNewTask', {
-                      familyId: this.state.familySelectedUid
-                    })}
-                    icon={<FontAwesome5
-                      name="plus"
-                      size={24}
-                      color="white"
-                    />
-                    }
-                    titleStyle={{ marginRight: 10 }}
-                    iconRight
-                  />
-                </View>
-              </View>
-            </View>
-            {/* </View> */}
-  
-          </ScrollView >
+              }
+            </Card>
+          );
+          familyObj[doc.id] = Object.assign({}, doc.data());
+        });
+        this.setState({ data: allFamilies });
+        this.setState({ loading: false, refreshing: false });
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
+    return allFamilies;
+  }
+
+  getSocialWorkers = async () => {
+
+    let allFamilies = []
+    let familyObj = {}
+
+    const swFamilies = await firebase
+      .firestore()
+      .collection('users')
+      .where('role', '==', 'sw')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          var data = doc.data();
+          allFamilies.push({
+            label: data.firstName + ' ' + data.lastName,
+            value: doc.id,
+            icon: () => <Icon name="flag" size={18} color="#900" />
+          });
+        });
+
+        this.setState({ socialWorkers: allFamilies })
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
+
+    return allFamilies;
+  }
+
+
+  async componentDidMount() {
+    YellowBox.ignoreWarnings(['Setting a timer']);
+    YellowBox.ignoreWarnings(['VirtualizedLists']);
+    this.getSocialWorkers()
+  }
+
+
+
+
+  render() {
+    if (this.state.socialWorkers.length == 0) {
+      console.log('social workers array is empty')
+      return null
+    }
+    return (
+      <SafeAreaView>
+        <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
+          <DropDownPicker
+            items={this.state.socialWorkers}
+            defaultValue={this.state.country}
+            containerStyle={{ height: 40 }}
+            placeholder='בחר עובד סוציאלי'
+            style={{ backgroundColor: '#fafafa' }}
+            searchable={true}
+            searchablePlaceholder="חיפוש"
+            searchablePlaceholderTextColor="gray"
+            seachableStyle={{}}
+            searchableError={() => <Text>לא נמצאו תוצאות</Text>}
+            itemStyle={{
+              justifyContent: 'flex-start'
+            }}
+            dropDownStyle={{ backgroundColor: '#fafafa' }}
+            // onChangeItem={item => this.setState({
+            //   country: item.value
+            // })}
+            onChangeItem={item => this.getFamilies(item.value)}
+          />
+
+          <ScrollView>
+            {this.state.data}
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
     )
@@ -248,6 +197,14 @@ const styles = StyleSheet.create({
     width: '100%'
     // alignItems:'center'
 
+  },
+  family: {
+    backgroundColor: '#6ED4C8',
+    borderRadius: 5,
+  },
+  buttons: {
+    flex: 1,
+    margin: 10
   },
   image: {
     flex: 1,

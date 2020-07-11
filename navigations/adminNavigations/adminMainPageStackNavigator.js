@@ -7,9 +7,12 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import adminMainPage from '../../screens/adminScreens/adminMainPage';
 import firebase from '../../config/config';
+import editFamilies from '../../screens/adminScreens/editFamilies';
 
 const adminStackNavigator = createStackNavigator({
     Main:adminMainPage,
+    editFamilies:editFamilies,
+
   },{
   
   defaultNavigationOptions:({navigation})=>{

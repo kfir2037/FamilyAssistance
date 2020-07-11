@@ -7,10 +7,12 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
 import adminWatchTasks from "../../screens/adminScreens/adminWatchTasks";
 import firebase from '../../config/config';
+import editFamilies from '../../screens/adminScreens/editFamilies';
 
 const adminStackNavigator = createStackNavigator(
   {
     Tasks: adminWatchTasks,
+    editFamilies:editFamilies,
   },
   {
     defaultNavigationOptions: ({ navigation }) => {
