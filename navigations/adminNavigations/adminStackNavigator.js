@@ -5,13 +5,13 @@ import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
-import adminWatchTasks from "../../screens/adminScreens/adminWatchTasks";
+import addSocialWorker from "../../screens/adminScreens/addSocialWorker";
 import firebase from '../../config/config';
 import editFamilies from '../../screens/adminScreens/editFamilies';
 
 const adminStackNavigator = createStackNavigator(
   {
-    Tasks: adminWatchTasks,
+    Tasks: addSocialWorker,
     editFamilies:editFamilies,
   },
   {

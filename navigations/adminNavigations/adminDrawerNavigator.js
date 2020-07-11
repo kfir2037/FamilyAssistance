@@ -45,7 +45,7 @@ const adminDrawerNavigator = createDrawerNavigator({
     Tasks:{
       screen:adminStackNavigator,
       navigationOptions: {
-        drawerLabel: 'משפחות',
+        drawerLabel: "הוספת עו''ס",
       },
     }
   },{
