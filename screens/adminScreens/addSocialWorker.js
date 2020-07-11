@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button,Input } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import firebase from '../../config/config';
 
@@ -10,7 +10,8 @@ export default class addSocialWorker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      socialWorker: {}
+      socialWorker: {},
+      alertText:''
     }
   }
 
@@ -56,9 +57,7 @@ export default class addSocialWorker extends Component {
       .then((resp) => {
         //Display success
         console.log('succes create social worker');
-        // console.log(resp.data.result);
-        // setModalLoading(false);
-        // setMessage('הוספת ילד בוצעה בהצלחה');
+        this.setState({alertText:'הוספת עובדת סוציאלית חדשה התבצע בהצלחה'})
       })
       .catch((error) => {
         // console.log('values', values);
@@ -66,8 +65,7 @@ export default class addSocialWorker extends Component {
         var message = error.message;
         //Display error
         console.log(code + ' ' + message);
-        // setModalLoading(false);
-        // setMessage(error.message);
+        this.setState({alertText:'הייתה בעיה בהרשמה, אנא נסי שוב'})
       });
 
   }
@@ -81,11 +79,7 @@ export default class addSocialWorker extends Component {
           <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
 
             <ScrollView>
-              {/* <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={text => this.onChangeLastName(text)}
-                value={this.state.socialWorker.lastName}
-              /> */}
+
 
               <Input
                 keyboardType='default'
@@ -96,7 +90,7 @@ export default class addSocialWorker extends Component {
                 placeholder='הכנס שם משפחה'
                 placeholderTextColor='lightgray'
                 label='שם משפחה'
-                  placeholderTextColor='gray'
+                placeholderTextColor='gray'
                 labelStyle={{ color: 'black', marginRight: 5 }}
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
@@ -111,7 +105,7 @@ export default class addSocialWorker extends Component {
                 placeholder='yout_name@domain.com'
                 placeholderTextColor='lightgray'
                 label='אימייל'
-                  placeholderTextColor='gray'
+                placeholderTextColor='gray'
                 labelStyle={{ color: 'black', marginRight: 5 }}
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
@@ -126,7 +120,7 @@ export default class addSocialWorker extends Component {
                 placeholder='הכנס שם פרטי'
                 placeholderTextColor='lightgray'
                 label='שם פרטי'
-                  placeholderTextColor='gray'
+                placeholderTextColor='gray'
                 labelStyle={{ color: 'black', marginRight: 5 }}
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
@@ -177,26 +171,7 @@ export default class addSocialWorker extends Component {
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
               />
-              {/* <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={text => this.onChangeEmail(text)}
-                value={this.state.socialWorker.email}
-              />
-              <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={text => this.onChangeFirstName(text)}
-                value={this.state.socialWorker.firstName}
-              />
-              <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={text => this.onChangePassword(text)}
-                value={this.state.socialWorker.passowrd}
-              />
-              <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                onChangeText={text => this.onChangeId(text)}
-                value={this.state.socialWorker.id}
-              /> */}
+
               <Button
                 buttonStyle={styles.button}
                 title="שמור"
@@ -211,7 +186,9 @@ export default class addSocialWorker extends Component {
                 titleStyle={{ marginRight: 5 }}
                 iconRight
               />
-
+              <Text>
+                {this.state.alertText}
+              </Text>
             </ScrollView>
 
           </ImageBackground>
