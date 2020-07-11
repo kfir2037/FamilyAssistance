@@ -1,22 +1,88 @@
 import React from 'react';
-import { StyleSheet, View, Text,ImageBackground } from 'react-native';
+import { StyleSheet, View, TextInput, ImageBackground, Text } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import firebase from '../../config/config';
+import { Button } from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
 
 export default class editFamilies extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            familyId: this.props.familyId
+            familyId: this.props.navigation.state.params.familyId,
+            familyData: {},
+            socialWorkers: [],
+            country: 'uk',
+
 
         }
     }
-    componentWillMount(){
-        console.log('1231231231233333: ',this.props)
+    async componentDidMount() {
+        var data
+        await firebase.firestore().collection('families').doc(this.state.familyId).get()
+            .then((doc) => {
+                data = doc.data()
+            })
+            .catch((err) => console.log('ERROR: ', err));
+        console.log('data: ', data)
+        await this.getSocialWorkers()
+        this.setState({ familyData: data })
     }
+    getSocialWorkers = async () => {
+
+        let allFamilies = []
+        let familyObj = {}
+
+        const swFamilies = await firebase
+            .firestore()
+            .collection('users')
+            .where('role', '==', 'sw')
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    var data = doc.data();
+                    allFamilies.push({
+                        label: data.firstName + ' ' + data.lastName,
+                        value: doc.id,
+                        icon: () => <Icon name="flag" size={18} color="#900" />
+                    });
+                });
+                console.log('allFamilies: ',allFamilies)
+                this.setState({ socialWorkers: allFamilies })
+            })
+            .catch(error => {
+                console.log("Error getting documents: ", error);
+            });
+
+        return allFamilies;
+    }
+    onChangeLastName = (value) => {
+        var tempData = this.state.familyData;
+        tempData.lastName = value;
+        this.setState({ familyData: tempData })
+    }
+    onChangeEmail = (value) => {
+        var tempData = this.state.familyData;
+        tempData.email = value;
+        this.setState({ familyData: tempData })
+    }
+    onChangePhone = (value) => {
+        var tempData = this.state.familyData;
+        tempData.phone = value;
+        this.setState({ familyData: tempData })
+    }
+    onChangeSocialWorker = (value) => {
+        var tempData = this.state.familyData;
+        tempData.swInCharge = value;
+        this.setState({ familyData: tempData })
+    }
+
     render() {
+        console.log('this.state.socialWorkers: ',this.state.socialWorkers)
 
         return (
             <SafeAreaView>
@@ -24,14 +90,71 @@ export default class editFamilies extends React.Component {
                 <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
 
                     <ScrollView>
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={text => this.onChangeLastName(text)}
+                            value={this.state.familyData.lastName}
+                        />
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={text => this.onChangeEmail(text)}
+                            value={this.state.familyData.email}
+                        />
+                        <TextInput
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                            onChangeText={text => this.onChangePhone(text)}
+                            value={this.state.familyData.phone}
+                        />
+                        <DropDownPicker
+                            // items={this.state.socialWorkers}
+                            items={[
+                                {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
+                                {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
+                            ]}
+                            defaultValue={this.state.country}
+                            containerStyle={{ height: 40 }}
+                            placeholder='בחר עובד סוציאלי'
+                            style={{ backgroundColor: '#fafafa' }}
+                            // searchable={true}
+                            // searchablePlaceholder="חיפוש"
+                            // searchablePlaceholderTextColor="gray"
+                            // seachableStyle={{}}
+                            // searchableError={() => <Text>לא נמצאו תוצאות</Text>}
+                            itemStyle={{
+                                justifyContent: 'flex-start'
+                            }}
+                            dropDownStyle={{ backgroundColor: '#fafafa' }}
+                            onChangeItem={item => this.setState({
+                              country: item.value
+                            })}
+                            // onChangeItem={item => this.onChangeSocialWorker(item.value)}
+                        />
 
+
+                        {/* <Button
+                            buttonStyle={styles.button}
+                            title="עריכה"
+                            onPress={() => this.props.navigation.navigate('editFamilies', {
+                                familyId: doc.id
+                            })}
+                            color='#767ead'
+                            icon={<MaterialCommunityIcons
+                                name="account-details"
+                                size={26}
+                                color="white"
+                            />
+                            }
+                            titleStyle={{ marginRight: 5 }}
+                            iconRight
+                        /> */}
                     </ScrollView>
 
                 </ImageBackground>
 
             </SafeAreaView>
 
-        )}
+        )
+    }
 }
 
 const styles = StyleSheet.create({
