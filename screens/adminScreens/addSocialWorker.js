@@ -89,7 +89,7 @@ export default class addSocialWorker extends Component {
 
               <Input
                 keyboardType='default'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangeLastName(text)}
                 value={this.state.socialWorker.lastName}
@@ -104,7 +104,7 @@ export default class addSocialWorker extends Component {
               />
               <Input
                 keyboardType='email-address'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangeEmail(text)}
                 value={this.state.socialWorker.email}
@@ -119,7 +119,7 @@ export default class addSocialWorker extends Component {
               />
               <Input
                 keyboardType='default'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangeFirstName(text)}
                 value={this.state.socialWorker.firstName}
@@ -134,7 +134,7 @@ export default class addSocialWorker extends Component {
               />
               <Input
                 keyboardType='default'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangePassword(text)}
                 value={this.state.socialWorker.passowrd}
@@ -149,7 +149,7 @@ export default class addSocialWorker extends Component {
               />
               <Input
                 keyboardType='numeric'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangeId(text)}
                 value={this.state.socialWorker.id}
@@ -164,7 +164,7 @@ export default class addSocialWorker extends Component {
               />
               <Input
                 keyboardType='numeric'
-                maxLength={40}
+                // maxLength={40}
                 selectionColor={'black'}
                 onChangeText={text => this.onChangePhone(text)}
                 value={this.state.socialWorker.phone}
