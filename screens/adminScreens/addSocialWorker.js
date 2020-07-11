@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text,TextInput, View, ImageBackground } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native-elements';
+import { Button,Input } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import firebase from '../../config/config';
 
@@ -39,12 +39,17 @@ export default class addSocialWorker extends Component {
     tempData.id = value;
     this.setState({ socialWorker: tempData })
   }
+  onChangePhone = (value) => {
+    var tempData = this.state.socialWorker;
+    tempData.phone = value;
+    this.setState({ socialWorker: tempData })
+  }
 
-  save =async () => {
+  save = async () => {
     var tempSocialWorker = this.state.socialWorker
-    tempSocialWorker.role='sw'
-    tempSocialWorker.parent=[]
-    tempSocialWorker.kids=[]
+    tempSocialWorker.role = 'sw'
+    tempSocialWorker.parent = []
+    tempSocialWorker.kids = []
     var createUser = firebase.functions().httpsCallable('createUser');
     //console.log('createUser ref: ', createUser);
     await createUser(tempSocialWorker)
@@ -76,12 +81,103 @@ export default class addSocialWorker extends Component {
           <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
 
             <ScrollView>
-              <TextInput
+              {/* <TextInput
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 onChangeText={text => this.onChangeLastName(text)}
                 value={this.state.socialWorker.lastName}
+              /> */}
+
+              <Input
+                keyboardType='default'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangeLastName(text)}
+                value={this.state.socialWorker.lastName}
+                placeholder='הכנס שם משפחה'
+                placeholderTextColor='lightgray'
+                label='שם משפחה'
+                  placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
               />
-              <TextInput
+              <Input
+                keyboardType='email-address'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangeEmail(text)}
+                value={this.state.socialWorker.email}
+                placeholder='yout_name@domain.com'
+                placeholderTextColor='lightgray'
+                label='אימייל'
+                  placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+              />
+              <Input
+                keyboardType='default'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangeFirstName(text)}
+                value={this.state.socialWorker.firstName}
+                placeholder='הכנס שם פרטי'
+                placeholderTextColor='lightgray'
+                label='שם פרטי'
+                  placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+              />
+              <Input
+                keyboardType='default'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangePassword(text)}
+                value={this.state.socialWorker.passowrd}
+                placeholder='סיסמה'
+                placeholderTextColor='lightgray'
+                label='סיסמה'
+                placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+              />
+              <Input
+                keyboardType='numeric'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangeId(text)}
+                value={this.state.socialWorker.id}
+                placeholder='הכנס תעודת זהות'
+                placeholderTextColor='lightgray'
+                label='תעודת זהות'
+                placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+              />
+              <Input
+                keyboardType='numeric'
+                maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangePhone(text)}
+                value={this.state.socialWorker.phone}
+                placeholder='הכנס מספר טלפון'
+                placeholderTextColor='lightgray'
+                label='מספר טלפון'
+                placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+              />
+              {/* <TextInput
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 onChangeText={text => this.onChangeEmail(text)}
                 value={this.state.socialWorker.email}
@@ -100,22 +196,22 @@ export default class addSocialWorker extends Component {
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 onChangeText={text => this.onChangeId(text)}
                 value={this.state.socialWorker.id}
+              /> */}
+              <Button
+                buttonStyle={styles.button}
+                title="שמור"
+                onPress={() => this.save()}
+                color='#767ead'
+                icon={<MaterialCommunityIcons
+                  name="account-details"
+                  size={26}
+                  color="white"
+                />
+                }
+                titleStyle={{ marginRight: 5 }}
+                iconRight
               />
-                   <Button
-                        buttonStyle={styles.button}
-                        title="שמור"
-                        onPress={()=>this.save()}
-                        color='#767ead'
-                        icon={<MaterialCommunityIcons
-                            name="account-details"
-                            size={26}
-                            color="white"
-                        />
-                        }
-                        titleStyle={{ marginRight: 5 }}
-                        iconRight
-                    />
-     
+
             </ScrollView>
 
           </ImageBackground>
