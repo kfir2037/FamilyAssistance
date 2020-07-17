@@ -8,7 +8,7 @@ import adminStackNavigator from './adminStackNavigator';
 import firebase from '../../config/config'
 import adminMainPageStackNavigator from './adminMainPageStackNavigator';
 import { Ionicons as Icon } from '@expo/vector-icons';
-
+import adminReports from '../../screens/adminScreens/adminReports'
 const CustomDrawerComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
     <View style={{ backgroundColor: '#e0aa00', height: '25%', alignItems: 'center', justifyContent: 'center' }}>
@@ -46,6 +46,12 @@ const adminDrawerNavigator = createDrawerNavigator({
       screen:adminStackNavigator,
       navigationOptions: {
         drawerLabel: "הוספת עו''ס",
+      },
+    },
+    Reports:{
+      screen:adminReports,
+      navigationOptions: {
+        drawerLabel: "הפקדת דוחות",
       },
     }
   },{

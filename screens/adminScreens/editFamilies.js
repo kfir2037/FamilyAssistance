@@ -101,11 +101,12 @@ export default class editFamilies extends React.Component {
                 </View>
             );
         }
+        console.log('social workers: ',this.state.socialWorkers)
         return (
 
             <SafeAreaView>
                 <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
-                <ScrollView>
+                {/* <ScrollView> */}
 
                     <TextInput
                         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -123,6 +124,10 @@ export default class editFamilies extends React.Component {
                         value={this.state.familyData.phone}
                     />
                     <DropDownPicker
+                        // items={[
+                        //     {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
+                        //     {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
+                        // ]}
                         items={this.state.socialWorkers}
             
                         defaultValue={this.state.country}
@@ -156,7 +161,7 @@ export default class editFamilies extends React.Component {
                         iconRight
                     />
                         {/* {this.state.data} */}
-                    </ScrollView>
+                    {/* </ScrollView> */}
                 </ImageBackground>
             </SafeAreaView>
 
