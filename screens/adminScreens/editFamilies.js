@@ -101,7 +101,6 @@ export default class editFamilies extends React.Component {
                 </View>
             );
         }
-        console.log('social workers: ',this.state.socialWorkers)
         return (
 
             <SafeAreaView>
