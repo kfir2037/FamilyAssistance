@@ -2,24 +2,22 @@ import React, { Component } from 'react';
 import { ActivityIndicator, StyleSheet, View, Text, ImageBackground, ScrollView, Platform } from 'react-native';
 import { Button } from 'react-native-elements';
 import Dropdown from './Dropdown';
-import DatePicker from 'react-native-datepicker'
+import SocialWorkersDropdown from './SocialWorkersDropdown';
 import DateTimePicker from "@react-native-community/datetimepicker";
-// import DatePicker from '@react-native-community/dateptimepicker'
 import firebase from '../../config/config';
-import { color } from 'react-native-reanimated';
 import moment from 'moment';
 import { Foundation, AntDesign } from '@expo/vector-icons';
-import { date } from 'yup';
-// var Mailer = require('NativeModules').RNMail;
 
-class Reports extends Component {
+class adminReports extends Component {
   constructor(props) {
     super(props);
     this.state = {
       families: [],
       data: {},
       familiesNames: [],
+      socialWorkersNames:[],
       selectedFamily: '',
+      selectedSocialWorker: '',
       startDate: '',
       endDate: '',
       fromDateShow: false,
@@ -35,22 +33,17 @@ class Reports extends Component {
 
   async componentDidMount() {
     let familiesNames = []
-    let families = await this.getFamilies();
-    // for (family in families) {
-    //   familiesNames.push({
-    //     label: 'משפחת' + family.familyDetails.lastName,
-    //     value: familyId
-    //   })
-    // }
-
+    let socialWorkers = await this.getSocialWorkers();
+    // let families = await this.getFamilies();
   }
 
-  getFamilies = async () => {
+  getFamilies = async (sw) => {
 
     let allFamilies = []
     let familiesNames = []
     let familyObj = {}
-    const socialWorkerUid = firebase.auth().currentUser['uid'];
+    // const socialWorkerUid = firebase.auth().currentUser['uid'];
+    const socialWorkerUid = sw;
     console.log('socialWorkerId ' + socialWorkerUid);
 
     const swFamilies = await firebase
@@ -85,14 +78,46 @@ class Reports extends Component {
 
     return allFamilies;
   }
+  getSocialWorkers = async () => {
+
+    let allFamilies = []
+    let familiesNames = []
+    let familyObj = {}
+    // const socialWorkerUid = firebase.auth().currentUser['uid'];
+    // console.log('socialWorkerId ' + socialWorkerUid);
+
+    const swFamilies = await firebase
+      .firestore()
+      .collection('users')
+      .where('role', '==', 'sw')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          familyObj[doc.id] = Object.assign({}, doc.data());
+
+          allFamilies.push({
+            familyDetails: doc.data(),
+            familyId: doc.id
+          })
+          familiesNames.push({
+            label: doc.data().firstName +' '+ doc.data().lastName,
+            value: doc.id
+          })
+        });
+
+        this.setState({ /* data: allFamilies, */ socialWorkersNames: familiesNames })
+      })
+      .catch(error => {
+        console.log("Error getting documents: ", error);
+      });
+
+    return allFamilies;
+  }
 
   tempServerGenerateReports = async (family, startDate, endDate, data) => {
     try {
-      // var family = this.state.selectedFamily
-      // var startDate = this.state.startDate
-      // var endDate = this.state.endDate;
+
       var tempDate = startDate
-      // var data = this.state.data
 
       var familyDetails = {};
       for (let i = 0; i < data.length; i++) {
@@ -322,6 +347,12 @@ class Reports extends Component {
     console.log('selectedFamily: ', family)
     console.log('this.state.selectedFamily: ', this.state.selectedFamily)
   }
+  selectedSocialWorker = async (sw) => {
+    this.setState({ selectedSocialWorker: sw })
+    console.log('sw: ', sw)
+    this.getFamilies(sw)
+    // console.log('this.state.selectedSocialWorker: ', this.state.selectedSocialWorker)
+  }
 
   onChangeFrom = (event, selectedDate) => {
     const currentDate = selectedDate || this.state.sdate;
@@ -336,7 +367,8 @@ class Reports extends Component {
   }
 
   render() {
-
+    // console.log('this.state.socialWorkersNames: ',this.state.socialWorkersNames)
+    // console.log('this.state.familiesNames: ',this.state.familiesNames)
     return (
 
       <ImageBackground style={styles.IBstyle} source={require('../../assets/new_background09.png')}>
@@ -344,6 +376,11 @@ class Reports extends Component {
           <View style={styles.headLines}>
             <Text style={styles.titleText}>הפקת דוחות</Text>
           </View>
+          <SocialWorkersDropdown
+            families={this.state.socialWorkersNames}
+            socialWorkerSelected={this.selectedSocialWorker.bind(this)}
+            // onPress={x=>{console.log('asdasdasdasd',x)}}
+          />
           <Dropdown
             families={this.state.familiesNames}
             familySelected={this.selectedFamily.bind(this)}
@@ -539,7 +576,7 @@ class Reports extends Component {
   }
 }
 
-export default Reports;
+export default adminReports;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { RefreshControl, FlatList, Picker, Platform, StyleSheet, View, Text, ActivityIndicator, ScrollView, SafeAreaView, Modal, TouchableHighlight, ImageBackground } from 'react-native';
+import { RefreshControl, Switch, FlatList, Image, Picker, Platform, StyleSheet, View, Text, ActivityIndicator, ScrollView, SafeAreaView, Modal, TouchableOpacity, TouchableHighlight, ImageBackground } from 'react-native';
 import firebase from '../../config/config';
-import { Card, Button, Input, ListItem } from 'react-native-elements';
+import { Card, Button, Input, ListItem, Icon } from 'react-native-elements';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -46,6 +46,9 @@ const WatchFamilies = ({ navigation }) => {
   const [message, setMessage] = useState('');
   const [show, setShow] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [familyId, setfamilyId] = useState(navigation.getParam('familyId'));
+  const [editFamilyModal, seteditFamilyModal] = useState(false);
+  const [isActive, setisActive] = useState(familyObj.status);
 
 
   const AddParentPress = () => {
@@ -56,10 +59,29 @@ const WatchFamilies = ({ navigation }) => {
     setIsKidModalVisible(!isKidModalVisible);
   }
 
+  const toggleSwitch = () => {
+    setisActive(!isActive);
+    var obj = familyObj
+    obj.status = isActive
+    setFamilyObj(obj)
+    console.log('familyId: ', familyId)
+    console.log('isActive: ', isActive)
+    firebase.firestore().collection('families').doc(familyId).update({
+      status: isActive,
+    })
+    console.log('changes was saved')
+  };
+  const changeFamilyStatus = (status) => {
+    console.log('status: ', status)
+    var obj = familyObj
+    obj.status = status
+    setFamilyObj(obj)
 
+  };
   const getFamily = async () => {
     const familyId = navigation.getParam('familyId');
-    console.log(familyId);
+    setfamilyId(familyId);
+
     await firebase.firestore().collection('families').doc(familyId).get()
       .then(async (doc) => {
         setFamilyObj(doc.data());
@@ -515,6 +537,8 @@ const WatchFamilies = ({ navigation }) => {
           </View>
         </Modal>
 
+        <Text style={styles.familyName}>משפחת {familyObj.lastName}</Text>
+
         <ScrollView refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -523,16 +547,25 @@ const WatchFamilies = ({ navigation }) => {
           />
         }
           style={styles.scrollView} >
-          <ImageBackground style={{ height: '100%', justifyContent: 'center', width: '100%', flex: 1 }} source={require('../../assets/new_background08.png')}>
-            <View style={{ alignItems: 'center',padding:5, marginHorizontal: 15, marginTop: 10, borderRadius: 13, backgroundColor: 'white' }}>
-              <Text style={styles.familyName}>משפחת {familyObj.lastName}</Text>
-            </View>
+          <ImageBackground style={{ height: '100%', justifyContent: 'center', width: '100%', flex: 1 }} imageStyle={{ opacity: 0.1 }} source={require('../../assets/family.png')}>
+
             <View style={styles.detailsContainer}>
               <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='פרטי משפחה:'>
                 <ImageBackground style={{}} imageStyle={{ height: '100%', opacity: 0.08 }} source={require('../../assets/family.png')}>
                   <Text style={styles.detailsText}>מצב משפחתי: {familyObj.isSingleParent ? 'גרושים' : 'נשואים'} </Text>
                   <Text style={styles.detailsText}>מספר נפשות: {familyObj.numOfPersons}</Text>
                   <Text style={styles.detailsText}>סטטוס פעילות: {familyObj.status ? <Text style={{ color: 'green' }}>פעילה</Text> : <Text style={{ color: 'crimson' }}>לא פעילה</Text>}</Text>
+                  <Text style={styles.detailsText}>פעיל/לא פעיל:</Text>
+
+                  {/* <Switch
+                        value={familyObj.status}
+                        onValueChange={value => changeFamilyStatus(!familyObj.status)}
+                      /> */}
+                  <Switch
+                    style={{ alignItems: "center" }}
+                    value={!isActive}
+                    onValueChange={toggleSwitch}
+                  />
                 </ImageBackground>
               </Card>
               <View style={styles.parentsDetails}>
@@ -645,9 +678,43 @@ const WatchFamilies = ({ navigation }) => {
               <Card containerStyle={{backgroundColor:'rgba(255,255,255,0.95)', borderRadius: 20,marginBottom:10 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
                 <Text style={{ fontSize: 18, marginRight: 10 }}>{familyObj.desc}</Text>
               </Card>
+              <Modal animationType={"slide"} transparent={false}
+
+                visible={editFamilyModal}
+                onRequestClose={() => { console.log("Modal has been closed.") }}>
+                {/*All views of Modal*/}
+                {/*Animation can be slide, slide, none*/}
+                <View style={styles.modal}>
+
+
+                  <Text style={styles.text}>Modal is open!</Text>
+                  <Button title="Click To Close Modal" onPress={() => {
+                    seteditFamilyModal(!editFamilyModal)
+                  }} />
+
+                </View>
+              </Modal>
             </View>
           </ImageBackground>
         </ScrollView>
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          // onPress={() => navigation.navigate('EditFamilies',{
+          //   familyId:familyId
+          // })}
+          onPress={() => seteditFamilyModal(true)}
+
+          style={styles.TouchableOpacityStyle}>
+
+          <Icon
+            style={styles.editIcon}
+            reverse
+            name='ios-american-football'
+            type='ionicon'
+            color='#517fa4'
+          />
+        </TouchableOpacity>
       </SafeAreaView>
     );
 
@@ -663,9 +730,31 @@ const styles = StyleSheet.create({
     //backgroundColor: '#b5bef5',
     alignItems: 'center',
     justifyContent: 'center',
-    //borderWidth: 1,
-    //borderColor: 'black',
-    //borderRadius: 10
+
+  },
+  TouchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+
+  FloatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 50,
+    height: 50,
+  },
+  editIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#ee6e73',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
   },
   familyName: {
     fontSize: 25,
@@ -686,6 +775,16 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginTop: 5
 
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    // backgroundColor: '#00ff00',
+    padding: 100
+  },
+  text: {
+    color: '#3f2949',
+    marginTop: 10
   },
   scrollView: {
     width: '100%',

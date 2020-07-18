@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 
-export default class editFamilies extends React.Component {
+export default class EditFamilies extends React.Component {
 
     constructor(props) {
         super(props)
