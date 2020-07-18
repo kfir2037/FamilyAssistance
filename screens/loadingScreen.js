@@ -40,14 +40,14 @@ export default class Login extends Component {
               console.log('loading')
               let role = doc._document.proto.fields.role.stringValue;
               if (role == 'sw') {
-                that.props.navigation.navigate('SwDashboard');
+                //that.props.navigation.navigate('SwDashboard');
               }
-              else if (role == 'parent') {
+              else if (role == 'parent' || role == 'kid') {
                 that.props.navigation.navigate('ParentsDashboard');
               }
-              else if (role == 'kid') {
-                that.props.navigation.navigate('KidsDashboard');
-              }
+              // else if (role == 'kid') {
+              //   that.props.navigation.navigate('KidsDashboard');
+              // }
               else if (role == 'admin') {
                 console.log('1111')
                 that.props.navigation.navigate('adminDashboard');
@@ -56,8 +56,8 @@ export default class Login extends Component {
                 that.props.navigation.navigate('Welcome');
               }
             })
-            .catch((err) => { 
-              console.log('loading', err); 
+            .catch((err) => {
+              console.log('loading', err);
               that.props.navigation.navigate('Welcome');
             })
         } else {
