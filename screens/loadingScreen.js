@@ -34,7 +34,7 @@ export default class Login extends Component {
             sessionTimeout = setTimeout(() => firebase.auth().signOut(), millisecondsUntilExpiration)
           })
           let userUid = user.uid;
-          console.log(userUid)
+          console.log('userUid: ', userUid)
           firebase.firestore().collection('users').doc(userUid).get()
             .then(doc => {
               console.log('loading')
@@ -56,7 +56,10 @@ export default class Login extends Component {
                 that.props.navigation.navigate('Welcome');
               }
             })
-            .catch((err) => { console.log('loading', err) })
+            .catch((err) => { 
+              console.log('loading', err); 
+              that.props.navigation.navigate('Welcome');
+            })
         } else {
           sessionTimeout && clearTimeout(sessionTimeout);
           sessionTimeout = null;
@@ -64,6 +67,7 @@ export default class Login extends Component {
         }
       } catch {
         console.log('error get current user 2');
+        that.props.navigation.navigate('Welcome');
       }
 
     })

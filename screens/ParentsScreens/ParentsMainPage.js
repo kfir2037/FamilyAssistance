@@ -217,6 +217,7 @@ export default class ParentsMainPage extends React.Component {
       loadingTasks: false
     });
   };
+  
   showAlert = () => {
     this.setState({
       showAlert: true,

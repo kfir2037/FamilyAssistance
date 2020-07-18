@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
   TextInput,
   TouchableOpacity,
   Image,
@@ -11,16 +12,22 @@ import {
 import firebase from '../../config/config';
 import Spinner from '../components/Spinner';
 import { auth } from 'firebase';
+import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
 export default class Form extends Component {
 
   constructor(props) {
     super(props);
+    this.ref = null;
     this.state = {
       id: '',
       password: '',
       errorMessage: '',
-      loading: false
+      loading: false,
+      recaptchaVerifier: null,
+      verificationId: '',
+      confirm: null,
+      verificationCode: ''
     };
 
 
@@ -72,16 +79,52 @@ export default class Form extends Component {
     // });
   }
 
+  firebaseConfig = firebase.options;
+
+  async signInWithPhoneNumber(phoneNumber) {
+    try {
+      const phoneProvider = new auth.PhoneAuthProvider();
+      const verificationId = await phoneProvider.verifyPhoneNumber(
+        phoneNumber,
+        this.ref
+      );
+      this.setState({ verificationId: verificationId });
+      console.log('verificationId: ',this.state.verificationId)
+      //const confirmation = await firebase.auth().sign.signInWithPhoneNumber(phoneNumber);
+      //this.setState({ confirm: confirmation });
+    } catch (err) {
+      console.log('error signInWithPhoneNumber: ', err);
+      this.setState({ errorMessage: 'אירעה שגיאה' });
+    }
+  }
+
+  async confirmCode() {
+    try {
+      const credential = firebase.auth.PhoneAuthProvider.credential(
+        this.state.verificationId,
+        this.state.verificationCode
+      );
+      await firebase.auth().signInWithCredential(credential);
+    } catch (err) {
+      console.log('code verification error: ', err);
+    }
+  }
+
+
   onButtonPress() {
 
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
 
     firebase.auth().signInWithEmailAndPassword(`${id}@gmail.com`, password)
-          .catch((err) => {
-            console.log('86');
-            this.onLoginFail();
-          });
+      .then(() => {
+        console.log('phoneNumber: ', firebase.auth().currentUser.phoneNumber);
+        //this.signInWithPhoneNumber(firebase.auth().currentUser.phoneNumber);
+
+      })
+      .catch((err) => {
+        this.onLoginFail();
+      });
 
     const userEmail = firebase.functions().httpsCallable('signinUserEmail');
 
@@ -121,6 +164,10 @@ export default class Form extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <FirebaseRecaptchaVerifierModal
+          ref={ref => this.ref = ref}
+          firebaseConfig={this.firebaseConfig}
+        />
         <TextInput
           onChangeText={(id) => this.setState({ id })}
           value={this.state.id}
@@ -147,6 +194,25 @@ export default class Form extends Component {
         />
 
         {this.state.errorMessage ? <Text style={styles.errorMessage}> {this.state.errorMessage} </Text> : null}
+
+        {this.state.verificationId
+          ?
+          <View>
+
+            <TextInput
+              onChangeText={(verificationCode) => this.setState({ verificationCode })}
+              value={this.state.verificationCode}
+              style={styles.inputBox}
+              underlineColorAndroid='transparent'
+              placeholder='קוד אימות'
+              selectionColor="gray"
+              secureTextEntry
+              placeholderTextColor="white"
+            />
+            <Button title="Confirm Code" onPress={() => this.confirmCode()} />
+          </View>
+          : null
+        }
 
         <View>
           {this.renderButton()}
