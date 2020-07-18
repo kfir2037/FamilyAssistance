@@ -52,7 +52,6 @@ function roleIsValid(role) {
     return validRoles.includes(role);
 }
 
-admin.auth().updateUser('oJbsyP4Hg2b7BLUtuaIkA1stSMO2',{ uid:'203720172'})
 
 const passRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$+=!*()@%&]).{8,10}$/g
 
@@ -848,7 +847,7 @@ sendPushNotification = async () => {
 
 setInterval(() => {
     console.log('setInterval')
-    sendPushNotification2()
+    //sendPushNotification2()
 }, 300000)
 
 //sendPushNotification2();
