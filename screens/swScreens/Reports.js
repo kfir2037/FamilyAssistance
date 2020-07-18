@@ -57,6 +57,7 @@ class Reports extends Component {
       .firestore()
       .collection('families')
       .where('swInCharge', '==', socialWorkerUid)
+      .where('status', '==', true)   
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {

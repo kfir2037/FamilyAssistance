@@ -448,7 +448,8 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
         }
 
         data['swInCharge'] = callerUid;
-        data['status'] = 'active';
+        // data['status'] = 'active';
+        data['status'] = true;
         data['parents'] = [];
         data['kids'] = [];
 

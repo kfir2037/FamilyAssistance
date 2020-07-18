@@ -7,12 +7,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Icon from '@expo/vector-icons/Ionicons';
 // import DashboardTabNavigator from './DashboardTabNavigator';
 import WatchFamilies from '../../screens/swScreens/WatchFamilies';
+import EditFamilies from '../../screens/swScreens/EditFamilies';
 
 
 const SwWatchFamiliesStackNavigator = createStackNavigator({
   //Tasks:WatchTasks,
   //AddNewFamily:AddNewFamily,
   WatchFamilies: WatchFamilies,
+  EditFamilies: EditFamilies,
 },
   {
     defaultNavigationOptions: ({ navigation }) => {

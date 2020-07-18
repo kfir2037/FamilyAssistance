@@ -51,6 +51,7 @@ export default class adminMainPage extends Component {
       .firestore()
       .collection('families')
       .where('swInCharge', '==', socialWorkerId)
+      .where('status', '==', true)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
