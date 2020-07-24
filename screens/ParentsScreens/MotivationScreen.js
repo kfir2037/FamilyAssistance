@@ -57,7 +57,7 @@ const MotivationScreen = () => {
           : errorMsg
             ? <Text style={styles.errorMsg}>{errorMsg}</Text>
             : <Card title='משפטי מוטיבציה' wrapperStyle={{}} containerStyle={{ height: '90%', borderRadius: 20, paddingHorizontal: 5 }}>
-              <ImageBackground style={{}} imageStyle={{ opacity: 0.08 }} source={require('../../assets/family.png')}>
+              <ImageBackground style={{}} imageStyle={{ opacity: 0.08 }} source={require('../../assets/family2.png')}>
                 <ScrollView style={{ height: '90%', paddingHorizontal: 10 }}>
                   {
                     sentences.map((s, i) => {

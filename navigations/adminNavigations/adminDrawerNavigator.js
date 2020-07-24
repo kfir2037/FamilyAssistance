@@ -12,7 +12,7 @@ import adminReports from '../../screens/adminScreens/adminReports'
 const CustomDrawerComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
     <View style={{ backgroundColor: '#e0aa00', height: '25%', alignItems: 'center', justifyContent: 'center' }}>
-      <Image source={require('../../assets/family.png')} style={{ marginVertical: 10, height: 120, width: 100 }} />
+      <Image source={require('../../assets/family2.png')} style={{ marginVertical: 10, height: 120, width: 100 }} />
       <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}>שלום, {firebase.auth().currentUser.displayName}</Text>
     </View>
     <ScrollView contentContainerStyle={{ justifyContent: 'space-between', flex: 1, flexDirection: 'column' }}>

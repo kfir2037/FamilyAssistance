@@ -15,11 +15,11 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/family2_icon.png",
     "splash": {
-      "image": "./assets/family.png",
+      "image": "./assets/family2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#e0aa00"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

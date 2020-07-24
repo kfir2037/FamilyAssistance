@@ -6,7 +6,6 @@ import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Formik } from 'formik';
-import ParentDetails from '../../src/components/ParentDetails';
 import * as yup from 'yup';
 
 function wait(timeout) {
@@ -30,7 +29,6 @@ const UserSchema = yup.object({
   phone: yup.string()
     .required('שדה חובה')
     .matches(phoneRegEx, 'מספר טלפון לא תקין'),
-
 })
 
 const WatchFamilies = ({ navigation }) => {
@@ -596,7 +594,7 @@ const WatchFamilies = ({ navigation }) => {
                           }}
                           ItemSeparatorComponent={(props) => {
                             //console.log('props', props);
-                            return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                            return (<View style={{ height: 5, margin: 10, backgroundColor: '#0ca5e5' }} />);
                           }}
                           data={parentDetails}
                           renderItem={({ item, separators }) => {
@@ -624,7 +622,7 @@ const WatchFamilies = ({ navigation }) => {
                 </Card>
               </View>
               <View style={styles.childsDetails}>
-                <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='ילדים:'>
+                <Card containerStyle={{ backgroundColor:'rgba(255,255,255,0.95)', borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='ילדים:'>
                   <ImageBackground style={{}} imageStyle={{ opacity: 0.08 }} source={require('../../assets/family.png')} >
                     <View>
                       {kidsDetailsLoading
@@ -649,7 +647,7 @@ const WatchFamilies = ({ navigation }) => {
                           }}
                           ItemSeparatorComponent={(props) => {
                             console.log('props', props);
-                            return (<View style={{ height: 5, margin: 10, backgroundColor: '#767ead' }} />);
+                            return (<View style={{ height: 5, margin: 10, backgroundColor: '#0ca5e5' }} />);
                           }}
                           data={kidsDetails}
                           renderItem={({ item, separators }) => {
@@ -677,7 +675,7 @@ const WatchFamilies = ({ navigation }) => {
 
                 </Card>
               </View>
-              <Card containerStyle={{ borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
+              <Card containerStyle={{backgroundColor:'rgba(255,255,255,0.95)', borderRadius: 20,marginBottom:10 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
                 <Text style={{ fontSize: 18, marginRight: 10 }}>{familyObj.desc}</Text>
               </Card>
               <Modal animationType={"slide"} transparent={false}
@@ -729,7 +727,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flex: 1,
-    backgroundColor: '#b5bef5',
+    //backgroundColor: '#b5bef5',
     alignItems: 'center',
     justifyContent: 'center',
 
@@ -761,8 +759,11 @@ const styles = StyleSheet.create({
   familyName: {
     fontSize: 25,
     fontWeight: 'bold',
-    marginTop: 10,
-    color: '#656d9c'
+    //marginTop: 10,
+    textAlign:'center',
+    color: 'black',
+
+
     //marginBottom: 5
     // borderWidth: 1,
     // borderColor: 'black'
@@ -807,7 +808,7 @@ const styles = StyleSheet.create({
 
   },
   button: {
-    backgroundColor: '#767ead',
+    backgroundColor: '#0ca5e5',
     width: 100,
     height: 40,
     borderRadius: 15
