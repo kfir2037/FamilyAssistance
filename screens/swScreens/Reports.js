@@ -120,7 +120,7 @@ class Reports extends Component {
       diff = parseInt(diff)
       let reportContent = []
       console.log('familyMembers.length: ', familyMembers.length);
-      for (let i = 0; i < diff; i++) {
+      for (let i = 0; i < diff+1; i++) {
         // familyMembers.forEach(async (x) => {
         for (let j = 0; j < familyMembers.length; j++) {
           let x = familyMembers[j]
@@ -502,7 +502,7 @@ class Reports extends Component {
                 testID='dateTimePicker'
                 value={this.state.edate}
                 mode='date'
-                maximumDate={new Date()}
+                // maximumDate={new Date()}
                 onChange={this.onChangeTo}
 
               />}
