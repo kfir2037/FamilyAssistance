@@ -7,8 +7,12 @@ import {createStackNavigator} from 'react-navigation-stack';
 import adminStackNavigator from './adminStackNavigator';
 import firebase from '../../config/config'
 import adminMainPageStackNavigator from './adminMainPageStackNavigator';
+import adminReportsStackNavigator from './adminReportsStackNavigator';
 import { Ionicons as Icon } from '@expo/vector-icons';
 import adminReports from '../../screens/adminScreens/adminReports'
+
+
+
 const CustomDrawerComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
     <View style={{ backgroundColor: '#e0aa00', height: '25%', alignItems: 'center', justifyContent: 'center' }}>
@@ -42,16 +46,16 @@ const adminDrawerNavigator = createDrawerNavigator({
         drawerLabel: 'ראשי',
       },
     },
-    Tasks:{
+    AddSW:{
       screen:adminStackNavigator,
       navigationOptions: {
         drawerLabel: "הוספת עו''ס",
       },
     },
     Reports:{
-      screen:adminReports,
+      screen:adminReportsStackNavigator,
       navigationOptions: {
-        drawerLabel: "הפקדת דוחות",
+        drawerLabel: "הפקת דוחות",
       },
     }
   },{
@@ -59,7 +63,7 @@ const adminDrawerNavigator = createDrawerNavigator({
     drawerWidth: '60%',
     drawerBackgroundColor: '#e0aa00',
     contentOptions: {
-      activeTintColor: '#0ca5e5',
+      activeTintColor: '#c0d747',
       inactiveTintColor: 'white',
       itemsContainerStyle: {
         alignItems: 'flex-end'

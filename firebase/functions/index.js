@@ -48,7 +48,7 @@ class IDAlreadyInUseError extends Error {
 }
 
 function roleIsValid(role) {
-    const validRoles = ['editor', 'parent', 'sw', 'kid']; //To be adapted with your own list of roles
+    const validRoles = ['admin', 'editor', 'parent', 'sw', 'kid']; //To be adapted with your own list of roles
     return validRoles.includes(role);
 }
 
@@ -63,6 +63,8 @@ const observer = query.onSnapshot(querySnapshot => {
 }, err => {
     console.log(`Encountered error: ${err}`);
 });
+
+
 
 exports.getFamilyMembers = functions.https.onCall(async (data, context) => {
     let family = await admin.firestore().collection('families').doc(data).get();
@@ -84,14 +86,7 @@ exports.deleteTask2 = functions.https.onCall(async (data, context) => {
     })
 });
 
-// const functions = require('firebase-functions');
-// const admin = require('firebase-admin');
 
-// admin.initializeApp();
-
-/**
-* Here we're using Gmail to send
-*/
 let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -101,6 +96,7 @@ let transporter = nodemailer.createTransport({
         pass: 'shimon123'
     }
 });
+
 /**
 * function to send email using given data. Data is formatted as two
 * objects:data.event and data.action
@@ -354,8 +350,8 @@ exports.createUser = functions.https.onCall(async (data, context) => {
 
         const newUser = {
             //email: data.email,
-            uid:data.id,
-            email:`${data.id}@gmail.com`,
+            uid: data.id,
+            email: `${data.id}@gmail.com`,
             emailVerified: false,
             phoneNumber: `+972${data.phone}`,
             password: data.id,
@@ -511,6 +507,11 @@ exports.signinUserEmail = functions.https.onCall(async (data, context) => {
 });
 
 
+exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
+    console.log('This will be run every 5 minutes!');
+    return null;
+});
+
 sendPushNotification2 = async () => {
     let expo = new Expo();
 
@@ -581,7 +582,13 @@ sendPushNotification2 = async () => {
                                 to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
                                 sound: 'default',
                                 title: 'משימה מתקרבת - 2',
-                                body: ' גוף הודעה -  משימה מתקרבת 2'
+                                body: ' גוף הודעה -  משימה מתקרבת 2',
+                                ios: {
+                                    sound: true
+                                },
+                                android: {
+                                    channelId: 'tasks'
+                                }
                             })
                         }
                     }
@@ -846,10 +853,10 @@ sendPushNotification = async () => {
 
 }
 
-setInterval(() => {
-    console.log('setInterval')
-    //sendPushNotification2()
-}, 300000)
+// setInterval(() => {
+//     console.log('setInterval')
+//     sendPushNotification2()
+// }, 300000)
 
 //sendPushNotification2();
 

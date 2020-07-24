@@ -40,7 +40,7 @@ export default class Login extends Component {
               console.log('loading')
               let role = doc._document.proto.fields.role.stringValue;
               if (role == 'sw') {
-                //that.props.navigation.navigate('SwDashboard');
+                that.props.navigation.navigate('SwDashboard');
               }
               else if (role == 'parent' || role == 'kid') {
                 that.props.navigation.navigate('ParentsDashboard');

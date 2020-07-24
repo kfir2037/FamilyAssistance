@@ -94,13 +94,14 @@ export default class Form extends Component {
       //this.setState({ confirm: confirmation });
     } catch (err) {
       console.log('error signInWithPhoneNumber: ', err);
-      this.setState({ errorMessage: 'אירעה שגיאה' });
+      this.setState({ errorMessage: 'אירעה שגיאה',loading:false });
+      this.props.navigation.navigate('Welcome');
     }
   }
 
   async confirmCode() {
     try {
-      const credential = firebase.auth.PhoneAuthProvider.credential(
+      const credential = auth.PhoneAuthProvider.credential(
         this.state.verificationId,
         this.state.verificationCode
       );
@@ -116,10 +117,12 @@ export default class Form extends Component {
     const { id, password } = this.state;
     this.setState({ errorMessage: '', loading: true });
 
+    // this.signInWithPhoneNumber('+972542311506');
+
     firebase.auth().signInWithEmailAndPassword(`${id}@gmail.com`, password)
       .then(() => {
         console.log('phoneNumber: ', firebase.auth().currentUser.phoneNumber);
-        //this.signInWithPhoneNumber(firebase.auth().currentUser.phoneNumber);
+        //this.signInWithPhoneNumber('+97254-231-1506');
 
       })
       .catch((err) => {
@@ -167,6 +170,9 @@ export default class Form extends Component {
         <FirebaseRecaptchaVerifierModal
           ref={ref => this.ref = ref}
           firebaseConfig={this.firebaseConfig}
+          title='אני לא רובוט'
+          cancelLabel='ביטול'
+          in
         />
         <TextInput
           onChangeText={(id) => this.setState({ id })}

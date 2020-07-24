@@ -1,155 +1,10 @@
-// import React from 'react';
-// import { Dimensions, View } from 'react-native';
-
-// import EventCalendar from '../../src/components/Calendar/EventCalendar';
-
-
-// let { width } = Dimensions.get('window');
-
-// export default class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       events: [
-//         {
-//           start: '2017-09-06 01:30:00',
-//           end: '2017-09-06 02:30:00',
-//           title: 'kfir 1',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//           color: 'green',
-//         },
-//         {
-//           start: '2017-09-07 00:30:00',
-//           end: '2017-09-07 01:30:00',
-//           title: 'kfir 2',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-07 01:30:00',
-//           end: '2017-09-07 02:20:00',
-//           title: 'kfir 3',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-07 04:10:00',
-//           end: '2017-09-07 04:40:00',
-//           title: 'kfir 4',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-07 01:05:00',
-//           end: '2017-09-07 01:45:00',
-//           title: 'kfir 5',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-07 14:30:00',
-//           end: '2017-09-07 16:30:00',
-//           title: 'kfir 6',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-08 01:20:00',
-//           end: '2017-09-08 02:20:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-08 04:10:00',
-//           end: '2017-09-08 04:40:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-08 00:45:00',
-//           end: '2017-09-08 01:45:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-08 11:30:00',
-//           end: '2017-09-08 12:30:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-09 01:30:00',
-//           end: '2017-09-09 02:00:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-09 03:10:00',
-//           end: '2017-09-09 03:40:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-09 00:10:00',
-//           end: '2017-09-09 01:45:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2017-09-10 12:10:00',
-//           end: '2017-09-10 13:45:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//         {
-//           start: '2020-02-12 01:10:00',
-//           end: '2020-02-12 03:45:00',
-//           title: 'Dr. Mariana Joseph',
-//           summary: '3412 Piedmont Rd NE, GA 3032',
-//         },
-//       ],
-//     };
-//   }
-
-//   _eventTapped(event) {
-//     alert(JSON.stringify(event));
-//   }
-
-
-
-//   render() {
-//     let day = new Date().getDate(); //Current day
-//     var month = new Date().getMonth() + 1; //Current Month
-//     var year = new Date().getFullYear(); //Current Year
-
-
-//     if(day<10){
-//       day="0"+day
-//     }
-//     if(month<10){
-//       month="0"+month
-//     }
-
-//     var stringDate = year+"-"+month+"-"+day
-//     console.log(stringDate)
-
-//     return (
-//       <View style={{ flex: 1, marginTop: 20 }}>
-//         <EventCalendar
-//           eventTapped={this._eventTapped.bind(this)}
-//           events={this.state.events}
-//           width={width}
-//           // initDate = {'2017-09-07'}
-//           initDate={stringDate}
-//           scrollToFirst
-//           upperCaseHeader
-//           uppercase
-//           scrollToFirst={false}
-//         />
-//       </View>
-//     );
-//   }
-// }
-
 import React, { Component } from 'react';
-import { SafeAreaView, Platform, StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
-import DateTime from 'react-native-customize-selected-date'
+import {ScrollView, YellowBox, SafeAreaView, Platform, StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { Card } from 'react-native-elements';
+import { FontAwesome } from '@expo/vector-icons';
+import firebase from "../../config/config";
+import Spinner from '../../src/components/Spinner';
 import moment from 'moment';
 import _ from 'lodash'
 
@@ -159,12 +14,13 @@ export default class App extends Component {
     this.state = {
       time: '',
       test: [],
-      selected: ''
-
-
-
-
-
+      morningTasks: [],
+      noonTasks: [],
+      afternoonTasks: [],
+      eveningTasks: [],
+      customTasks: [],
+      selected: '',
+      loadingTasks: false
 
     };
 
@@ -179,17 +35,254 @@ export default class App extends Component {
 
   }
 
-  onChangeDate(date) {
-    let arr = []
-    this.setState({ selected: date });
-    for (let i = 0; i < 10; i++) {
-      arr.push(date)
-    }
-    this.setState({ test: arr })
-
-    //alert(date)
-
+  async componentDidMount() {
+    let tasks = await this.getTasks(new Date());
   }
+
+  async onChangeDate(date) {
+    console.log('dateChanged: ', date);
+    this.setState({
+      selected: date
+    })
+    this.getTasks(date)
+  }
+
+  getTasks = async (date) => {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
+    this.setState({
+      loadingTasks: true
+    })
+    const userID = firebase.auth().currentUser.uid;
+    const familyId = await firebase.firestore().collection('users').doc(userID).get()
+    .then(doc=>{
+      return doc.data().familyId;
+    })
+    var morningTasks = [];
+    var noonTasks = [];
+    var afternoonTasks = [];
+    var eveningTasks = [];
+    var customTasks = [];
+    // var today = moment(new Date()).format("DD/MM/YYYY");
+    var today = moment(date).format("DD/MM/YYYY");
+    var allTasks = [];
+    var familyMembers = {};
+    console.log("family id: ", familyId);
+    const family = await firebase
+      .firestore()
+      .collection("users")
+      .where("familyId", "==", familyId)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          if (!doc.exists) {
+            console.log("No such document!!!!!!");
+          } else {
+            let allData = doc.data();
+            familyMembers[doc.id] = allData.firstName + " " + allData.lastName;
+          }
+        });
+      });
+
+    const tasks = await firebase
+      .firestore()
+      .collection("tasks")
+      .where("userId", "==", userID)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          let allData = doc.data();
+          let taskDate = allData.date.seconds;
+          taskDate = moment(taskDate * 1000).format("DD/MM/YYYY");
+
+          if (taskDate == today) {
+            console.log("day");
+            if (allData.category == "morning") {
+              morningTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.join(', '),
+              });
+            } else if (allData.category == "noon") {
+              noonTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.slice(),
+              });
+            } else if (allData.category == "afternoon") {
+              afternoonTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.slice(),
+              });
+            } else if (allData.category == "evening") {
+              eveningTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.slice(),
+              });
+            } else if (allData.category == "custom tasks") {
+              console.log('custom')
+              customTasks.push({
+                name: familyMembers[allData.userId],
+                time: allData.time,
+                isDone: allData.isDone,
+                date: allData.date,
+                tasks: allData.tasks.slice(),
+              });
+            }
+          }
+        });
+
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+        this.setState({
+          loadingTasks: false
+        })
+      });
+
+    this.setState({
+      morningTasks: morningTasks,
+      noonTasks: noonTasks,
+      afternoonTasks: afternoonTasks,
+      eveningTasks: eveningTasks,
+      customTasks: customTasks,
+      loadingTasks: false
+    });
+    return familyId;
+  };
+
+  returnMorningTasks() {
+    return (
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות בוקר">
+        {
+          this.state.morningTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                {obj.isDone
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ marginTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+  }
+
+  returnNoonTasks() {
+    return (
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות צהריים">
+        {
+          this.state.noonTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                {obj.isDone
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+  }
+
+  returnAfternoonTasks() {
+    return (
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות אחר הצהריים">
+        {
+          this.state.afternoonTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                {obj.isDone
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+  }
+
+  returnEveningTasks() {
+    return (
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות ערב">
+        {
+          this.state.eveningTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                {obj.isDone
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+  }
+
+  returnCustomTasks() {
+    return (
+      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות">
+        {
+          this.state.customTasks.map((obj, i) => {
+            return (
+              <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                {obj.isDone
+                  ? <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='check-square-o' color='green' size={18} />
+                  </View>
+                  : <View style={{ paddingTop: 3 }}>
+                    <FontAwesome name='square-o' color='red' size={18} />
+                  </View>
+                }
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+              </View>
+            );
+          })
+        }
+      </Card>
+    );
+  }
+
+
 
   render() {
     return (
@@ -233,10 +326,44 @@ export default class App extends Component {
 
               }}
             />
-            <View style={styles.tasks}>
-              <Text>{this.state.test}</Text>
-            </View>
           </View>
+          <ScrollView>
+            {this.state.loadingTasks
+              ? <Spinner />
+              :
+              <View >
+                {this.state.morningTasks.length == 0
+                  ? null
+                  : <View style={styles.tasksGroup}>
+                    <View style={styles.tasksList}>{this.returnMorningTasks()}</View>
+                  </View>
+                }
+                {this.state.noonTasks.length == 0
+                  ? null
+                  : <View style={styles.tasksGroup}>
+                    <View style={styles.tasksList}>{this.returnNoonTasks()}</View>
+                  </View>
+                }
+                {this.state.afternoonTasks.length == 0
+                  ? null
+                  : <View style={styles.tasksGroup}>
+                    <View style={styles.tasksList}>{this.returnAfternoonTasks()}</View>
+                  </View>
+                }
+                {this.state.eveningTasks.length == 0
+                  ? null
+                  : <View style={styles.tasksGroup}>
+                    <View style={styles.tasksList}>{this.returnEveningTasks()}</View>
+                  </View>
+                }
+                {this.state.customTasks.length == 0
+                  ? null
+                  : <View style={styles.tasksGroup}>
+                    <View style={styles.tasksList}>{this.returnCustomTasks()}</View>
+                  </View>
+                }
+              </View>}
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
@@ -259,6 +386,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
 
 
+  },
+  tasksList: {
+    alignItems: 'flex-end',
+    //marginRight: 10,
+    marginBottom: 7
+  },
+  tasksGroup: {
+
+    marginRight: 10,
   },
   icLockRed: {
     width: 13 / 2,

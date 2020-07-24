@@ -7,6 +7,8 @@ import {
   Image,
   ActivityIndicator,
   ImageBackground,
+  Platform,
+  RefreshControl
 } from "react-native";
 import Accordion from "../../src/components/Accordion";
 import {
@@ -41,6 +43,7 @@ export default class ParentsMainPage extends React.Component {
       numberOftasksDone: 1,
       showAlert: false,
       loadingTasks: true,
+      refreshing:false
     };
     this.updateIndex = this.updateIndex.bind(this);
 
@@ -59,7 +62,7 @@ export default class ParentsMainPage extends React.Component {
   }
 
   async componentDidMount() {
-    this.registerForPushNotification()
+    this.registerForPushNotification();
     await this.getCustomTasks();
   }
 
@@ -79,6 +82,18 @@ export default class ParentsMainPage extends React.Component {
     const token = await Notifications.getExpoPushTokenAsync()
       .then(() => { console.log('token: ', token) })
       .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
+
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('tasks', {
+        name: 'tasks',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+      console.log('created android push channel');
+    }
+
     const user = firebase.auth().currentUser.uid;
 
     var userDoc = firebase.firestore().collection('users').doc(user)
@@ -90,7 +105,8 @@ export default class ParentsMainPage extends React.Component {
         .catch((err) => { console.log('Adding Token Error ', err) });
     }
 
-  }
+  };
+
   getCustomTasks = async () => {
     var user = firebase.auth().currentUser.uid;
     var currentDate = moment(new Date()).format("DD/MM/YYYY");
@@ -197,8 +213,9 @@ export default class ParentsMainPage extends React.Component {
           } else {
             console.log("not same");
           }
-        });
 
+        });
+        this.setState({refreshing:false})
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
@@ -217,7 +234,7 @@ export default class ParentsMainPage extends React.Component {
       loadingTasks: false
     });
   };
-  
+
   showAlert = () => {
     this.setState({
       showAlert: true,
@@ -289,6 +306,11 @@ export default class ParentsMainPage extends React.Component {
 
   }
 
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.getCustomTasks();
+  }
+
   render() {
 
     const { showAlert } = this.state;
@@ -296,7 +318,14 @@ export default class ParentsMainPage extends React.Component {
     return (
       <View style={styles.container}>
         <ImageBackground style={{ height: '100%', width: '100%' }} source={require('../../assets/new_background08.png')}>
-          <ScrollView>
+          <ScrollView refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh.bind(this)}
+              enabled
+              colors={['#e0aa00']}
+            />
+          }>
             <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
 
             {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}

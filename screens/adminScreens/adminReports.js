@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, StyleSheet, View, Text, ImageBackground, ScrollView, Platform } from 'react-native';
+import { SafeAreaView, ActivityIndicator, StyleSheet, View, Text, ImageBackground, ScrollView, Platform } from 'react-native';
 import { Button } from 'react-native-elements';
 import Dropdown from './Dropdown';
 import SocialWorkersDropdown from './SocialWorkersDropdown';
@@ -347,6 +347,7 @@ class adminReports extends Component {
     console.log('selectedFamily: ', family)
     console.log('this.state.selectedFamily: ', this.state.selectedFamily)
   }
+
   selectedSocialWorker = async (sw) => {
     this.setState({ selectedSocialWorker: sw })
     console.log('sw: ', sw)
@@ -371,52 +372,191 @@ class adminReports extends Component {
     // console.log('this.state.familiesNames: ',this.state.familiesNames)
     return (
 
-      <ImageBackground style={styles.IBstyle} source={require('../../assets/new_background09.png')}>
-        <ScrollView style={styles.container}>
-          <View style={styles.headLines}>
-            <Text style={styles.titleText}>הפקת דוחות</Text>
-          </View>
-          <SocialWorkersDropdown
-            families={this.state.socialWorkersNames}
-            socialWorkerSelected={this.selectedSocialWorker.bind(this)}
-            // onPress={x=>{console.log('asdasdasdasd',x)}}
-          />
-          <Dropdown
-            families={this.state.familiesNames}
-            familySelected={this.selectedFamily.bind(this)}
-          />
-          <View style={styles.lineStyle} />
-
-          <View style={{ width: '50%', alignSelf: 'center', marginBottom: 10 }}>
-            {this.state.loadingWeek
+      <SafeAreaView>
+        <ImageBackground style={styles.IBstyle} source={require('../../assets/new_background09.png')}>
+          <ScrollView style={styles.container}>
+            <View style={styles.headLines}>
+              <Text style={styles.titleText}>הפקת דוחות</Text>
+            </View>
+            <SocialWorkersDropdown
+              families={this.state.socialWorkersNames}
+              socialWorkerSelected={this.selectedSocialWorker.bind(this)}
+              // onPress={x=>{console.log('asdasdasdasd',x)}}
+            />
+            <Dropdown
+              families={this.state.familiesNames}
+              familySelected={this.selectedFamily.bind(this)}
+            />
+            <View style={styles.lineStyle} />
+  
+            <View style={{ width: '50%', alignSelf: 'center', marginBottom: 10 }}>
+              {this.state.loadingWeek
+                ? <View>
+                  <ActivityIndicator size='large' color='#0ca5e5' />
+                  <Text style={styles.waitingMsg}>נא המתן...</Text>
+                </View>
+                : <Button
+                  disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
+                  titleStyle={{ marginRight: 10 }}
+                  icon={<Foundation
+                    name="page-export-csv"
+                    size={24}
+                    color="white" />
+                  }
+                  iconRight
+                  buttonStyle={styles.button}
+                  onPress={this.generateWeeklyReports}
+                  title="הפקת דו''ח שבועי"
+                />}
+              
+            </View>
+            <View style={{ width: '50%', alignSelf: 'center' }}>
+              {this.state.loadingMonth
+                ? <View>
+                  <ActivityIndicator size='large' color='#0ca5e5' />
+                  <Text style={styles.waitingMsg}>נא המתן...</Text>
+                </View>
+                : <Button
+                  disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
+                  buttonStyle={styles.button}
+                  icon={<Foundation
+                    name="page-export-csv"
+                    size={24}
+                    color="white" />
+                  }
+                  iconRight
+                  titleStyle={{ marginRight: 10 }}
+                  onPress={this.generateMonthlyReports}
+                  title="הפקת דו''ח חודשי"
+                />}
+            </View>
+            <View style={styles.lineStyle} />
+            <View style={styles.headLines}>
+              <Text style={styles.titleText}>דו''ח לפי תאריכים נבחרים</Text>
+            </View>
+            <View style={styles.datesPickers}>
+              <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
+                <Text style={styles.dateTitles}>מתאריך:</Text>
+                <Text style={styles.date}> {moment(this.state.sdate).format('DD/MM/YYYY')}</Text>
+              </View>
+              {/* <DatePicker
+  
+                style={{ width: '50%' }}
+                date={this.state.startDate}
+                mode="date"
+                placeholder="בחר תאריך"
+                format="DD-MM-YYYY"
+                minDate="01-01-2020"
+                maxDate="30-12-2030"
+                confirmBtnText="בחר"
+                cancelBtnText="בטל"
+                customStyles={{
+                  placeholderText: {
+                    color: 'white'
+                  },
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    borderColor: 'white',
+                    borderRadius: 20,
+                    marginLeft: 36
+                  }
+                  // ... You can check the source to find the other keys.
+                }}
+                onDateChange={(date) => {
+                  this.setState({ startDate: date })
+                  console.log('startDate: ', this.state.startDate)
+                }}
+              /> */}
+              <Button
+                disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
+                buttonStyle={styles.button}
+                containerStyle={{ width: '40%', alignSelf: 'center' }}
+                title=' בחר תאריך'
+                onPress={() => this.setState({ fromDateShow: true })}
+                icon={<AntDesign name="calendar" size={24} color="white" />
+                }
+                iconRight
+              />
+              {this.state.fromDateShow &&
+                <DateTimePicker
+                  testID='dateTimePicker'
+                  value={this.state.sdate}
+                  mode='date'
+                  onChange={this.onChangeFrom}
+  
+                />}
+            </View>
+            <View style={styles.datesPickers}>
+              <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
+                <Text style={styles.dateTitles}>עד תאריך: </Text>
+                <Text style={styles.date}> {moment(this.state.edate).format('DD/MM/YYYY')}</Text>
+              </View>
+              {/* <DatePicker
+                style={{ width: '50%' }}
+                date={this.state.endDate}
+                mode="date"
+                androidMode='spinner'
+                placeholder="בחר תאריך"
+                format="DD-MM-YYYY"
+                minDate="01-01-2020"
+                maxDate="30-12-2030"
+                confirmBtnText="Confirm"
+                cancelBtnText="בטל"
+                customStyles={{
+                  placeholderText: {
+                    color: 'white'
+                  },
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    borderColor: 'white',
+                    borderRadius: 20,
+                    marginLeft: 36
+                  }
+                  // ... You can check the source to find the other keys.
+                }}
+                onDateChange={(date) => { this.setState({ endDate: date }) }}
+              /> */}
+              <Button
+                disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
+                buttonStyle={styles.button}
+                containerStyle={{ width: '40%', alignSelf: 'center', marginBottom: 10 }}
+                title=' בחר תאריך'
+                onPress={() => this.setState({ toDateShow: true })}
+                icon={<AntDesign name="calendar" size={24} color="white" />
+                }
+                iconRight
+              />
+              {this.state.toDateShow &&
+                <DateTimePicker
+                  testID='dateTimePicker'
+                  value={this.state.edate}
+                  mode='date'
+                  maximumDate={new Date()}
+                  onChange={this.onChangeTo}
+  
+                />}
+            </View>
+            {this.state.loadingCustom
               ? <View>
                 <ActivityIndicator size='large' color='#0ca5e5' />
                 <Text style={styles.waitingMsg}>נא המתן...</Text>
               </View>
               : <Button
                 disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
-                titleStyle={{ marginRight: 10 }}
-                icon={<Foundation
-                  name="page-export-csv"
-                  size={24}
-                  color="white" />
-                }
-                iconRight
                 buttonStyle={styles.button}
-                onPress={this.generateWeeklyReports}
-                title="הפקת דו''ח שבועי"
-              />}
-            
-          </View>
-          <View style={{ width: '50%', alignSelf: 'center' }}>
-            {this.state.loadingMonth
-              ? <View>
-                <ActivityIndicator size='large' color='#0ca5e5' />
-                <Text style={styles.waitingMsg}>נא המתן...</Text>
-              </View>
-              : <Button
-                disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
-                buttonStyle={styles.button}
+                containerStyle={{ width: '50%', alignSelf: 'center', marginBottom: 10 }}
+                onPress={this.generateReports}
+                title="הפקת דו''ח"
                 icon={<Foundation
                   name="page-export-csv"
                   size={24}
@@ -424,153 +564,16 @@ class adminReports extends Component {
                 }
                 iconRight
                 titleStyle={{ marginRight: 10 }}
-                onPress={this.generateMonthlyReports}
-                title="הפקת דו''ח חודשי"
               />}
-          </View>
-          <View style={styles.lineStyle} />
-          <View style={styles.headLines}>
-            <Text style={styles.titleText}>דו''ח לפי תאריכים נבחרים</Text>
-          </View>
-          <View style={styles.datesPickers}>
-            <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
-              <Text style={styles.dateTitles}>מתאריך:</Text>
-              <Text style={styles.date}> {moment(this.state.sdate).format('DD/MM/YYYY')}</Text>
-            </View>
-            {/* <DatePicker
-
-              style={{ width: '50%' }}
-              date={this.state.startDate}
-              mode="date"
-              placeholder="בחר תאריך"
-              format="DD-MM-YYYY"
-              minDate="01-01-2020"
-              maxDate="30-12-2030"
-              confirmBtnText="בחר"
-              cancelBtnText="בטל"
-              customStyles={{
-                placeholderText: {
-                  color: 'white'
-                },
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  borderColor: 'white',
-                  borderRadius: 20,
-                  marginLeft: 36
-                }
-                // ... You can check the source to find the other keys.
-              }}
-              onDateChange={(date) => {
-                this.setState({ startDate: date })
-                console.log('startDate: ', this.state.startDate)
-              }}
-            /> */}
-            <Button
-              disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
-              buttonStyle={styles.button}
-              containerStyle={{ width: '40%', alignSelf: 'center' }}
-              title=' בחר תאריך'
-              onPress={() => this.setState({ fromDateShow: true })}
-              icon={<AntDesign name="calendar" size={24} color="white" />
+              {this.state.feedbackMsg == 'הדו"ח נשלח בהצלחה'
+                ? <Text style={styles.waitingMsg}>{this.state.feedbackMsg}</Text>
+                : this.state.feedbackMsg == 'אירעה שגיאה'
+                  ? <Text style={{...styles.waitingMsg,  color: 'crimson' }}>{this.state.feedbackMsg}</Text>
+                  : null
               }
-              iconRight
-            />
-            {this.state.fromDateShow &&
-              <DateTimePicker
-                testID='dateTimePicker'
-                value={this.state.sdate}
-                mode='date'
-                onChange={this.onChangeFrom}
-
-              />}
-          </View>
-          <View style={styles.datesPickers}>
-            <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
-              <Text style={styles.dateTitles}>עד תאריך: </Text>
-              <Text style={styles.date}> {moment(this.state.edate).format('DD/MM/YYYY')}</Text>
-            </View>
-            {/* <DatePicker
-              style={{ width: '50%' }}
-              date={this.state.endDate}
-              mode="date"
-              androidMode='spinner'
-              placeholder="בחר תאריך"
-              format="DD-MM-YYYY"
-              minDate="01-01-2020"
-              maxDate="30-12-2030"
-              confirmBtnText="Confirm"
-              cancelBtnText="בטל"
-              customStyles={{
-                placeholderText: {
-                  color: 'white'
-                },
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  borderColor: 'white',
-                  borderRadius: 20,
-                  marginLeft: 36
-                }
-                // ... You can check the source to find the other keys.
-              }}
-              onDateChange={(date) => { this.setState({ endDate: date }) }}
-            /> */}
-            <Button
-              disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
-              buttonStyle={styles.button}
-              containerStyle={{ width: '40%', alignSelf: 'center', marginBottom: 10 }}
-              title=' בחר תאריך'
-              onPress={() => this.setState({ toDateShow: true })}
-              icon={<AntDesign name="calendar" size={24} color="white" />
-              }
-              iconRight
-            />
-            {this.state.toDateShow &&
-              <DateTimePicker
-                testID='dateTimePicker'
-                value={this.state.edate}
-                mode='date'
-                maximumDate={new Date()}
-                onChange={this.onChangeTo}
-
-              />}
-          </View>
-          {this.state.loadingCustom
-            ? <View>
-              <ActivityIndicator size='large' color='#0ca5e5' />
-              <Text style={styles.waitingMsg}>נא המתן...</Text>
-            </View>
-            : <Button
-              disabled={this.state.loadingWeek || this.state.loadingMonth || this.state.loadingCustom ? true : false}
-              buttonStyle={styles.button}
-              containerStyle={{ width: '50%', alignSelf: 'center', marginBottom: 10 }}
-              onPress={this.generateReports}
-              title="הפקת דו''ח"
-              icon={<Foundation
-                name="page-export-csv"
-                size={24}
-                color="white" />
-              }
-              iconRight
-              titleStyle={{ marginRight: 10 }}
-            />}
-            {this.state.feedbackMsg == 'הדו"ח נשלח בהצלחה'
-              ? <Text style={styles.waitingMsg}>{this.state.feedbackMsg}</Text>
-              : this.state.feedbackMsg == 'אירעה שגיאה'
-                ? <Text style={{...styles.waitingMsg,  color: 'crimson' }}>{this.state.feedbackMsg}</Text>
-                : null
-            }
-        </ScrollView>
-      </ImageBackground>
+          </ScrollView>
+        </ImageBackground>
+      </SafeAreaView>
 
     );
   }

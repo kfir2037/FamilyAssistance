@@ -27,9 +27,9 @@ export default class Login extends Component {
               </View>
               <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
                 <Form type="Login" navigation={this.props.navigation} />
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')} style={{ alignItems: 'center' }}>
+                {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')} style={{ alignItems: 'center' }}>
                   <Text style={{ fontSize: 16, color: '#0ca5e5' }}>שכחת סיסמה?</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </KeyboardAvoidingView>
             <Image style={{ alignSelf: 'center', marginBottom: 15, height: 40, width: 160, bottom: 17 }} source={require('../assets/logo_b7.png')} />
