@@ -110,7 +110,7 @@ export default class App extends Component {
                 time: allData.time,
                 isDone: allData.isDone,
                 date: allData.date,
-                tasks: allData.tasks.slice(),
+                tasks: allData.tasks.join(', '),
               });
             } else if (allData.category == "afternoon") {
               afternoonTasks.push({
@@ -118,7 +118,7 @@ export default class App extends Component {
                 time: allData.time,
                 isDone: allData.isDone,
                 date: allData.date,
-                tasks: allData.tasks.slice(),
+                tasks: allData.tasks.join(', '),
               });
             } else if (allData.category == "evening") {
               eveningTasks.push({
@@ -126,7 +126,7 @@ export default class App extends Component {
                 time: allData.time,
                 isDone: allData.isDone,
                 date: allData.date,
-                tasks: allData.tasks.slice(),
+                tasks: allData.tasks.join(', '),
               });
             } else if (allData.category == "custom tasks") {
               console.log('custom')
@@ -135,7 +135,7 @@ export default class App extends Component {
                 time: allData.time,
                 isDone: allData.isDone,
                 date: allData.date,
-                tasks: allData.tasks.slice(),
+                tasks: allData.tasks.join(', '),
               });
             }
           }
