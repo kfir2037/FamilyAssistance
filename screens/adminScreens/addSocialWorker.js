@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, TextInput, View, ImageBackground } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View, ImageBackground, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, Input } from 'react-native-elements';
@@ -11,7 +11,8 @@ export default class addSocialWorker extends Component {
     super(props)
     this.state = {
       socialWorker: {},
-      alertText:''
+      alertText: '',
+      loading: false
     }
   }
 
@@ -57,7 +58,7 @@ export default class addSocialWorker extends Component {
       .then((resp) => {
         //Display success
         console.log('succes create social worker');
-        this.setState({alertText:'הוספת עובדת סוציאלית חדשה התבצע בהצלחה'})
+        this.setState({ alertText: 'הוספת עובדת סוציאלית חדשה התבצע בהצלחה',loading:false })
       })
       .catch((error) => {
         // console.log('values', values);
@@ -65,7 +66,7 @@ export default class addSocialWorker extends Component {
         var message = error.message;
         //Display error
         console.log(code + ' ' + message);
-        this.setState({alertText:'הייתה בעיה בהרשמה, אנא נסי שוב'})
+        this.setState({ alertText: 'הייתה בעיה בהרשמה, אנא נסה/י שנית',loading:false })
       });
 
   }
@@ -77,10 +78,8 @@ export default class addSocialWorker extends Component {
         <SafeAreaView>
 
           <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
-
-            <ScrollView>
-
-
+            <Text style={{marginTop:10,fontSize:22,fontWeight:'bold',alignSelf:'center'}}>הוספת עובד סוציאלי</Text>
+            <ScrollView style={{ marginVertical: 10 }}>
               <Input
                 keyboardType='default'
                 // maxLength={40}
@@ -95,6 +94,7 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
               />
               <Input
                 keyboardType='email-address'
@@ -110,6 +110,8 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
               />
               <Input
                 keyboardType='default'
@@ -125,6 +127,8 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
               />
               <Input
                 keyboardType='default'
@@ -140,6 +144,8 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
               />
               <Input
                 keyboardType='numeric'
@@ -155,6 +161,8 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
               />
               <Input
                 keyboardType='numeric'
@@ -170,23 +178,31 @@ export default class addSocialWorker extends Component {
                 inputContainerStyle={{ borderBottomColor: 'transparent' }}
                 textAlign='right'
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
               />
 
-              <Button
-                buttonStyle={styles.button}
-                title="שמור"
-                onPress={() => this.save()}
-                color='#767ead'
-                icon={<MaterialCommunityIcons
-                  name="account-details"
-                  size={26}
-                  color="white"
-                />
-                }
-                titleStyle={{ marginRight: 5 }}
-                iconRight
-              />
-              <Text>
+              {this.state.loading
+                ? <ActivityIndicator color='blue' size='large' />
+                : <Button
+                  buttonStyle={{ borderRadius: 7 }}
+                  title="שמור"
+                  onPress={() => {
+                    this.setState({ loading: true })
+                    this.save()
+                  }}
+                  color='#767ead'
+                  icon={<MaterialCommunityIcons
+                    name="account-details"
+                    size={26}
+                    color="white"
+                  />
+                  }
+                  titleStyle={{ marginRight: 5 }}
+                  iconRight
+                  containerStyle={{ marginHorizontal: 10 }}
+                />}
+              <Text style={{alignSelf:'center',marginTop:5}}>
                 {this.state.alertText}
               </Text>
             </ScrollView>

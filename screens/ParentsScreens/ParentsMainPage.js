@@ -10,15 +10,6 @@ import {
   Platform,
   RefreshControl
 } from "react-native";
-import Accordion from "../../src/components/Accordion";
-import {
-  FormLabel,
-  FormInput,
-  FormValidationMessage,
-  Header,
-  Button,
-  ButtonGroup,
-} from "react-native-elements";
 import Accordion2 from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment";
@@ -43,7 +34,7 @@ export default class ParentsMainPage extends React.Component {
       numberOftasksDone: 1,
       showAlert: false,
       loadingTasks: true,
-      refreshing:false
+      refreshing: false
     };
     this.updateIndex = this.updateIndex.bind(this);
 
@@ -54,8 +45,6 @@ export default class ParentsMainPage extends React.Component {
     this.setState({ selectedIndex });
   }
 
-
-
   async UNSAFE_componentWillMount() {
     // await this.getTasks();
     //await this.getCustomTasks();
@@ -64,6 +53,18 @@ export default class ParentsMainPage extends React.Component {
   async componentDidMount() {
     this.registerForPushNotification();
     await this.getCustomTasks();
+
+    firebase.firestore().collection('tasks')
+      .where("date", ">=", new Date("2020/07/30 00:00"))
+      .get()
+      .then(snap => {
+        snap.forEach(doc => {
+          console.log(doc.id);
+        });
+      })
+      .catch(err => {
+        console.log('query Error: ', err)
+      })
   }
 
   registerForPushNotification = async () => {
@@ -215,7 +216,7 @@ export default class ParentsMainPage extends React.Component {
           }
 
         });
-        this.setState({refreshing:false})
+        this.setState({ refreshing: false })
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
@@ -327,8 +328,6 @@ export default class ParentsMainPage extends React.Component {
             />
           }>
             <Image style={styles.image} source={require('../../src/images/30456.jpg')} />
-
-            {/* <Text>Baby vector created by macrovector - www.freepik.com</Text> */}
             <View style={styles.container}>
               {this.state.loadingTasks
                 ? <ActivityIndicator size={40} color='#e0aa00' style={{ marginTop: 10 }} />

@@ -29,15 +29,15 @@ const MotivationScreen = () => {
       })
   }
 
-  const renderPlusButton = () => {
-    //if (firebase.auth().currentUser.)
+  // const renderPlusButton = () => {
+  //   //if (firebase.auth().currentUser.)
 
-    return (
-      <TouchableOpacity style={styles.iconContainer}>
-        <Icon name='pluscircleo' size={30} />
-      </TouchableOpacity>
-    );
-  }
+  //   return (
+  //     <TouchableOpacity style={styles.iconContainer}>
+  //       <Icon name='pluscircleo' size={30} />
+  //     </TouchableOpacity>
+  //   );
+  // }
 
   useEffect(() => {
     setLoading(true);
@@ -70,7 +70,6 @@ const MotivationScreen = () => {
                       );
                     })
                   }
-                  {renderPlusButton()}
                 </ScrollView>
 
               </ImageBackground>

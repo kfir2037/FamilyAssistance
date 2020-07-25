@@ -9,6 +9,7 @@ import firebase from '../../config/config';
 import SwStackNavigator from './SwStackNavigator'
 import SwAddNewFamilyStackNavigator from './SwAddNewFamilyStackNavigator'
 import SwWatchFamiliesStackNavigator from './SwWatchFamiliesStackNavigator'
+import SwMotivationStackNavigator from './SwMotivationStackNavigator'
 import ChangePasswordScreen from '../../screens/ChangePasswordScreen'
 import SettingsStackNavigator from './SettingsStackNavigator'
 import ReportsStackNavigator from './ReportsStackNavigator'
@@ -73,6 +74,14 @@ const SwDrawerNavigator = createDrawerNavigator({
       drawerLabel: 'הגדרות',
 
     }
+  },
+
+  SwMotivation: {
+    screen: SwMotivationStackNavigator,
+    navigationOptions:{
+      drawerLabel:'משפטי מוטיבציה'
+    }
+
   },
 
   ChangePasswordFlow:{

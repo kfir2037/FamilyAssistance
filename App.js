@@ -49,14 +49,6 @@ const AppSwitchNavigator = createSwitchNavigator({
           header: null
         }
       },
-      // ForgotPassword: {
-      //   screen: ForgotPasswordScreen,
-      //   navigationOptions: {
-      //     headerStyle: {
-      //       backgroundColor: '#e0aa00'
-      //     }
-      //   }
-      // }
     }
 
     ),

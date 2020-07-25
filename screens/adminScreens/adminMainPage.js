@@ -68,7 +68,7 @@ export default class adminMainPage extends Component {
           //   </View>
           // );
           allFamilies.push(
-            <Card containerStyle={{ width: '90%', borderRadius: 20 }} title={family.lastName}>
+            <Card key={family.email} containerStyle={{ width: '90%', borderRadius: 20 }} title={family.lastName}>
               {
                 <View style={{ flexDirection: 'column' }} >
                   <View style={{ paddingTop: 3 }}></View>
@@ -152,33 +152,37 @@ export default class adminMainPage extends Component {
   render() {
     if (this.state.socialWorkers.length == 0) {
       console.log('social workers array is empty')
-      return null
+      return null;
     }
     return (
       <SafeAreaView>
         <ImageBackground style={{ height: '100%' }} source={require('../../assets/new_background09.png')}>
-          <DropDownPicker
-            items={this.state.socialWorkers}
-            defaultValue={this.state.country}
-            containerStyle={{ height: 40 }}
-            placeholder='בחר עובד סוציאלי'
-            style={{ backgroundColor: '#fafafa' }}
-            searchable={true}
-            searchablePlaceholder="חיפוש"
-            searchablePlaceholderTextColor="gray"
-            seachableStyle={{}}
-            searchableError={() => <Text>לא נמצאו תוצאות</Text>}
-            itemStyle={{
-              justifyContent: 'flex-start'
-            }}
-            dropDownStyle={{ backgroundColor: '#fafafa' }}
-            // onChangeItem={item => this.setState({
-            //   country: item.value
-            // })}
-            onChangeItem={item => this.getFamilies(item.value)}
-          />
-
-          <ScrollView>
+          <View >
+            <DropDownPicker
+              items={this.state.socialWorkers}
+              defaultValue={this.state.country}
+              containerStyle={{ margin: 10, height: 40 }}
+              placeholder='בחר עובד סוציאלי'
+              style={{ backgroundColor: '#fafafa' }}
+              searchable={true}
+              searchablePlaceholder="חיפוש"
+              searchablePlaceholderTextColor="gray"
+              //searchableStyle={{}}
+              searchableError={() => <Text>לא נמצאו תוצאות</Text>}
+              itemStyle={{
+                justifyContent: 'flex-end',
+                borderWidth: 1, borderColor: 'black',
+                paddingHorizontal:10
+                
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa', height: 300 }}
+              // onChangeItem={item => this.setState({
+              //   country: item.value
+              // })}
+              onChangeItem={item => this.getFamilies(item.value)}
+            />
+          </View>
+          <ScrollView style={{margin:10 }}>
             {this.state.data}
           </ScrollView>
         </ImageBackground>

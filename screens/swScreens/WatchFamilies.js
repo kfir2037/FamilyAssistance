@@ -622,7 +622,7 @@ const WatchFamilies = ({ navigation }) => {
                 </Card>
               </View>
               <View style={styles.childsDetails}>
-                <Card containerStyle={{ backgroundColor:'rgba(255,255,255,0.95)', borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='ילדים:'>
+                <Card containerStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: 20 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='ילדים:'>
                   <ImageBackground style={{}} imageStyle={{ opacity: 0.08 }} source={require('../../assets/family.png')} >
                     <View>
                       {kidsDetailsLoading
@@ -675,7 +675,7 @@ const WatchFamilies = ({ navigation }) => {
 
                 </Card>
               </View>
-              <Card containerStyle={{backgroundColor:'rgba(255,255,255,0.95)', borderRadius: 20,marginBottom:10 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
+              <Card containerStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: 20, marginBottom: 10 }} titleStyle={{ fontSize: 22, textAlign: 'right' }} title='הערות:' >
                 <Text style={{ fontSize: 18, marginRight: 10 }}>{familyObj.desc}</Text>
               </Card>
               <Modal animationType={"slide"} transparent={false}
@@ -760,7 +760,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     //marginTop: 10,
-    textAlign:'center',
+    textAlign: 'center',
     color: 'black',
 
 
