@@ -250,7 +250,7 @@ export default class ParentsMainPage extends React.Component {
 
   async markMission(task) {
     // this.showAlert()
-
+    console.log('task: ',task)
     var isDone;
     await firebase
       .firestore()
@@ -264,20 +264,25 @@ export default class ParentsMainPage extends React.Component {
       .catch((error) => {
         console.log('GETTING TASKS ERROR ', error);
       });
-    if (isDone) {
+    if (!isDone) {
       console.log(
         "this.state.numberOftasksDone+1: ",
         this.state.numberOftasksDone + 1
       );
       console.log("this.state.numberOftasks: ", this.state.numberOftasks);
-      if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks >= 0.6 && (this.state.numberOftasksDone + 1) / this.state.numberOftasks != 1) {
+      var tasksPercentDone = (this.state.numberOftasksDone + 1) / (this.state.numberOftasks)
+      console.log('tasksPercentDone: ',tasksPercentDone)
+      var notAllTasks=(this.state.numberOftasksDone + 1) / (this.state.numberOftasks)
+      console.log('notAllTasks: ',notAllTasks)
+
+      if (tasksPercentDone >= 0.6 && notAllTasks != 1) {
         console.log("111");
         this.setState({
           numberOftasksDone: this.state.numberOftasksDone + 1,
           textForAlert: "אתה בדרך הנכונה, כל הכבוד!",
         });
         this.showAlert();
-      } else if ((this.state.numberOftasksDone + 1) / this.state.numberOftasks == 1) {
+      } else if (tasksPercentDone == 1) {
         console.log("2222");
         this.setState({
           numberOftasksDone: this.state.numberOftasksDone + 1,
@@ -287,6 +292,7 @@ export default class ParentsMainPage extends React.Component {
       }
 
       else {
+        console.log('4444')
         this.setState({ numberOftasksDone: this.state.numberOftasksDone + 1 });
       }
       console.log("count+1");
@@ -351,7 +357,8 @@ export default class ParentsMainPage extends React.Component {
                     show={showAlert}
                     showProgress={false}
                     title="כל הכבוד"
-                    message="אתה בדרך הנכונה!"
+                    // message="אתה בדרך הנכונה!"
+                    message={this.state.textForAlert}
                     closeOnTouchOutside={true}
                     closeOnHardwareBackPress={false}
                     showCancelButton={false}
