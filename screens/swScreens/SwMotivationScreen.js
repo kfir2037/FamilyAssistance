@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshControl, Modal, Text, View, StyleSheet, ImageBackground, ScrollView, SafeAreaView, TouchableHighlight } from 'react-native';
+import { ActivityIndicator, RefreshControl, Modal, Text, View, StyleSheet, ImageBackground, ScrollView, SafeAreaView, TouchableHighlight } from 'react-native';
 import { Card, Divider, Input, Button } from 'react-native-elements';
 import firebase from '../../config/config';
 import Spinner from '../../src/components/Spinner';
 import { AntDesign as Icon } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { add } from 'react-native-reanimated';
 
 const SwMotivationScreen = () => {
 
   const [sentences, setSentences] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [addSentenceLoading, setAddSentenceLoading] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [sentence, setSentence] = useState('');
@@ -55,16 +58,30 @@ const SwMotivationScreen = () => {
   }, []);
 
   const handleAddSentence = async () => {
-    await firebase.firestore().collection('motivation').add({
-      content: sentence,
-      wroteBy: firebase.auth().currentUser.displayName
-    })
-      .then(() => {
-        console.log('sentence added!');
+    setAddSentenceLoading(true);
+    if (sentence) {
+      await firebase.firestore().collection('motivation').add({
+        content: sentence,
+        wroteBy: firebase.auth().currentUser.displayName
       })
-      .catch(() => {
-        console.log('error adding sentence!');
-      })
+        .then(() => {
+          console.log('sentence added!');
+          setAddSentenceLoading(false);
+          setFeedbackMsg('המשפט נוסף בהצלחה');
+
+        })
+        .catch(() => {
+          console.log('error adding sentence!');
+          setAddSentenceLoading(false);
+          setFeedbackMsg('אירעה שגיאה');
+
+        })
+    }
+    else {
+      console.log('error adding sentence!');
+      setAddSentenceLoading(false);
+      setFeedbackMsg('לא ניתן להוסיף משפט ריק');
+    }
   }
 
   useEffect(() => {
@@ -84,7 +101,7 @@ const SwMotivationScreen = () => {
           ? <Spinner style={{ marginTop: 20 }} />
           : errorMsg
             ? <Text style={styles.errorMsg}>{errorMsg}</Text>
-            : <Card title='משפטי מוטיבציה' wrapperStyle={{}} containerStyle={{ height: '90%', borderRadius: 20, paddingHorizontal: 5 }}>
+            : <Card title='משפטי מוטיבציה' wrapperStyle={{}} containerStyle={{ backgroundColor: 'rgba(255,255,255,1)', height: '90%', borderRadius: 20, paddingHorizontal: 5 }}>
               <ImageBackground style={{}} imageStyle={{ opacity: 0.08 }} source={require('../../assets/family2.png')}>
                 <ScrollView
                   style={{ height: '90%', paddingHorizontal: 10 }}
@@ -117,6 +134,8 @@ const SwMotivationScreen = () => {
                       <View style={styles.modalView} >
                         <TouchableHighlight style={styles.closeIcon} onPress={() => {
                           setModalVisible(!modalVisible);
+                          setFeedbackMsg('');
+                          setSentence('');
                         }}>
                           <Icon name="close" size={25} />
                         </TouchableHighlight>
@@ -129,20 +148,29 @@ const SwMotivationScreen = () => {
                             placeholder='הוסף משפט'
                             label='משפט חדש'
                             multiline
+                            maxLength={100}
                             placeholderTextColor='gray'
                             labelStyle={{ color: 'black', marginRight: 5 }}
                             inputContainerStyle={{ borderBottomColor: 'transparent' }}
                             textAlign='right'
-                            inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                            inputStyle={{ height: '100%', backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                            containerStyle={{ marginVertical: 5 }}
                           />
-                          <Button
-                            buttonStyle={styles.button}
-                            containerStyle={{ width: '50%', alignSelf: 'center' }}
-                            title='הוסף'
-                            titleStyle={{ fontWeight: 'bold' }}
-                            onPress={handleAddSentence}
+                          {addSentenceLoading
+                            ? <ActivityIndicator size='large' color='#0ca5e5' />
+                            : <Button
+                              buttonStyle={styles.button}
+                              containerStyle={{ width: '50%', alignSelf: 'center' }}
+                              title='הוסף'
+                              titleStyle={{ fontWeight: 'bold' }}
 
-                          />
+                              onPress={handleAddSentence}
+
+                            />}
+                          {feedbackMsg
+                            ? <Text style={{ fontWeight: 'bold', alignSelf: 'center' }}>{feedbackMsg}</Text>
+                            : null
+                          }
 
                         </View>
 

@@ -132,7 +132,7 @@ export default class MainPage extends Component {
           }
              >
   
-            <ScrollView  style={{ height: '50%', backgroundColor: 'white', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
+            <ScrollView  style={{ height: '50%', backgroundColor: 'rgba(255,255,255,0.87)', marginHorizontal: 10, borderRadius: 20, marginTop: 10 }}>
               <View style={styles.header}>
                 <Text style={styles.titleText}>משפחות</Text>
               </View>

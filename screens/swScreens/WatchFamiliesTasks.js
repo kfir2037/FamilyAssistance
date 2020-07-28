@@ -9,12 +9,13 @@ import {
   SafeAreaView,
   ActivityIndicator,
   ImageBackground,
+  Alert
 } from "react-native";
 import { Card } from 'react-native-elements';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import _ from "lodash";
 import firebase from "../../config/config";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import moment from "moment";
 import Spinner from '../../src/components/Spinner';
 import { FontAwesome } from '@expo/vector-icons';
@@ -103,6 +104,7 @@ export default class App extends Component {
             console.log("day");
             if (allData.category == "morning") {
               morningTasks.push({
+                id: doc.id,
                 name: familyMembers[allData.userId],
                 time: allData.time,
                 isDone: allData.isDone,
@@ -176,21 +178,25 @@ export default class App extends Component {
 
   returnMorningTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות בוקר">
+      <Card containerStyle={{ width: '95%', borderRadius: 20, justifyContent: 'center' }} title="משימות בוקר">
         {
           this.state.morningTasks.map((obj, i) => {
             return (
+
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <TouchableOpacity onPress={this.createTwoButtonAlert()} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                  <FontAwesome name="trash-o" size={19} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.taskHour}> | </Text>
                 {obj.isDone
                   ? <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='check-square-o' color='green' size={18} />
                   </View>
-                  : <View style={{ marginTop: 3 }}>
+                  : <View style={{ marginTop: 5 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
-
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | {'\n'} עבור: {obj.name} </Text>
               </View>
             );
           })
@@ -201,20 +207,24 @@ export default class App extends Component {
 
   returnNoonTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות צהריים">
+      <Card containerStyle={{ width: '95%', borderRadius: 20 }} title="משימות צהריים">
         {
-          this.state.noonTasks.map((obj, i) => {
+          this.state.morningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                  <FontAwesome name="trash-o" size={19} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.taskHour}> | </Text>
                 {obj.isDone
                   ? <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='check-square-o' color='green' size={18} />
                   </View>
-                  : <View style={{ paddingTop: 3 }}>
+                  : <View style={{ marginTop: 5 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | {'\n'} עבור: {obj.name} </Text>
 
               </View>
             );
@@ -226,20 +236,24 @@ export default class App extends Component {
 
   returnAfternoonTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות אחר הצהריים">
+      <Card containerStyle={{ width: '95%', borderRadius: 20 }} title="משימות אחר הצהריים">
         {
           this.state.afternoonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                  <FontAwesome name="trash-o" size={19} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.taskHour}> | </Text>
                 {obj.isDone
                   ? <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='check-square-o' color='green' size={18} />
                   </View>
-                  : <View style={{ paddingTop: 3 }}>
+                  : <View style={{ marginTop: 5 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | {'\n'} עבור: {obj.name} </Text>
               </View>
             );
           })
@@ -250,20 +264,24 @@ export default class App extends Component {
 
   returnEveningTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות ערב">
+      <Card containerStyle={{ width: '95%', borderRadius: 20 }} title="משימות ערב">
         {
           this.state.eveningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                  <FontAwesome name="trash-o" size={19} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.taskHour}> | </Text>
                 {obj.isDone
                   ? <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='check-square-o' color='green' size={18} />
                   </View>
-                  : <View style={{ paddingTop: 3 }}>
+                  : <View style={{ marginTop: 5 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | {'\n'} עבור: {obj.name} </Text>
               </View>
             );
           })
@@ -274,20 +292,24 @@ export default class App extends Component {
 
   returnCustomTasks() {
     return (
-      <Card containerStyle={{ width: '90%', borderRadius: 20 }} title="משימות">
+      <Card containerStyle={{ width: '95%', borderRadius: 20 }} title="משימות">
         {
           this.state.customTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
+                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                  <FontAwesome name="trash-o" size={19} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.taskHour}> | </Text>
                 {obj.isDone
                   ? <View style={{ paddingTop: 3 }}>
                     <FontAwesome name='check-square-o' color='green' size={18} />
                   </View>
-                  : <View style={{ paddingTop: 3 }}>
+                  : <View style={{ marginTop: 5 }}>
                     <FontAwesome name='square-o' color='red' size={18} />
                   </View>
                 }
-                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | עבור: {obj.name} </Text>
+                <Text style={styles.taskHour}> | {obj.time} | {obj.tasks} | {'\n'} עבור: {obj.name} </Text>
               </View>
             );
           })
@@ -295,6 +317,25 @@ export default class App extends Component {
       </Card>
     );
   }
+
+  createTwoButtonAlert = (name) =>
+    Alert.alert(
+      "מחיקת משימה",
+      `האם אתה בטוח שברצונך למחוק את המשימה עבור ${name}`,
+      [
+        {
+          text: "ביטול",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "OK", onPress: () => {
+            console.log("OK Pressed")
+          }
+        }
+      ],
+      { cancelable: false }
+    );
 
   render() {
     return (
@@ -340,7 +381,7 @@ export default class App extends Component {
             />
 
           </View>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ justifyContent: 'center' }}>
             {this.state.loadingTasks
               ? <Spinner />
               :
@@ -396,6 +437,9 @@ const styles = StyleSheet.create({
   courses: {
     flexDirection: "column",
   },
+  taskHour: {
+    fontSize: 15
+  },
   tasks: {
     alignItems: "center",
     color: "green",
@@ -412,13 +456,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   tasksList: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
     //marginRight: 10,
-    marginBottom: 7
+    marginBottom: 7,
+    //marginHorizontal: 5,
+
   },
   tasksGroup: {
 
-    marginRight: 10,
+    //marginRight: 10,
   },
   icLockRed: {
     width: 13 / 2,

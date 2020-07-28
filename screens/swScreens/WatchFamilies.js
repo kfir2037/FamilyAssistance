@@ -48,7 +48,7 @@ const WatchFamilies = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [familyId, setfamilyId] = useState(navigation.getParam('familyId'));
   const [editFamilyModal, seteditFamilyModal] = useState(false);
-  const [isActive, setisActive] = useState(familyObj.status);
+  const [isActive, setisActive] = useState();
 
 
   const AddParentPress = () => {
@@ -59,18 +59,20 @@ const WatchFamilies = ({ navigation }) => {
     setIsKidModalVisible(!isKidModalVisible);
   }
 
-  const toggleSwitch = () => {
-    setisActive(!isActive);
+  const toggleSwitch = async () => {
+    setisActive(previousState => !previousState);
     var obj = familyObj
     obj.status = isActive
-    setFamilyObj(obj)
+    //setFamilyObj(obj);
     console.log('familyId: ', familyId)
     console.log('isActive: ', isActive)
-    firebase.firestore().collection('families').doc(familyId).update({
-      status: isActive,
+    await firebase.firestore().collection('families').doc(familyId).update({
+      status: !familyObj.status
     })
+    
     console.log('changes was saved')
   };
+
   const changeFamilyStatus = (status) => {
     console.log('status: ', status)
     var obj = familyObj
@@ -78,6 +80,7 @@ const WatchFamilies = ({ navigation }) => {
     setFamilyObj(obj)
 
   };
+
   const getFamily = async () => {
     const familyId = navigation.getParam('familyId');
     setfamilyId(familyId);
@@ -90,7 +93,7 @@ const WatchFamilies = ({ navigation }) => {
           await doc.data().parents.forEach(async (parentID) => {
             await firebase.firestore().collection('users').doc(parentID).get()
               .then((doc) => {
-
+                //setisActive(familyObj.status);
                 parentDetails.push({
                   key: doc.id,
                   firstName: doc.data().firstName,
@@ -192,8 +195,15 @@ const WatchFamilies = ({ navigation }) => {
 
   useEffect(() => {
     console.log('effect familyObj', familyObj['parents']);
+    console.log('isActive effect 1: ',isActive);
+    setisActive(familyObj.status);
+
+    console.log('isActive effect 2: ',isActive);
+
     //setParentDetailsLoading(false);
   }, [familyObj]);
+
+
 
   useEffect(() => {
     console.log('effect parentDetails ', parentDetails);
@@ -563,8 +573,10 @@ const WatchFamilies = ({ navigation }) => {
                       /> */}
                   <Switch
                     style={{ alignItems: "center" }}
-                    value={!isActive}
-                    onValueChange={toggleSwitch}
+                    value={familyObj.status}
+                    onValueChange={() => {
+                      toggleSwitch();
+                    }}
                   />
                 </ImageBackground>
               </Card>

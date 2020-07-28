@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const FieldValue = require('firebase-admin').firestore.FieldValue;
 const { Expo } = require('expo-server-sdk');
 var fetch = require('node-fetch')
-var moment = require('moment');
+var moment = require('moment-timezone');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
 const RandExp = require('randexp');
@@ -13,6 +13,7 @@ admin.initializeApp({
     credential: admin.credential.applicationDefault(),
     databaseURL: "https://family-assistance-f5ebb.firebaseio.com",
 });
+
 
 class UnauthenticatedError extends Error {
     constructor(message) {
@@ -55,14 +56,14 @@ function roleIsValid(role) {
 
 const passRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$+=!*()@%&]).{8,10}$/g
 
-const query = admin.firestore().collection('tasks').where('category', '==', 'morning');
+// const query = admin.firestore().collection('tasks').where('category', '==', 'morning');
 
-const observer = query.onSnapshot(querySnapshot => {
-    console.log(`Received query snapshot: ${querySnapshot.size}`);
-    // ...
-}, err => {
-    console.log(`Encountered error: ${err}`);
-});
+// const observer = query.onSnapshot(querySnapshot => {
+//     console.log(`Received query snapshot: ${querySnapshot.size}`);
+//     // ...
+// }, err => {
+//     console.log(`Encountered error: ${err}`);
+// });
 
 
 
@@ -468,6 +469,7 @@ exports.createFamily = functions.https.onCall(async (data, context) => {
     }
 });
 
+
 exports.signinUserEmail = functions.https.onCall(async (data, context) => {
     //admin.firestore().collection('users').where('id')
     const userEmail = await admin.firestore().collection('usersIDs').doc(data).get()
@@ -508,9 +510,11 @@ exports.signinUserEmail = functions.https.onCall(async (data, context) => {
 
 
 exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
-    console.log('This will be run every 5 minutes!');
+    console.log('This will be run every 5 minutes!', context);
+    //sendPushNotification2();
     return null;
 });
+
 
 sendPushNotification2 = async () => {
     let expo = new Expo();
@@ -538,11 +542,16 @@ sendPushNotification2 = async () => {
 
     let messages = [];
 
-    const currentDate = moment(new Date());
+    const currentDate = moment(new Date()).tz('Asia/Tel_Aviv');
+    //const currentDatePlusDay = moment(new Date()).tz('Asia/Tel_Aviv').add(1,'days');
+    console.log('currentDate for the query: ', new Date(currentDate.format('YYYY/MM/DD 00:01')));
+    // console.log('currentDatePlusDay for the query: ', new Date(currentDate.format('YYYY/MM/DD 23:59')));
 
     const allTasks = await admin
         .firestore()
         .collection("tasks")
+        .where("date", ">=", new Date('2020/07/28 00:01'))
+        .where("date", "<=", new Date('2020/07/29 00:01'))
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach(async (doc) => {
@@ -552,44 +561,54 @@ sendPushNotification2 = async () => {
                     let allData = doc.data();
                     // console.log('category: ', allData.category)
                     if (allData.category == 'morning') {
+                        const taskDateAndTime = moment(allData.date.seconds * 1000).tz('Asia/Tel_Aviv');
+                        const taskTime = moment(new Date()).tz('Asia/Tel_Aviv').set({ hour: parseInt(allData.time.slice(0, 2)), minute: parseInt(allData.time.slice(3, 5))});
+                        const taskDateOnlyDate = moment(allData.date.seconds * 1000).tz('Asia/Tel_Aviv').format('DD/MM/YYYY');
+                        const currentDateOnlyDate = moment(new Date()).tz('Asia/Tel_Aviv');
+                        const currentTimeOnlyTime = moment(new Date()).tz('Asia/Tel_Aviv');
+                        const currentTimeOnlyTimePlusFive = moment(new Date()).tz('Asia/Tel_Aviv').add(5, 'minutes');
 
-                        const taskDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY HH:mm');
-                        const taskDateOnlyDate = moment(allData.date.seconds * 1000).format('DD/MM/YYYY');
-                        const currentDateOnlyDate = moment(new Date()).format('DD/MM/YYYY');
+                        // await admin.firestore().collection('users').doc(allData.userId)
+                        //     .get()
+                        //     .then((doc) => {
+                        //         if (!doc.exists) {
+                        //             console.log("error on get user for pushToken: No such document!");
+                        //         } else {
+                        //             const token = doc.data().pushNotificationToken;
+                        //             console.log('token: ', token);
+                        //         }
+                        //     })
+                        //     .catch((err) => {
+                        //         console.log('error on getting pushToken: ', err);
+                        //     });
+
+                        console.log('taskDate: ', taskDateAndTime.format());
                         console.log('taskDateOnlyDate ', taskDateOnlyDate)
-                        console.log('currentDateOnlyDate', currentDateOnlyDate)
-                        console.log('morningFirstAlert ', morningFirstAlert);
-                        console.log('morningSecondsAlert ', morningSecondsAlert);
-                        if (taskDateOnlyDate == currentDateOnlyDate) {
-                            console.log('same date')
-                            const timeOfAlert = currentDate.add(morningFirstAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
-                            const timeOfAlert2 = currentDate.add(morningFirstAlert, "minutes").format('DD/MM/YYYY HH:mm')
-                            const timeOfAlert3 = currentDate.add(morningSecondsAlert + 5, "minutes").format('DD/MM/YYYY HH:mm')
-                            const timeOfAlert4 = currentDate.add(morningSecondsAlert, "minutes").format('DD/MM/YYYY HH:mm')
+                        console.log('currentDateOnlyDate', currentDateOnlyDate.format('DD/MM/YYYY HH:mm'))
+                        // console.log('morningFirstAlert ', morningFirstAlert);
+                        // console.log('morningSecondsAlert ', morningSecondsAlert);
+                        console.log('taskTime: ', taskTime.format('HH:mm'));
+                        console.log('currentTimeOnlyTime: ', currentTimeOnlyTime.format('HH:mm'));
+                        console.log('currentTimeOnlyTime: ', currentTimeOnlyTimePlusFive.format('HH:mm'));
 
-                            console.log('currentDate ', currentDate)
-                            console.log('taskDate ', taskDate)
-                            console.log('timeOfAlert ', timeOfAlert)
-                            console.log('timeOfAlert2 ', timeOfAlert2)
-                            console.log('timeOfAlert3 ', timeOfAlert3)
-                            console.log('timeOfAlert4 ', timeOfAlert4)
-                            console.log('morningFirstAlert ', morningFirstAlert)
-                            console.log('morningSecondsAlert ', morningSecondsAlert)
-                            //if (moment(taskDate).isAfter(timeOfAlert2) && moment(taskDate).isBefore(timeOfAlert)) {
-                            console.log('needs to send push notification - alert number 1')
+                        //console.log('currentTimeOnlyTime plus 5: ', currentTimeOnlyTime.add(5, "minutes").format('HH:mm'));
 
-                            messages.push({
-                                to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
-                                sound: 'default',
-                                title: 'משימה מתקרבת - 2',
-                                body: ' גוף הודעה -  משימה מתקרבת 2',
-                                ios: {
-                                    sound: true
-                                },
-                                android: {
+                        if (taskDateOnlyDate == currentDateOnlyDate.format('DD/MM/YYYY')) {
+                            console.log('same date');
+                            if (taskTime.isBetween(currentTimeOnlyTime, currentTimeOnlyTimePlusFive)) {
+
+                                console.log('needs to send push notification - alert number 1');
+
+                                messages.push({
+                                    to: 'ExponentPushToken[EUmyKELbBeaN15Z2BC8LwE]',
+                                    sound: 'default',
+                                    title: 'משימות בוקר',
+                                    body: allData.tasks.join(', ').toString(),
                                     channelId: 'tasks'
-                                }
-                            })
+                                });
+
+                                console.log('notification pushed to messages array');
+                            }
                         }
                     }
                 }
@@ -600,11 +619,15 @@ sendPushNotification2 = async () => {
 
 
     let chunks = expo.chunkPushNotifications(messages);
+    console.log('chunks made');
+
     let tickets = [];
     (async () => {
+        console.log('start "for" loop of chunks')
         for (let chunk of chunks) {
             try {
                 let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                console.log('chunk sent')
                 console.log('ticketChunk ', ticketChunk);
                 tickets.push(...ticketChunk);
                 // NOTE: If a ticket contains an error code in ticket.details.error, you
@@ -612,12 +635,14 @@ sendPushNotification2 = async () => {
                 // documentation:
                 // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
             } catch (error) {
-                console.error(error);
+                console.log(error);
             }
         }
+        console.log('end for loop');
     })();
 
 }
+
 
 sendPushNotification = async () => {
     console.log('sendPushNotification is running')
@@ -856,9 +881,13 @@ sendPushNotification = async () => {
 // setInterval(() => {
 //     console.log('setInterval')
 //     sendPushNotification2()
-// }, 300000)
+// }, 100000)
 
-//sendPushNotification2();
+// setTimeout(() => {
+//     sendPushNotification2();
+// }, 3000)
+
+
 
 
 

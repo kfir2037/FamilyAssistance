@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import Accordion2 from "../../src/components/Accordion";
 import firebase from "../../config/config";
-import moment from "moment";
+import moment from "moment-timezone";
 import AwesomeAlert from "react-native-awesome-alerts";
 import * as Permissions from 'expo-permissions';
 import { Notifications } from 'expo';
@@ -54,17 +54,34 @@ export default class ParentsMainPage extends React.Component {
     this.registerForPushNotification();
     await this.getCustomTasks();
 
-    firebase.firestore().collection('tasks')
-      .where("date", ">=", new Date("2020/07/30 00:00"))
-      .get()
-      .then(snap => {
-        snap.forEach(doc => {
-          console.log(doc.id);
-        });
-      })
-      .catch(err => {
-        console.log('query Error: ', err)
-      })
+    const currentTime = moment(new Date());
+    console.log('currentTime: ',currentTime.format('HH:mm'));
+    const currentTimePlusFive = moment(new Date()).add(5,'minutes');
+    console.log('currentTimePlusFive: ',currentTimePlusFive.format('HH:mm'));
+
+    const betweenTime = moment(new Date()).add(3,'minutes');
+    console.log('betweenTime: ',betweenTime.format('HH:mm'));
+    console.log(betweenTime.isBetween(currentTime,currentTimePlusFive));
+    console.log('date string: ', moment(new Date()).set({hour:parseInt('15'),minute:parseInt('00')}))
+
+    const currentDate = moment(new Date()).tz('Asia/Tel_Aviv');
+    console.log('currentDate for the query: ', currentDate.format('YYYY/MM/DD 00:01'));
+    console.log('currentDate for the query: ', new Date(currentDate.format('YYYY/MM/DD 00:01')));
+
+
+    // firebase.firestore().collection('tasks')
+    //   .where("date", ">=", new Date(currentTime.format("YYYY/MM/DD HH:mm")))
+    //   .get()
+    //   .then(snap => {
+    //     snap.forEach(doc => {
+    //       console.log(moment.tz(new Date(doc.data().date.seconds * 1000),"Asia/Tel_Aviv").format());
+    //     });
+    //   })
+    //   .catch(err => {
+    //     console.log('query Error: ', err)
+    //   })
+
+
   }
 
   registerForPushNotification = async () => {
@@ -80,9 +97,10 @@ export default class ParentsMainPage extends React.Component {
     if (finalStatus !== 'granted') {
       return;
     }
-    const token = await Notifications.getExpoPushTokenAsync()
-      .then(() => { console.log('token: ', token) })
-      .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
+    const token = await Notifications.getExpoPushTokenAsync();
+    console.log('token: ',token); 
+      // .then(() => { console.log('token: ', token) })
+      // .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
 
 
     if (Platform.OS === 'android') {
