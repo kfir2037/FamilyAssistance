@@ -113,6 +113,7 @@ export default class App extends Component {
               });
             } else if (allData.category == "noon") {
               noonTasks.push({
+                id: doc.id,
                 name: familyMembers[allData.userId],
                 time: allData.time,
                 isDone: allData.isDone,
@@ -121,6 +122,7 @@ export default class App extends Component {
               });
             } else if (allData.category == "afternoon") {
               afternoonTasks.push({
+                id: doc.id,
                 name: familyMembers[allData.userId],
                 time: allData.time,
                 isDone: allData.isDone,
@@ -129,6 +131,7 @@ export default class App extends Component {
               });
             } else if (allData.category == "evening") {
               eveningTasks.push({
+                id: doc.id,
                 name: familyMembers[allData.userId],
                 time: allData.time,
                 isDone: allData.isDone,
@@ -138,6 +141,7 @@ export default class App extends Component {
             } else if (allData.category == "custom tasks") {
               console.log('custom')
               customTasks.push({
+                id: doc.id,
                 name: familyMembers[allData.userId],
                 time: allData.time,
                 isDone: allData.isDone,
@@ -184,7 +188,7 @@ export default class App extends Component {
             return (
 
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <TouchableOpacity onPress={this.createTwoButtonAlert()} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => this.createTwoButtonAlert(obj.name, obj.id)} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
                   <FontAwesome name="trash-o" size={19} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.taskHour}> | </Text>
@@ -209,10 +213,10 @@ export default class App extends Component {
     return (
       <Card containerStyle={{ width: '95%', borderRadius: 20 }} title="משימות צהריים">
         {
-          this.state.morningTasks.map((obj, i) => {
+          this.state.noonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => this.createTwoButtonAlert(obj.name, obj.id)} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
                   <FontAwesome name="trash-o" size={19} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.taskHour}> | </Text>
@@ -241,7 +245,7 @@ export default class App extends Component {
           this.state.afternoonTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => this.createTwoButtonAlert(obj.name, obj.id)} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
                   <FontAwesome name="trash-o" size={19} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.taskHour}> | </Text>
@@ -269,7 +273,7 @@ export default class App extends Component {
           this.state.eveningTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => this.createTwoButtonAlert(obj.name, obj.id)} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
                   <FontAwesome name="trash-o" size={19} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.taskHour}> | </Text>
@@ -297,7 +301,7 @@ export default class App extends Component {
           this.state.customTasks.map((obj, i) => {
             return (
               <View key={i} style={{ flexDirection: 'row-reverse' }} >
-                <TouchableOpacity style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
+                <TouchableOpacity onPress={() => this.createTwoButtonAlert(obj.name, obj.id)} style={{ flexDirection: 'row-reverse', marginTop: 4, justifyContent: 'center' }}>
                   <FontAwesome name="trash-o" size={19} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.taskHour}> | </Text>
@@ -318,10 +322,10 @@ export default class App extends Component {
     );
   }
 
-  createTwoButtonAlert = (name) =>
+  createTwoButtonAlert = (name, id) =>
     Alert.alert(
-      "מחיקת משימה",
-      `האם אתה בטוח שברצונך למחוק את המשימה עבור ${name}`,
+      '',
+      `האם אתה בטוח שברצונך למחוק את המשימה עבור ${name} ?`,
       [
         {
           text: "ביטול",
@@ -329,12 +333,20 @@ export default class App extends Component {
           style: "cancel"
         },
         {
-          text: "OK", onPress: () => {
-            console.log("OK Pressed")
+          text: "אישור", onPress: async () => {
+            console.log("OK Pressed");
+            console.log('name id: ',name, id);
+            this.getTasks();
+            await firebase.firestore().collection('tasks').doc(id).delete()
+              .then(function () {
+                console.log("Document successfully deleted!");
+              }).catch(function (error) {
+                console.error("Error removing document: ", error);
+              });
           }
         }
       ],
-      { cancelable: false }
+      { cancelable: true }
     );
 
   render() {

@@ -8,7 +8,8 @@ import {
   ActivityIndicator,
   ImageBackground,
   Platform,
-  RefreshControl
+  RefreshControl,
+  ProgressBarAndroid
 } from "react-native";
 import Accordion2 from "../../src/components/Accordion";
 import firebase from "../../config/config";
@@ -55,14 +56,14 @@ export default class ParentsMainPage extends React.Component {
     await this.getCustomTasks();
 
     const currentTime = moment(new Date());
-    console.log('currentTime: ',currentTime.format('HH:mm'));
-    const currentTimePlusFive = moment(new Date()).add(5,'minutes');
-    console.log('currentTimePlusFive: ',currentTimePlusFive.format('HH:mm'));
+    console.log('currentTime: ', currentTime.format('HH:mm'));
+    const currentTimePlusFive = moment(new Date()).add(5, 'minutes');
+    console.log('currentTimePlusFive: ', currentTimePlusFive.format('HH:mm'));
 
-    const betweenTime = moment(new Date()).add(3,'minutes');
-    console.log('betweenTime: ',betweenTime.format('HH:mm'));
-    console.log(betweenTime.isBetween(currentTime,currentTimePlusFive));
-    console.log('date string: ', moment(new Date()).set({hour:parseInt('15'),minute:parseInt('00')}))
+    const betweenTime = moment(new Date()).add(3, 'minutes');
+    console.log('betweenTime: ', betweenTime.format('HH:mm'));
+    console.log(betweenTime.isBetween(currentTime, currentTimePlusFive));
+    console.log('date string: ', moment(new Date()).set({ hour: parseInt('15'), minute: parseInt('00') }))
 
     const currentDate = moment(new Date()).tz('Asia/Tel_Aviv');
     console.log('currentDate for the query: ', currentDate.format('YYYY/MM/DD 00:01'));
@@ -98,9 +99,9 @@ export default class ParentsMainPage extends React.Component {
       return;
     }
     const token = await Notifications.getExpoPushTokenAsync();
-    console.log('token: ',token); 
-      // .then(() => { console.log('token: ', token) })
-      // .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
+    console.log('token: ', token);
+    // .then(() => { console.log('token: ', token) })
+    // .catch((err) => { console.log('getExpoPushTokenAsync Error: ', err) })
 
 
     if (Platform.OS === 'android') {
@@ -268,7 +269,7 @@ export default class ParentsMainPage extends React.Component {
 
   async markMission(task) {
     // this.showAlert()
-    console.log('task: ',task)
+    console.log('task: ', task)
     var isDone;
     await firebase
       .firestore()
@@ -289,9 +290,9 @@ export default class ParentsMainPage extends React.Component {
       );
       console.log("this.state.numberOftasks: ", this.state.numberOftasks);
       var tasksPercentDone = (this.state.numberOftasksDone + 1) / (this.state.numberOftasks)
-      console.log('tasksPercentDone: ',tasksPercentDone)
-      var notAllTasks=(this.state.numberOftasksDone + 1) / (this.state.numberOftasks)
-      console.log('notAllTasks: ',notAllTasks)
+      console.log('tasksPercentDone: ', tasksPercentDone)
+      var notAllTasks = (this.state.numberOftasksDone + 1) / (this.state.numberOftasks)
+      console.log('notAllTasks: ', notAllTasks)
 
       if (tasksPercentDone >= 0.6 && notAllTasks != 1) {
         console.log("111");
@@ -356,12 +357,16 @@ export default class ParentsMainPage extends React.Component {
               {this.state.loadingTasks
                 ? <ActivityIndicator size={40} color='#e0aa00' style={{ marginTop: 10 }} />
                 : <View style={styles.container}>
-                  {/* { <ProgressBarAndroid
-              styleAttr="Horizontal"
-              indeterminate={false}
-              // progress={tasks / tasksDone}
-              progress={this.state.numberOftasksDone / this.state.numberOftasks}
-            />  */}
+                  {Platform.OS == 'android'
+                    ? <ProgressBarAndroid
+                      styleAttr="Horizontal"
+                      indeterminate={false}
+                      // progress={tasks / tasksDone}
+
+                      progress={this.state.numberOftasksDone / this.state.numberOftasks}
+                    />
+                    : null
+                  }
                   <Accordion2
                     allTasks={this.state.allTasks}
                     morningTasks={this.state.morningTasks}

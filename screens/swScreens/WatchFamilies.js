@@ -61,15 +61,16 @@ const WatchFamilies = ({ navigation }) => {
 
   const toggleSwitch = async () => {
     setisActive(previousState => !previousState);
-    var obj = familyObj
-    obj.status = isActive
+    // var obj = familyObj
+    // obj.status = isActive
+    familyObj.status = !familyObj.status;
     //setFamilyObj(obj);
     console.log('familyId: ', familyId)
     console.log('isActive: ', isActive)
     await firebase.firestore().collection('families').doc(familyId).update({
-      status: !familyObj.status
+      status: familyObj.status
     })
-    
+
     console.log('changes was saved')
   };
 
@@ -195,10 +196,10 @@ const WatchFamilies = ({ navigation }) => {
 
   useEffect(() => {
     console.log('effect familyObj', familyObj['parents']);
-    console.log('isActive effect 1: ',isActive);
-    setisActive(familyObj.status);
+    console.log('isActive effect 1: ', isActive);
+    //setisActive(familyObj.status);
 
-    console.log('isActive effect 2: ',isActive);
+    console.log('isActive effect 2: ', isActive);
 
     //setParentDetailsLoading(false);
   }, [familyObj]);
