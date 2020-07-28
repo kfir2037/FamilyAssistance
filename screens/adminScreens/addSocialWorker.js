@@ -97,23 +97,6 @@ export default class addSocialWorker extends Component {
                 containerStyle={{ marginBottom: 10 }}
               />
               <Input
-                keyboardType='email-address'
-                // maxLength={40}
-                selectionColor={'black'}
-                onChangeText={text => this.onChangeEmail(text)}
-                value={this.state.socialWorker.email}
-                placeholder='yout_name@domain.com'
-                placeholderTextColor='lightgray'
-                label='אימייל'
-                placeholderTextColor='gray'
-                labelStyle={{ color: 'black', marginRight: 5 }}
-                inputContainerStyle={{ borderBottomColor: 'transparent' }}
-                textAlign='right'
-                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
-                containerStyle={{ marginBottom: 10 }}
-
-              />
-              <Input
                 keyboardType='default'
                 // maxLength={40}
                 selectionColor={'black'}
@@ -131,6 +114,24 @@ export default class addSocialWorker extends Component {
 
               />
               <Input
+                keyboardType='email-address'
+                // maxLength={40}
+                selectionColor={'black'}
+                onChangeText={text => this.onChangeEmail(text)}
+                value={this.state.socialWorker.email}
+                placeholder='your_name@domain.com'
+                placeholderTextColor='lightgray'
+                label='אימייל'
+                placeholderTextColor='gray'
+                labelStyle={{ color: 'black', marginRight: 5 }}
+                inputContainerStyle={{ borderBottomColor: 'transparent' }}
+                textAlign='right'
+                inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
+                containerStyle={{ marginBottom: 10 }}
+
+              />
+              
+              {/* <Input
                 keyboardType='default'
                 // maxLength={40}
                 selectionColor={'black'}
@@ -146,7 +147,7 @@ export default class addSocialWorker extends Component {
                 inputStyle={{ backgroundColor: 'lightgray', color: 'gray', borderWidth: 1, borderRadius: 7, borderColor: 'lightgray', paddingHorizontal: 10 }}
                 containerStyle={{ marginBottom: 10 }}
 
-              />
+              /> */}
               <Input
                 keyboardType='numeric'
                 // maxLength={40}
@@ -200,7 +201,7 @@ export default class addSocialWorker extends Component {
                   }
                   titleStyle={{ marginRight: 5 }}
                   iconRight
-                  containerStyle={{ marginHorizontal: 10 }}
+                  containerStyle={{marginVertical:10, marginHorizontal: 10 }}
                 />}
               <Text style={{alignSelf:'center',marginTop:5}}>
                 {this.state.alertText}

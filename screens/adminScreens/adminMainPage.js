@@ -72,12 +72,11 @@ export default class adminMainPage extends Component {
               {
                 <View style={{ flexDirection: 'column' }} >
                   <View style={{ paddingTop: 3 }}></View>
-                  <Text>{family.email}</Text>
-                  <Text>{family.parent}</Text>
-                  <Text>{family.kids}</Text>
-                  <Text>{family.lastName}</Text>
-                  <Text>{family.phone}</Text>
-                  <Text>{family.status}</Text>
+                  <Text>דוא"ל: {family.email}</Text>
+                  <Text>ת"ז הורים: {family.parents.join(', ')}</Text>
+                  <Text>ת"ז ילדים: {family.kids.join(', ')}</Text>
+                  <Text>טלפון: {family.phone}</Text>
+                  {family.status? <Text>פעילה</Text> : <Text>לא פעילה</Text>}
                   <View style={{ paddingBottom: 3 }}></View>
                   <Button
                     buttonStyle={styles.button}
@@ -126,7 +125,7 @@ export default class adminMainPage extends Component {
           allFamilies.push({
             label: data.firstName + ' ' + data.lastName,
             value: doc.id,
-            icon: () => <Icon name="flag" size={18} color="#900" />
+            //icon: () => <Icon name="flag" size={18} color="#900" />
           });
         });
 
@@ -160,7 +159,7 @@ export default class adminMainPage extends Component {
           <View >
             <DropDownPicker
               items={this.state.socialWorkers}
-              defaultValue={this.state.country}
+              //defaultValue={this.state.country}
               containerStyle={{ margin: 10, height: 40 }}
               placeholder='בחר עובד סוציאלי'
               style={{ backgroundColor: '#fafafa' }}
@@ -171,7 +170,6 @@ export default class adminMainPage extends Component {
               searchableError={() => <Text>לא נמצאו תוצאות</Text>}
               itemStyle={{
                 justifyContent: 'flex-end',
-                borderWidth: 1, borderColor: 'black',
                 paddingHorizontal:10
                 
               }}
