@@ -11,8 +11,8 @@ import {
   RefreshControl,
   ProgressBarAndroid
 } from "react-native";
-import * as Progress from 'expo-progress';
-import { ProgressBar } from '@react-native-community/progress-bar-android';
+//import { ProgressBar } from '@react-native-community/progress-bar-android';
+import { ProgressBar } from 'react-native-paper';
 import Accordion2 from "../../src/components/Accordion";
 import firebase from "../../config/config";
 import moment from "moment-timezone";
@@ -360,13 +360,20 @@ export default class ParentsMainPage extends React.Component {
                 ? <ActivityIndicator size={40} color='#e0aa00' style={{ marginTop: 10 }} />
                 : <View style={styles.container}>
 
-                  {/* <Progress.Bar
-                    isIndeterminate={false}
-                    // styleAttr="Horizontal"
-                    // indeterminate={false}
-                    // // progress={tasks / tasksDone}
+                  {/* <ProgressBarAndroid
+                    styleAttr="Horizontal"
+                    indeterminate={false}
+                    // progress={tasks / tasksDone}
+
                     progress={this.state.numberOftasksDone / this.state.numberOftasks}
                   /> */}
+
+                  <ProgressBar
+                    progress={this.state.numberOftasksDone / this.state.numberOftasks}
+                    indeterminate={false}
+                    style={{height:20, marginVertical:10}}
+                    color={'#767ead'}
+                  />
 
 
                   <Accordion2
