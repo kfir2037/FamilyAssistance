@@ -33,7 +33,7 @@
     "express": "^4.17.1",
     "firebase": "^7.6.1",
     "formik": "^2.1.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.31",
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.3",
